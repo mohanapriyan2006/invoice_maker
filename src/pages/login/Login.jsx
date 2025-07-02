@@ -1,0 +1,105 @@
+import React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { api } from '../../API/api';
+import { useNavigate } from 'react-router-dom';
+
+const Login = () => {
+
+  const navigate = useNavigate();
+
+
+  const formik = useFormik({
+    initialValues: {
+      user_name: '',
+      password: ''
+    },
+    validationSchema: Yup.object({
+      user_name: Yup.string()
+        .min(6, 'username must be at least 6 characters')
+        .required('username is required'),
+      password: Yup.string()
+        .min(4, 'Password must be at least 4 characters')
+        .required('Password is required')
+    }),
+    onSubmit: (values) => {
+      console.log('Form submitted:', values);
+      const postUser = async () => {
+        try {
+          const res = await api.post("/login", { ...values });
+          if (res.data.access_token) {
+            localStorage.setItem("token", res.data.access_token);
+          }
+          console.log("Successfully Logined");
+          alert("Successfully Logined");
+
+        } catch (e) {
+          if (e.response) {
+            if (e.response.status === 401) {
+              console.log("Unauthorized: Invalid username or password");
+              alert("Invalid username or password");
+            } else {
+              console.log("Server error:", e.response.status);
+              alert("Something went wrong!, Try again");
+            }
+          } else if (e.request) {
+            console.log("No response from server.");
+            alert("No response from server, Try again");
+          } else {
+            console.log("Request error:", e.message);
+            alert("Something went wrong!, Try again");
+          }
+        }
+      };
+
+      postUser();
+
+    }
+  });
+
+  return (
+    <div className='place-content-center place-items-center py-20'>
+
+      <h2 className='login-title'>Welcome Back 😊</h2>
+
+      <form onSubmit={formik.handleSubmit} className='login-form' >
+        <div className='w-full text-center  -mt-4 '>
+          <h3 className='text-blue-900 text-[26px] font-semibold'>Login</h3>
+        </div>
+        <label className='absolute -left-99999' htmlFor="user_name">Enter username :</label>
+        <input
+          type="text"
+          name="user_name"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.user_name}
+          placeholder='  Enter username'
+          className='login-input'
+        />
+        {formik.touched.user_name && formik.errors.user_name && (
+          <div style={{ color: 'red' }}>{formik.errors.user_name}</div>
+        )}
+
+        <label htmlFor="password" className='absolute -left-99999'>Enter password:</label>
+        <input
+          type="password"
+          name="password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.password}
+          placeholder='  Enter password'
+          className='login-input'
+        />
+        {formik.touched.password && formik.errors.password && (
+          <div style={{ color: 'red' }}>{formik.errors.password}</div>
+        )}
+
+        <button type="submit" className='btn-1'>Login</button>
+      </form>
+
+      <h4>I don't have account, click to <button className='px-2 btn-1' onClick={() => navigate('/signup')}>SignUp</button></h4>
+    </div>
+  );
+};
+
+export default Login;
