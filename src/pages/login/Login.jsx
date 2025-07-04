@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { api } from '../../API/api';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../../API/api';
+import DataContext from '../../context/DataContest';
 
 const Login = () => {
 
   const navigate = useNavigate();
+  const { setLoginPage } = useContext(DataContext);
+
+  const [showPassword, setShowPassword] = useState(false);
 
 
   const formik = useFormik({
@@ -32,6 +37,11 @@ const Login = () => {
           }
           console.log("Successfully Logined");
           alert("Successfully Logined");
+          navigate("/");
+          setLoginPage({
+            isActive: false,
+            isLogined: true
+          })
 
         } catch (e) {
           if (e.response) {
@@ -80,16 +90,25 @@ const Login = () => {
           <div style={{ color: 'red' }}>{formik.errors.user_name}</div>
         )}
 
-        <label htmlFor="password" className='absolute -left-99999'>Enter password:</label>
-        <input
-          type="password"
-          name="password"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.password}
-          placeholder='  Enter password'
-          className='login-input'
-        />
+        <div className="relative w-full">
+          <label htmlFor="password" className="sr-only">Enter password:</label>
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.password}
+            placeholder="  Enter password"
+            className="login-input pr-10"
+          />
+          <div
+            className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+            onClick={() => setShowPassword(prev => !prev)}
+          >
+            {showPassword ? <EyeOff className="w-auto h-5 mt-3 text-gray-500" /> : <Eye className="w-auto h-5 mt-3 text-gray-500" />}
+          </div>
+        </div>
+
         {formik.touched.password && formik.errors.password && (
           <div style={{ color: 'red' }}>{formik.errors.password}</div>
         )}

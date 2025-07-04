@@ -5,19 +5,42 @@
     font-family: 'Poppins', sans-serif;
 }
 
+body {
+    box-sizing: none;
+    margin: 0;
+}
+
+/* layout */
+.parent {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.parent .div1 {
+    grid-area: 1 / 1 / 4 / 2;
+}
+
+.parent .div2 {
+    grid-area: 1 / 2 / 4 / 5;
+}
+
+
 /* login css*/
 .login-form {
     @apply rounded border-2 flex flex-col gap-2 py-8 px-20 border-dashed border-gray-400 hover:border-blue-700
 }
 
-.login-title{
+.login-title {
     @apply text-4xl font-semibold mb-10 text-blue-700
 }
 
-.login-input{
+.login-input {
     @apply text-[18px] mt-3 font-medium border rounded h-10 w-80 outline-0 focus:border-2 focus:border-blue-700
 }
 
-.btn-1{
+.btn-1 {
     @apply border mt-5 rounded-2xl bg-linear-30 to-blue-400 from-blue-600 text-white font-semibold py-1 cursor-pointer hover:to-blue-700
 }

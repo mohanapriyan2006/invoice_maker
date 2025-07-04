@@ -1,40 +1,30 @@
-import { useEffect } from 'react'
-import { api } from './API/api';
+// import { useEffect } from 'react'
+// import { api } from './API/api';
 import './App.css'
-import Login from './pages/login/Login'
-import SignUp from './pages/login/signUp';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home';
+import { DataProvider } from './context/DataContest';
+import Layout from './layout/Layout';
 
 
 function App() {
 
-  useEffect(() => {
 
-    const fetch = async () => {
-      const res = await api.get("companies");
-      console.log(res.data);
-    }
+  // useEffect(() => {
 
-    fetch();
-  }
-    , []);
+  //   const fetch = async () => {
+  //     const res = await api.get("companies");
+  //     console.log(res.data);
+  //   }
+
+  //   fetch();
+  // }
+  //   , []);
 
   return (
-    <>
-      <Router>
 
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/signup' element={<SignUp />} />
-        </Routes>
-
-
-
-      </Router>
-    </>
+    <DataProvider>
+     <Layout/>
+    </DataProvider>
   )
 }
 
-export default App
+export default App;

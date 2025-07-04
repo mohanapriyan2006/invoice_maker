@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+.home-actions .action{
+    @apply flex-1/3 p-4 rounded-2xl cursor-pointer
+}
+
+
+.home-actions .action .action-text{
+    @apply text-white text-center font-bold text-[20px]
+}
