@@ -30,24 +30,33 @@ const SignUp = () => {
                 .oneOf([Yup.ref('password'), null], 'Passwords must match')
                 .required('Confirm Password is required')
         }),
-        onSubmit: (values) => {
+        onSubmit: (values, { setFieldError }) => {
             console.log('Form submitted:', values);
             const postUser = async () => {
                 try {
                     await api.post("/signup", { ...values })
-                    navigate("/login");
+                    navigate("/");
                 } catch (e) {
-                    console.log(e.message);
-                    alert(e.message);
+                    if (e.response && e.response.data) {
+                        console.log("Error Details:", e.response.data);
+                        alert("Username already registered !");
+                        if (e.response.data.detail) {
+                            setFieldError("user_name", "Username already exists");
+                        } else {
+                            setFieldError("user_name", "Signup failed. Try again.");
+                        }
+                    } else {
+                        setFieldError("user_name", "Server error. Try again later.");
+                    }
                 }
-            }
 
+            }
             postUser();
         }
     });
 
     return (
-        <div className='place-content-center place-items-center py-20'>
+        <div className='place-content-center place-items-center py-5 md:py-20'>
             <h2 className='login-title'>Create an account 😊</h2>
             <form onSubmit={formik.handleSubmit} className='login-form'>
 
@@ -108,10 +117,10 @@ const SignUp = () => {
                     <div style={{ color: 'red' }}>{formik.errors.confirmPassword}</div>
                 )}
 
-                <button type="submit" className='btn-1'>Sign Up</button>
+                <button type="submit" className='btn-1  mt-5'>Sign Up</button>
             </form>
 
-            <h4>I already have account, click to <button className='px-2 btn-1' onClick={() => navigate('/login')}>Login</button></h4>
+            <h4>I already have account, click to <button className='px-2 btn-1  mt-5' onClick={() => navigate('/')}>Login</button></h4>
 
         </div>
     );
