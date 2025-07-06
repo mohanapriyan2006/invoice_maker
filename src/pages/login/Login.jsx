@@ -9,7 +9,7 @@ import DataContext from '../../context/DataContest';
 const Login = () => {
 
   const navigate = useNavigate();
-  const { setLoginPage, setToken,setuserDeatils } = useContext(DataContext);
+  const { setLoginPage, setToken, setuserDeatils } = useContext(DataContext);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -27,18 +27,18 @@ const Login = () => {
         .min(4, 'Password must be at least 4 characters')
         .required('Password is required')
     }),
-    onSubmit: (values,{setFieldError}) => {
+    onSubmit: (values, { setFieldError }) => {
       console.log('Form submitted:', values);
+
       const postUser = async () => {
         try {
-          const res = await api.post("/login", { ...values });
+          const res = await api.post("users/login", { ...values });
           if (res.data.access_token) {
             localStorage.setItem("token", res.data.access_token);
             setToken(res.data.access_token);
             localStorage.setItem("userDetail", JSON.stringify(res.data.user_details));
             setuserDeatils(res.data.user_details);
           }
-          console.log("Successfully Logined");
           alert("Successfully Logined");
           navigate("/home");
           setLoginPage({
@@ -50,7 +50,7 @@ const Login = () => {
           if (e.response) {
             if (e.response.status === 401) {
               console.log("Unauthorized: Invalid username or password");
-              setFieldError("password","Invalid username or password");
+              setFieldError("password", "Invalid username or password");
             } else {
               console.log("Server error:", e.response.status);
               alert("Something went wrong!, Try again");
@@ -71,7 +71,7 @@ const Login = () => {
   });
 
   return (
-    <div className='place-content-center place-items-center py-5 md:py-20'>
+    <div className='place-content-center place-items-center py-5'>
 
       <h2 className='login-title'>Welcome Back 😊</h2>
 

@@ -39,7 +39,7 @@ const CustomerForm = () => {
         onSubmit: (values, { setFieldError }) => {
             const postCustomer = async () => {
                 try {
-                    await api.post('/customers', values, {
+                    await api.post(`companies/${values.company_id}/customers/`, values, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },

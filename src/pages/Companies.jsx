@@ -11,11 +11,11 @@ const Companies = () => {
     <div className='companies-div ml-10 p-1 relative'>
       <h3 className='md:text-2xl text-[20px] font-semibold text-blue-900 text-center underline'>Your Companies</h3>
       <div className="companies p-2 flex flex-col gap-4 mt-5 ">
-        {yourCompanies.lenght ?
-          <div>
+        {yourCompanies.length === 0  ?
+          (<div>
             <h5 className='text-2xl font-semibold text-red-700'>Company Not Found !</h5>
             <button className='btn-1 px-4' onClick={() => navigate('/home')}>Go Back</button>
-          </div>
+          </div>)
           : yourCompanies.map(
             (company, index) => (
               <div key={index} className="shadow hover:shadow-blue-600 max-w-200 min-w-60 p-2 px-5 flex md:flex-row flex-col justify-between gap-1 border border-gray-200 rounded">

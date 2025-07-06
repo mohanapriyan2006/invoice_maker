@@ -1,13 +1,40 @@
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import DataContext from '../context/DataContest';
+import { api } from '../API/api';
+import deleteI from '../assets/delete1.png'
+import editI from '../assets/edit.png'
 
 const ProductDetail = () => {
     const { id } = useParams();
-    const { yourProducts, navigate } = useContext(DataContext);
+    const { token, yourProducts, navigate } = useContext(DataContext);
 
 
-    const product = yourProducts.find(p => p.product_id === Number(id));
+    // const product = yourProducts.find(p => p.product_id === Number(id));
+    const product = yourProducts[0];
+
+    // delete
+    const handleDeleteProduct = async (id, cId) => {
+        let isOk = confirm("Are you want to delete this Product ?");
+        if (isOk) {
+            try {
+                await api.delete(`companies/${cId}/products/${id}`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
+                alert("Product Deleted Successfully.");
+            } catch (e) {
+                if (e.response && e.response.data) {
+                    console.log("Error in Delete Product : ", e.response.data)
+                } else {
+                    alert("Server Error in Delete Product : ", e);
+                }
+            }
+        }
+    }
 
     return (
         <>
@@ -18,7 +45,8 @@ const ProductDetail = () => {
                 </div>
             ) : (
                 <div className=''>
-                    <div className="product-details border border-gray-300 rounded-xl p-4 mt-10 ml-12 md:mx-auto shadow-md bg-white max-w-60 md:max-w-150 justify-center items-center">
+                    <h3 className='md:text-2xl text-[20px] font-semibold text-blue-900 text-center underline'>Your Product Details</h3>
+                    <div className="product-details border border-gray-300 rounded-xl p-4 mt-10 ml-10 md:mx-auto shadow-md bg-white min-w-fit md:max-w-150 justify-center items-center">
                         <h4 className="md:text-3xl text-xl font-bold text-blue-800 mb-2 text-center">{product.product_name}</h4>
 
                         <div className="text-sm text-gray-700 space-y-2 p-4">
@@ -41,15 +69,20 @@ const ProductDetail = () => {
                                 className='border-3 border-blue-600 h-12 px-2 md:px-6 rounded-2xl hover:bg-blue-500 hover:text-white cursor-pointer'>
                                 Back
                             </button>
-                            <button className='border-3 h-12 px-4 rounded-2xl bg-red-800 hover:bg-red-700 text-white cursor-pointer'>
-                                Delete
-                            </button>
-                            <button className='btn-1 px-6 h-12'>
+
+                            <button
+                                onClick={() => handleDeleteProduct(1, 1)}
+                                className='border-3 h-12 px-4 rounded-2xl bg-red-800 hover:bg-red-700 text-white cursor-pointer  flex items-center gap-2'>
+                                <img src={deleteI} className='h-auto w-5' alt="icon" />
+                                Delete</button>
+
+                            <button className='btn-1 px-6 h-12  flex items-center gap-2'>
+                                <img src={editI} className='h-auto w-5' alt="icon" />
                                 Edit
                             </button>
                         </div>
                     </div>
-                </div>
+                </div >
             )}
         </>
     );

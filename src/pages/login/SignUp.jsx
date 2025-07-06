@@ -34,14 +34,13 @@ const SignUp = () => {
             console.log('Form submitted:', values);
             const postUser = async () => {
                 try {
-                    await api.post("/signup", { ...values })
+                    await api.post("users/signup", { ...values })
                     navigate("/");
                 } catch (e) {
                     if (e.response && e.response.data) {
                         console.log("Error Details:", e.response.data);
-                        alert("Username already registered !");
                         if (e.response.data.detail) {
-                            setFieldError("user_name", "Username already exists");
+                            setFieldError("user_name", "Username already registered !");
                         } else {
                             setFieldError("user_name", "Signup failed. Try again.");
                         }
@@ -56,7 +55,7 @@ const SignUp = () => {
     });
 
     return (
-        <div className='place-content-center place-items-center py-5 md:py-20'>
+        <div className='place-content-center place-items-center py-5'>
             <h2 className='login-title'>Create an account 😊</h2>
             <form onSubmit={formik.handleSubmit} className='login-form'>
 

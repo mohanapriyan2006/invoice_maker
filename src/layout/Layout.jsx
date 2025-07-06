@@ -15,6 +15,9 @@ import ProductDetail from '../components/ProductsDetail';
 import Customers from '../pages/Customers';
 import CustomerForm from '../components/CustomerForm';
 import CustomerDetail from '../components/CustomerDetail';
+import Invoices from '../pages/Invoices';
+import InvoiceForm from '../components/InvoiceForm';
+import InvoiceDetail from '../components/InvoiceDetials';
 
 const Layout = () => {
     const { loginPage, width } = useContext(DataContext);
@@ -41,6 +44,9 @@ const Layout = () => {
                     <Route path='/customers' element={<Customers />} />
                     <Route path='/customerForm' element={<CustomerForm />} />
                     <Route path='/customersDetail/:id' element={<CustomerDetail />} />
+                    <Route path='/invoices' element={<Invoices />} />
+                    <Route path='/invoiceForm' element={<InvoiceForm />} />
+                    <Route path='/invoiceDetail/:id' element={<InvoiceDetail />} />
                 </Routes>
 
             </div>
@@ -49,4 +55,4 @@ const Layout = () => {
     )
 }
 
-export default Layout
+export default Layout;

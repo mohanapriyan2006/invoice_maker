@@ -35,7 +35,7 @@ const ProductForm = () => {
         onSubmit: (values, { setFieldError }) => {
             const postProduct = async () => {
                 try {
-                    await api.post("/products", { ...values }, {
+                    await api.post(`companies/${values.company_id}/products/`, { ...values }, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }

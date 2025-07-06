@@ -1,46 +1,64 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import '../style/Home.css'
-// import { api } from '../API/api';
 import DataContext from '../context/DataContest';
+import RecentInvoices from '../components/RecentInvoices';
+import companyI from '../assets/company1.png'
+import productI from '../assets/product1.png'
+import customerI from '../assets/customer1.png'
+import invoiceI from '../assets/invoice1.png'
+import smileI from '../assets/smile.png'
+import greetingI from '../assets/greeting.png'
 
 const Home = () => {
 
-  // const {token} = useContext(DataContext);
-
-  // useEffect(() => {
-
-  //   const fetch = async () => {
-  //     const res = await api.get("companies", {
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`
-  //       }
-  //     }
-  //     );
-  //     console.log(res.data);
-  //   }
-
-  //   fetch();
-  // }
-  //   , []);
+  const { navigate, userDeatils } = useContext(DataContext);
 
   return (
     <>
       <div className="home px-2">
 
-        <h1 className='text-[20px] md:text-2xl font-semibold text-center mt-3'>Welcome back <span className="text-blue-800">(user_name)</span></h1>
+        <h1 className='text-[20px] md:text-2xl font-semibold mt-3 md:ml-0 ml-6 flex justify-center items-center gap-2'>
+          <img src={greetingI} className='h-auto md:w-10 w-8' alt="icon"/> Welcome back 
+          <span className="text-blue-800 underline">{userDeatils.user_name}</span>
+          <img src={smileI} className='h-auto md:w-10 w-8' alt="icon"/>
+          </h1>
 
-        <div className="home-actions flex gap-5 flex-wrap justify-evenly p-10">
-          <button className="action bg-cyan-500 hover:bg-cyan-600">
-            <p className='action-text'><span>+</span>  Add Company</p>
+        <div className="home-actions flex gap-5 flex-wrap justify-evenly p-8">
+
+          <button
+            onClick={() => navigate('/companyForm')}
+            className="action bg-cyan-500 hover:bg-cyan-600">
+            <p className='action-text flex items-center gap-2 justify-center'>
+              <span className='text-4xl'>+</span>  Add Company
+              <img src={companyI} className='h-auto md:w-14 w-8' alt='icon'/>
+              </p>
           </button>
-          <button className="action bg-amber-600 hover:bg-amber-700">
-            <p className='action-text'><span>+</span> Add Products</p>
+
+          <button
+            onClick={() => navigate('/productForm')}
+            className="action bg-amber-600 hover:bg-amber-700">
+            <p className='action-text  flex items-center gap-2 justify-center'>
+              <span>+</span> Add Products
+              <img src={productI} className='h-auto md:w-14 w-8' alt='icon'/>
+              </p>
           </button>
-          <button className="action bg-emerald-500 hover:bg-emerald-600">
-            <p className='action-text'><span>+</span> Add Customer</p>
+
+          <button
+            onClick={() => navigate('/customerForm')}
+            className="action bg-emerald-500 hover:bg-emerald-600">
+            <p className='action-text flex items-center gap-2 justify-center'>
+              <span>+</span> Add Customer
+              <img src={customerI} className='h-auto md:w-14 w-8' alt='icon'/>
+              </p>
           </button>
-          <button className="action bg-indigo-500 hover:bg-indigo-600">
-            <p className='action-text'><span>+</span> Create Invoice</p>
+
+          <button
+            onClick={() => navigate('/invoiceForm')}
+            className="action bg-indigo-500 hover:bg-indigo-600">
+            <p className='action-text flex items-center gap-2 justify-center'>
+              <span>+</span> Create Invoice
+              <img src={invoiceI} className='h-auto md:w-14 w-8' alt='icon'/>
+              </p>
           </button>
         </div>
 
@@ -48,8 +66,8 @@ const Home = () => {
 
         <h2 className='text-[22px] font-medium text-center'> Recenty Added Invoices</h2>
 
-        <div className="recent-invoice flex justify-center items-center m-5">
-          <h3 className='text-lg text-yellow-800 font-medium'>No Invoices are found !</h3>
+        <div className="recent-invoice flex flex-wrap my-8">
+          <RecentInvoices />
         </div>
       </div>
     </>
