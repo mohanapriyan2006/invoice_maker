@@ -21,8 +21,8 @@ const Header = () => {
   return (
     <>
       <header className={styles.header}>
-        <img src={invoiceLogo} className='h-auto w-12 ' alt="logo" />
-        <h1 className={` text-2xl md:text-3xl font-extrabold bg-clip-text text-transparent bg-linear-30 from-blue-500 to-blue-800 `}>Invoice Manager</h1>
+        <img src={invoiceLogo} className='h-auto w-8 sm:w-12 ' alt="logo" />
+        <h1 className={` text-lg sm:text-2xl md:text-3xl font-extrabold bg-clip-text text-transparent bg-linear-30 from-blue-500 to-blue-800 `}>Invoice Manager</h1>
         {/* <button
           onClick={() => {
             navigate('/login');

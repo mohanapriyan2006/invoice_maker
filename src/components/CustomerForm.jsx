@@ -1,15 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { api } from '../API/api';
 import DataContext from '../context/DataContest';
+import { useParams } from 'react-router-dom';
 
-const CustomerForm = () => {
-    const { token, navigate, fetchCustomers } = useContext(DataContext);
+const CustomerForm = ({ editMode = false }) => {
+    const { id } = useParams();
+    const { token, navigate, fetchCustomers, yourCompanies, yourCustomers, fetchCompany } = useContext(DataContext);
+    const [editCustomerData, setEditCustomerData] = useState(null);
+
+    useEffect(() => {
+        if (!yourCompanies || yourCompanies.length === 0) {
+            fetchCompany();
+        }
+    }, []);
 
     const formik = useFormik({
         initialValues: {
-            customer_to: 0,
+            company_id: '',
             customer_name: '',
             customer_address_line1: '',
             customer_address_line2: '',
@@ -23,7 +32,7 @@ const CustomerForm = () => {
         },
 
         validationSchema: Yup.object({
-            customer_to: Yup.number().min(1).required('Customer ID is required'),
+            company_id: Yup.string().required('Please select a company'),
             customer_name: Yup.string().required('Customer name is required'),
             customer_address_line1: Yup.string().required('Address Line 1 is required'),
             customer_address_line2: Yup.string().required('Address Line 2 is required'),
@@ -37,66 +46,132 @@ const CustomerForm = () => {
         }),
 
         onSubmit: (values, { setFieldError }) => {
-            const postCustomer = async () => {
+            const saveCustomer = async () => {
                 try {
-                    await api.post(`companies/${values.company_id}/customers/`, values, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
+                    if (editMode && editCustomerData) {
+                        // PUT
+                        await api.put(
+                            `companies/${values.company_id}/customers/${editCustomerData.customer_id}`,
+                            values,
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
+                    } else {
+                        // POST
+                        await api.post(
+                            `companies/${values.company_id}/customers/`,
+                            { ...values, customer_to: values.company_id },
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
+                    }
 
-                    fetchCustomers();
+                    fetchCustomers(values.company_id);
                     navigate('/customers');
                 } catch (e) {
                     if (e.response && e.response.data) {
-                        setFieldError('customer_name', 'Invalid or duplicate customer');
+                        setFieldError('customer_phone', 'Invalid customer input. Check again.');
+                        console.error('API Error:', e.response.data);
                     } else {
-                        alert('Server Error:', e.message);
+                        alert('Server Error: ' + e.message);
                     }
                 }
             };
 
-            postCustomer();
+            saveCustomer();
         },
     });
+
+    // Prefill form on edit
+    useEffect(() => {
+        if (editMode) {
+            const existing = yourCustomers.find(cust => cust.customer_id === id);
+            setEditCustomerData(existing);
+        }
+
+        if (editMode && editCustomerData) {
+            formik.setValues({
+                company_id: editCustomerData.company_id || '',
+                customer_name: editCustomerData.customer_name || '',
+                customer_address_line1: editCustomerData.customer_address_line1 || '',
+                customer_address_line2: editCustomerData.customer_address_line2 || '',
+                customer_city: editCustomerData.customer_city || '',
+                customer_state: editCustomerData.customer_state || '',
+                customer_postal_code: editCustomerData.customer_postal_code || '',
+                customer_country: editCustomerData.customer_country || '',
+                customer_gstin: editCustomerData.customer_gstin || '',
+                customer_email: editCustomerData.customer_email || '',
+                customer_phone: editCustomerData.customer_phone || ''
+            });
+        }
+    }, [editMode, editCustomerData]);
 
     return (
         <form
             onSubmit={formik.handleSubmit}
-            className="ml-15 md:mx-auto p-4 space-y-4 bg-white shadow rounded"
+            className="model-form"
         >
-            <h2 className="text-2xl font-bold mb-4 text-center text-blue-800">Add New Customer</h2>
+            <h2 className="form-title">
+                {editMode ? 'Edit Customer' : 'Add New Customer'}
+            </h2>
 
-            {Object.keys(formik.initialValues).map((key) => (
-                <div key={key} className="flex flex-col">
-                    <label htmlFor={key} className="capitalize font-semibold">
-                        {key.replace(/_/g, ' ')}<span className="text-red-600">*</span>
-                    </label>
-                    <input
-                        id={key}
-                        name={key}
-                        type={typeof formik.initialValues[key] === 'number' ? 'number' : 'text'}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values[key]}
-                        className="border border-gray-300 p-2 rounded"
-                    />
-                    {formik.touched[key] && formik.errors[key] && (
-                        <span className="text-red-500 text-sm">{formik.errors[key]}</span>
-                    )}
-                </div>
-            ))}
+            {/* Company Dropdown */}
+            <div className="flex flex-col">
+                <label htmlFor="company_id" className="capitalize font-semibold">
+                    Select Company <span className="text-red-600">*</span>
+                </label>
+                <select
+                    id="company_id"
+                    name="company_id"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.company_id}
+                    className="border border-gray-300 p-2 rounded"
+                >
+                    <option value="">-- Select Company --</option>
+                    {yourCompanies.map((company) => (
+                        <option key={company.company_id} value={company.company_id}>
+                            {company.company_name}
+                        </option>
+                    ))}
+                </select>
+                {formik.touched.company_id && formik.errors.company_id && (
+                    <span className="text-red-500 text-sm">{formik.errors.company_id}</span>
+                )}
+            </div>
 
+            {/* Other Fields */}
+            {Object.keys(formik.initialValues)
+                .filter((key) => key !== 'company_id')
+                .map((key) => (
+                    <div key={key} className="flex flex-col">
+                        <label htmlFor={key} className="capitalize font-semibold">
+                            {key.replace(/_/g, ' ')} <span className="text-red-600">*</span>
+                        </label>
+                        <input
+                            id={key}
+                            name={key}
+                            type="text"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values[key]}
+                            className="border border-gray-300 p-2 rounded"
+                        />
+                        {formik.touched[key] && formik.errors[key] && (
+                            <span className="text-red-500 text-sm">{formik.errors[key]}</span>
+                        )}
+                    </div>
+                ))}
+
+            {/* Actions */}
             <div className="grid grid-cols-2 items-center gap-1 md:gap-10">
                 <button
                     onClick={() => navigate('/customers')}
                     type="button"
-                    className="border-3 border-blue-600 h-12 px-6 rounded-2xl hover:bg-blue-500 hover:text-white cursor-pointer"
+                    className="cancel"
                 >
                     Cancel
                 </button>
                 <button type="submit" className="btn-1 px-6 h-12">
-                    Submit
+                    {editMode ? 'Update' : 'Submit'}
                 </button>
             </div>
         </form>

@@ -38,14 +38,18 @@ const Layout = () => {
                     <Route path='/companies' element={<Companies />} />
                     <Route path='/companyDetail/:id' element={<CompanyDetail />} />
                     <Route path='/companyForm' element={<CompanyForm />} />
+                    <Route path='/companyForm/:id' element={<CompanyForm editMode={true} />} />
                     <Route path='/products' element={<Products />} />
                     <Route path='/productForm' element={<ProductForm />} />
+                    <Route path='/productForm/:id' element={<ProductForm editMode={true} />} />
                     <Route path='/productsDetail/:id' element={<ProductDetail />} />
                     <Route path='/customers' element={<Customers />} />
                     <Route path='/customerForm' element={<CustomerForm />} />
+                    <Route path='/customerForm/:id' element={<CustomerForm editMode={true} />} />
                     <Route path='/customersDetail/:id' element={<CustomerDetail />} />
                     <Route path='/invoices' element={<Invoices />} />
                     <Route path='/invoiceForm' element={<InvoiceForm />} />
+                    <Route path='/invoiceForm/:id' element={<InvoiceForm editMode={true} />} />
                     <Route path='/invoiceDetail/:id' element={<InvoiceDetail />} />
                 </Routes>
 

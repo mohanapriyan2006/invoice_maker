@@ -28,7 +28,6 @@ const Login = () => {
         .required('Password is required')
     }),
     onSubmit: (values, { setFieldError }) => {
-      console.log('Form submitted:', values);
 
       const postUser = async () => {
         try {

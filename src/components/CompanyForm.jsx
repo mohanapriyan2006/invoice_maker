@@ -1,17 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { api } from '../API/api';
 import DataContext from '../context/DataContest';
+import { useParams } from 'react-router-dom';
 
-const CompanyForm = () => {
+const CompanyForm = ({ editMode = false }) => {
 
-  const { token,navigate,fetchCompany } = useContext(DataContext);
+  const { id } = useParams();
+
+  const { token, navigate, fetchCompany, userDeatils, yourCompanies } = useContext(DataContext);
+
+  const [editCompanyData, setEditCompanyData] = useState(null);
 
 
   const formik = useFormik({
     initialValues: {
-      company_owner: 0,
       company_name: '',
       company_address: '',
       company_gstin: '',
@@ -25,7 +29,6 @@ const CompanyForm = () => {
     },
 
     validationSchema: Yup.object({
-      company_owner: Yup.number().required('Owner ID is required'),
       company_name: Yup.string().required('Company name is required'),
       company_address: Yup.string().required('Address is required'),
       company_gstin: Yup.string().required('GSTIN is required'),
@@ -38,43 +41,81 @@ const CompanyForm = () => {
       company_ifsc_code: Yup.string().required('IFSC Code is required'),
     }),
 
-    onSubmit: (values,{setFieldError}) => {
-      const postC = async () => {
+    onSubmit: (values, { setFieldError }) => {
+      const saveCompany = async () => {
         try {
-          await api.post("/companies", { ...values },
-            {
+          if (editMode && editCompanyData) {
+            // PUT request (Update)
+            await api.put(`/companies/${editCompanyData.company_id}`, values, {
               headers: {
-                'Authorization': `Bearer ${token}`
-              }
-            }
-          )
-        fetchCompany();
-        navigate("/companies");
+                Authorization: `Bearer ${token}`,
+              },
+            });
+          } else {
+            // POST request (Create)
+            await api.post("/companies", {
+              ...values,
+              company_owner: userDeatils.user_id,
+            }, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+          }
 
+          fetchCompany();
+          navigate("/companies");
         } catch (e) {
           if (e.response && e.response.data) {
-            setFieldError("company_ifsc_code","Invalid Details, Once again check")
+            setFieldError("company_ifsc_code", "Invalid Details, check again");
+            console.error("Company Save Error: ", e.response.data);
           } else {
-            alert("Server Error : ", e);
+            alert("Server Error: " + e.message);
           }
         }
-      }
+      };
 
-      postC();
+      saveCompany();
     },
   });
 
+  // Pre-fill values if editing
+  useEffect(() => {
+    if (editMode) {
+      const temp = yourCompanies.find(val => val.company_id === id);
+      setEditCompanyData(temp);
+    }
+    if (editMode && editCompanyData) {
+      formik.setValues({
+        company_name: editCompanyData.company_name || '',
+        company_address: editCompanyData.company_address || '',
+        company_gstin: editCompanyData.company_gstin || '',
+        company_msme: editCompanyData.company_msme || '',
+        company_email: editCompanyData.company_email || '',
+        company_bank_account_no: editCompanyData.company_bank_account_no || '',
+        company_bank_name: editCompanyData.company_bank_name || '',
+        company_account_holder: editCompanyData.company_account_holder || '',
+        company_branch: editCompanyData.company_branch || '',
+        company_ifsc_code: editCompanyData.company_ifsc_code || ''
+      });
+    }
+  }, [editMode, editCompanyData]);
+
   return (
-    <form onSubmit={formik.handleSubmit} className=" ml-15 md:mx-auto p-4 space-y-4 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold mb-4 text-center text-blue-800">Company Registration</h2>
+    <form onSubmit={formik.handleSubmit} className="model-form">
+      <h2 className="form-title">
+        {editMode ? 'Edit Company' : 'Company Registration'}
+      </h2>
 
       {Object.keys(formik.initialValues).map((key) => (
         <div key={key} className="flex flex-col">
-          <label htmlFor={key} className="capitalize font-semibold">{key.replace(/_/g, ' ')}<span className='text-red-600'>*</span></label>
+          <label htmlFor={key} className="capitalize font-semibold">
+            {key.replace(/_/g, ' ')}<span className='text-red-600'>*</span>
+          </label>
           <input
             id={key}
             name={key}
-            type={key === 'company_owner' ? 'number' : 'text'}
+            type='text'
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values[key]}
@@ -85,15 +126,21 @@ const CompanyForm = () => {
           )}
         </div>
       ))}
+
       <div className='grid grid-cols-2 items-center gap-1 md:gap-10'>
-        <button 
-        onClick={() => navigate("/companies")}
-        type='button'
-         className="border-3 border-blue-600 h-12 px-6 rounded-2xl hover:bg-blue-500 hover:text-white cursor-pointer">Cancel</button>
-        <button type="submit" className="btn-1 px-6 h-12">Submit</button>
+        <button
+          onClick={() => navigate("/companies")}
+          type='button'
+          className="cancel">
+          Cancel
+        </button>
+        <button type="submit" className="btn-1 px-6 h-12">
+          {editMode ? 'Update' : 'Submit'}
+        </button>
       </div>
     </form>
   );
 };
 
 export default CompanyForm;
+

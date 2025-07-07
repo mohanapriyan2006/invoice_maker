@@ -41,7 +41,10 @@ body {
     }
 } */
 
+/* --------------------- */
 /* login css*/
+/* --------------------- */
+
 .login-form {
     @apply rounded border-2 flex flex-col gap-2 py-8 px-4 md:px-20 border-dashed border-gray-400 hover:border-blue-700
 }
@@ -57,3 +60,114 @@ body {
 .btn-1 {
     @apply border rounded-2xl bg-linear-30 to-blue-400 from-blue-600 text-white font-semibold py-1 cursor-pointer hover:to-blue-700
 }
+
+/* ------------------------------------- */
+/* loading data */
+/* ------------------------------------- */
+
+.loading-div {
+    @apply text-center text-[20px] md:text-2xl font-semibold text-blue-600 tracking-wider mt-15 ml-5 flex items-center justify-center gap-2
+}
+
+.loading-div .load-icon {
+    @apply h-auto w-8 animate-spin
+}
+
+.loading-div .load-span {
+    @apply animate-pulse -ml-1
+}
+
+
+/* ------------------------------------- */
+/* model overview */
+/* ------------------------------------- */
+
+.model-overview-div {
+    @apply ml-10 p-1 relative
+}
+
+.heading {
+    @apply md:text-2xl text-[20px] font-semibold text-blue-900 text-center underline
+}
+
+.model-overview-div .model-space {
+    @apply p-2 flex flex-col gap-4 mt-5
+}
+
+.model-overview-div .not-found {
+    @apply text-lg sm:text-2xl font-semibold text-red-700
+}
+
+.model-overview-div .model {
+    @apply shadow hover:shadow-blue-600 max-w-200 min-w-60 p-2 px-5 flex md:flex-row flex-col justify-between gap-1 border border-gray-200 rounded
+}
+
+.model-overview-div .add-btn {
+    @apply text-3xl font-semibold p-2 h-10 hover:scale-[108%] fixed bottom-4 right-4 flex justify-center items-center
+}
+
+
+/* ------------------------------------- */
+/* model details */
+/* ------------------------------------- */
+
+.model-details {
+    @apply border border-gray-300 rounded-xl p-4 mt-10 ml-10 md:mx-auto shadow-md bg-white min-w-fit md:max-w-150 justify-center items-center
+}
+
+.model-details .model-title {
+    @apply md:text-3xl text-xl font-bold text-blue-800 mb-2 text-center
+}
+
+.details-btns {
+    @apply flex justify-center gap-0 md:gap-10 mt-6
+}
+
+.details-btns .back {
+    @apply border-3 border-blue-600 h-12 px-2 md:px-6 rounded-2xl hover:bg-blue-500 hover:text-white cursor-pointer
+}
+
+.details-btns .delete {
+    @apply border-3 h-12 px-4 rounded-2xl bg-red-800 hover:bg-red-700 text-white cursor-pointer flex items-center gap-0 md:gap-2
+}
+
+.btn-icon {
+    @apply h-auto w-5 -ml-2
+}
+
+.details-btns .edit {
+    @apply px-6 h-12 flex items-center gap-2
+}
+
+
+/* ------------------------------------- */
+/* model form */
+/* ------------------------------------- */
+
+.model-form {
+    @apply ml-15 md:mx-auto p-4 space-y-4 bg-white shadow rounded
+}
+
+.model-form .form-title {
+    @apply text-2xl font-bold mb-4 text-center text-blue-800
+}
+
+.model-form .cancel {
+    @apply border-3 border-blue-600 h-12 px-6 rounded-2xl hover:bg-blue-500 hover:text-white cursor-pointer
+}
+
+
+/* ------------------------------------- */
+/* model choose company */
+/* ------------------------------------- */
+
+
+.model-choose{
+    @apply mt-4 mb-5 max-w-md mx-auto
+}
+
+.model-choose .select{
+    @apply border-2 border-gray-300 focus:border-blue-600 p-2 w-full rounded
+}
+
+
