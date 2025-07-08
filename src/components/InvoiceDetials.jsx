@@ -16,16 +16,27 @@ const InvoiceDetail = () => {
 
     const invoice = yourInvoices.find(val => val.invoice_id == id);
     // const invoice = yourInvoices[0];
-
     const sanitizeColors = (element) => {
         if (!element) return;
-        element.querySelectorAll('*').forEach(el => {
-            const style = window.getComputedStyle(el);
-            if (style.color.includes('oklch')) el.style.color = '#000';
-            if (style.backgroundColor.includes('oklch')) el.style.backgroundColor = '#fff';
+
+        // Apply to root element and all children
+        const elements = [element, ...element.querySelectorAll('*')];
+        elements.forEach(el => {
+            // Force black text and white background
+            el.style.color = '#000000';
+            el.style.backgroundColor = '#ffffff';
+
+            // Remove any potential oklch in other properties
+            el.style.borderColor = '#000000';
+            el.style.outlineColor = '#000000';
+            el.style.textDecorationColor = '#000000';
+
+            // Handle box-shadow (remove or set to simple black)
+            if (window.getComputedStyle(el).boxShadow.includes('oklch')) {
+                el.style.boxShadow = 'none';
+            }
         });
     };
-
 
     const downloadAsImage = async () => {
         if (!componentRef.current) return;
@@ -37,7 +48,8 @@ const InvoiceDetail = () => {
                 scale: 2,
                 useCORS: true,
                 allowTaint: true,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                logging: true, // Debugging
             });
 
             const imgData = canvas.toDataURL('image/png', 1.0);
@@ -57,33 +69,46 @@ const InvoiceDetail = () => {
         if (!componentRef.current) return;
 
         try {
-            sanitizeColors(componentRef.current);
+            // 1. Create a clone of your invoice
+            const invoiceClone = componentRef.current.cloneNode(true);
+            document.body.appendChild(invoiceClone);
 
-            const canvas = await html2canvas(componentRef.current, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff'
+            // 2. Force basic styles (critical fix)
+            invoiceClone.style.width = "210mm"; // A4 width
+            invoiceClone.style.position = "absolute";
+            invoiceClone.style.left = "-9999px";
+            invoiceClone.style.visibility = "visible";
+
+            // 3. Capture with html2canvas
+            const canvas = await html2canvas(invoiceClone, {
+                scale: 2, // Increased scale for better quality
+                scrollX: 0,
+                scrollY: 0,
+                backgroundColor: "#ffffff"
             });
 
-            const imgData = canvas.toDataURL('image/png');
+            // 4. Generate PDF
             const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4',
+                orientation: "portrait",
+                unit: "mm",
+                format: "a4"
             });
 
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const imgWidth = pageWidth - 20; // 10mm margins on each side
+            const imgWidth = 190; // 210mm - 20mm margins
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+            pdf.addImage(canvas, "PNG", 10, 10, imgWidth, imgHeight);
             pdf.save(`Invoice_${invoice.invoice_number}.pdf`);
+
+            // 5. Clean up
+            document.body.removeChild(invoiceClone);
+
         } catch (error) {
-            console.error("Error generating PDF:", error);
+            console.error("PDF Error:", error);
             alert("Failed to generate PDF. Please try again.");
         }
     };
+
 
     const handleDeleteInvoice = async (invoiceId, companyId) => {
         const isOk = window.confirm("Are you sure you want to delete this Invoice?");
@@ -128,14 +153,14 @@ const InvoiceDetail = () => {
 
             <div
                 ref={componentRef}
-                className="bg-white shadow-2xl rounded-xl p-8 md:ml-0 ml-4 max-w-5xl mx-auto border border-gray-200"
+                className="invoice-div bg-white shadow-2xl rounded-xl p-8 md:ml-0 ml-4 max-w-5xl mx-auto border border-gray-200"
             >
                 <div className="text-2xl font-bold text-center text-gray-800 mb-6">
                     Tax Invoice
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6 text-sm mb-6">
-                    <div>
+                    <div className='space-y-1.5'>
                         <h4 className="font-semibold text-lg mb-1 text-gray-700">From</h4>
                         <p>{invoice.invoice_by?.company_name}</p>
                         <p>{invoice.invoice_by?.company_address}</p>
@@ -143,7 +168,7 @@ const InvoiceDetail = () => {
                         <p>Email: {invoice.invoice_by?.company_email}</p>
                     </div>
 
-                    <div>
+                    <div  className='space-y-1.5'>
                         <h4 className="font-semibold text-lg mb-1 text-gray-700">To</h4>
                         <p>{invoice.client?.customer_name}</p>
                         <p>{invoice.client?.customer_address_line1}, {invoice.client?.customer_address_line2}</p>
@@ -241,7 +266,7 @@ const InvoiceDetail = () => {
                 </button>
             </div>
         </div>
-    );
+    )
 
 };
 

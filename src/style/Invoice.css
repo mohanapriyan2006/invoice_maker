@@ -17,3 +17,13 @@
         padding: 0;
     }
 }
+
+
+.invoice-div #invoice-pdf-container {
+    overflow: visible !important;
+    width: 100% !important;
+}
+
+.invoice-div table {
+    page-break-inside: avoid !important;
+}

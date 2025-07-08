@@ -115,7 +115,9 @@ const Login = () => {
           <div style={{ color: 'red' }}>{formik.errors.password}</div>
         )}
 
-        <button type="submit" className='btn-1  mt-5'>Login</button>
+        <p className='text-sm text-yellow-700 mt-4'>Forget username/password <a className='cursor-pointer hover:underline text-blue-700'>change</a></p>
+
+        <button type="submit" className='btn-1  mt-1'>Login</button>
       </form>
 
       <h4>I don't have account, click to <button className='px-2 btn-1  mt-5' onClick={() => navigate('/signup')}>SignUp</button></h4>

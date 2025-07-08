@@ -55,7 +55,7 @@ const InvoiceForm = ({ editMode = false }) => {
     const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
         try {
             if (editMode && editInvoiceData) {
-                await api.put(`/invoices/${id}`, values, {
+                await api.put(`/invoices/${id}?company_id=${values.owner_company}`, values, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
             } else {
