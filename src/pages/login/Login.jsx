@@ -9,7 +9,7 @@ import DataContext from '../../context/DataContest';
 const Login = () => {
 
   const navigate = useNavigate();
-  const { setLoginPage, setToken, setuserDeatils } = useContext(DataContext);
+  const { setLoginPage, setToken, setuserDetails } = useContext(DataContext);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,7 +36,7 @@ const Login = () => {
             localStorage.setItem("token", res.data.access_token);
             setToken(res.data.access_token);
             localStorage.setItem("userDetail", JSON.stringify(res.data.user_details));
-            setuserDeatils(res.data.user_details);
+            setuserDetails(res.data.user_details);
           }
           alert("Successfully Logined");
           navigate("/home");
@@ -115,7 +115,9 @@ const Login = () => {
           <div style={{ color: 'red' }}>{formik.errors.password}</div>
         )}
 
-        <p className='text-sm text-yellow-700 mt-4'>Forget username/password <a className='cursor-pointer hover:underline text-blue-700'>change</a></p>
+        <p className='text-sm text-yellow-700 mt-4'>Forget <a 
+        onClick={() => navigate('/changePassword')}
+        className='cursor-pointer hover:underline hover:text-blue-700'>password</a> ?</p>
 
         <button type="submit" className='btn-1  mt-1'>Login</button>
       </form>

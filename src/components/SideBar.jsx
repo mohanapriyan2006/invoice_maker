@@ -9,18 +9,48 @@ import companyI from '../assets/company2.png'
 import productI from '../assets/product2.png'
 import customerI from '../assets/customer2.png'
 import logoutI from '../assets/logout.png'
+import deleteI from '../assets/delete2.png'
 import menuWI from '../assets/menuwhite.svg';
+import { api } from '../API/api';
 
 
 const SideBar = () => {
     const navigate = useNavigate();
-    const { setLoginPage, setToken, width, isToggle, setIsToggle, userDeatils } = useContext(DataContext);
+    const { setLoginPage, token, setToken, width, isToggle, setIsToggle, userDetails } = useContext(DataContext);
 
     const handleLogout = () => {
         navigate('/');
         localStorage.removeItem("token");
         setLoginPage((p) => ({ ...p, isActive: true }));
         setToken("");
+    }
+
+    // delete
+    const handleDeleteAccount = async (id) => {
+        let isOk = confirm("Are you want to delete this Account ?");
+        if (isOk) {
+            try {
+                await api.delete(`users/${id}`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
+                alert("Account Deleted Successfully.");
+                navigate('/');
+                setLoginPage({
+                    isLogined: false,
+                    isActive: true,
+                })
+            } catch (e) {
+                if (e.response && e.response.data) {
+                    console.log("Error in Delete Account : ", e.response.data)
+                } else {
+                    alert("Server Error in Delete Account : ", e);
+                }
+            }
+        }
     }
 
     const sidebarRef = useRef();
@@ -62,10 +92,11 @@ const SideBar = () => {
                 <div className="profile flex gap-4 mt-4 -ml-2 flex-wrap">
                     <img className='h-auto w-20 border-dashed border-2 border-gray-300 rounded-full' src={avatar} alt="avatar" />
                     <div className='flex flex-col justify-center gap-1'>
-                        <h1>{userDeatils.user_name}</h1>
+                        <h1><span className='text-sm'>Username : </span>{userDetails.user_name}</h1>
+                        <h3><span className='text-sm'>Created At : </span>{new Date(userDetails.created_at).toLocaleDateString()}</h3>
                         <h2
                             onClick={() => { navigate('/home'); setIsToggle(false); }}
-                            className={style.links}>
+                            className="font-semibold w-fit flex gap-2 items-center">
                             <img src={profileI} alt='icon' className='h-4 w-4' /> your profile</h2>
                     </div>
                 </div>
@@ -98,18 +129,24 @@ const SideBar = () => {
                         <img src={customerI} alt='icon' className='h-5 w-5' />Customers</p>
 
                     <p onClick={handleLogout}
-                        className='font-semibold hover:underline cursor-pointer text-red-400 mt-15 w-fit flex gap-1 items-center'
+                        className='font-semibold hover:underline cursor-pointer text-red-400 mt-8 w-fit flex gap-1 items-center'
                     >
                         <img src={logoutI} alt='icon' className='h-5 w-5' />Logout</p>
                 </div>
 
-                <div className="divider border-b-2 border-dashed max-full mt-10 mb-6"></div>
+                <div className="divider border-b-2 border-dashed max-full mt-6 mb-1"></div>
 
-                <div className="about pl-2 flex flex-col gap-1 text-white">
+                <p onClick={() => handleDeleteAccount(userDetails.user_id)}
+                    className='font-semibold hover:underline cursor-pointer text-red-400 mt-4 w-fit flex gap-1 items-center'
+                >
+                    <img src={deleteI} alt='icon' className='h-5 w-5' />Detele Account</p>
+
+                <div className="about pl-2 mt-6 flex flex-col gap-1 text-white">
                     <p>&copy; 2025 </p>
                     <p>Invoice manager</p>
                 </div>
 
+                <div className="divider border-b-2 border-dashed max-full mt-2 mb-6"></div>
             </div>
         </>
     )

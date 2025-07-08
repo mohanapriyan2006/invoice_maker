@@ -34,7 +34,7 @@ export const DataProvider = ({ children }) => {
 
     // JWT token
     const [token, setToken] = useState("");
-    const [userDeatils, setuserDeatils] = useState({});
+    const [userDetails, setuserDetails] = useState({});
 
 
     const fetchToken = async () => {
@@ -49,7 +49,7 @@ export const DataProvider = ({ children }) => {
         }
 
         if (userdetail) {
-            setuserDeatils(JSON.parse(userdetail));
+            setuserDetails(JSON.parse(userdetail));
         }
 
     }
@@ -170,7 +170,7 @@ export const DataProvider = ({ children }) => {
             token, setToken,
             width, setWidth,
             isToggle, setIsToggle,
-            userDeatils, setuserDeatils,
+            userDetails, setuserDetails,
             isLoading, setIsLoading,
             yourCompanies, setYourCompanies, fetchCompany,
             yourProducts, setYourProducts, fetchProducts,

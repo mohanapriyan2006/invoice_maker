@@ -15,29 +15,29 @@ const ProductDetail = () => {
     // const product = yourProducts[0];
 
     // delete
-    const handleDeleteProduct = async (id, cId) => {
-        let isOk = confirm("Are you want to delete this Product ?");
-        if (isOk) {
-            try {
-                await api.delete(`companies/${cId}/products/${id}`,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    }
-                );
-                alert("Product Deleted Successfully.");
-                fetchProducts();
-                navigate('/products');
-            } catch (e) {
-                if (e.response && e.response.data) {
-                    console.log("Error in Delete Product : ", e.response.data)
-                } else {
-                    alert("Server Error in Delete Product : ", e);
-                }
-            }
-        }
-    }
+    // const handleDeleteProduct = async (id, cId) => {
+    //     let isOk = confirm("Are you want to delete this Product ?");
+    //     if (isOk) {
+    //         try {
+    //             await api.delete(`companies/${cId}/products/${id}`,
+    //                 {
+    //                     headers: {
+    //                         'Authorization': `Bearer ${token}`
+    //                     }
+    //                 }
+    //             );
+    //             alert("Product Deleted Successfully.");
+    //             fetchProducts();
+    //             navigate('/products');
+    //         } catch (e) {
+    //             if (e.response && e.response.data) {
+    //                 console.log("Error in Delete Product : ", e.response.data)
+    //             } else {
+    //                 alert("Server Error in Delete Product : ", e);
+    //             }
+    //         }
+    //     }
+    // }
 
     if (!product) {
         return (<div className='text-center mt-10'>
@@ -82,11 +82,11 @@ const ProductDetail = () => {
                                 Back
                             </button>
 
-                            <button
+                            {/* <button
                                 onClick={() => handleDeleteProduct(product.product_id, product.company_id)}
                                 className='border-3 h-12 px-4 rounded-2xl bg-red-800 hover:bg-red-700 text-white cursor-pointer  flex items-center gap-2'>
                                 <img src={deleteI} className='btn-icon' alt="icon" />
-                                Delete</button>
+                                Delete</button> */}
 
                             <button
                                 onClick={() => navigate(`productForm/${product.product_id}`)}

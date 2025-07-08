@@ -9,7 +9,7 @@ const CompanyForm = ({ editMode = false }) => {
 
   const { id } = useParams();
 
-  const { token, navigate, fetchCompany, userDeatils, yourCompanies } = useContext(DataContext);
+  const { token, navigate, fetchCompany, userDetails, yourCompanies } = useContext(DataContext);
 
   const [editCompanyData, setEditCompanyData] = useState(null);
 
@@ -55,7 +55,7 @@ const CompanyForm = ({ editMode = false }) => {
             // POST request (Create)
             await api.post("/companies", {
               ...values,
-              company_owner: userDeatils.user_id,
+              company_owner: userDetails.user_id,
             }, {
               headers: {
                 Authorization: `Bearer ${token}`,

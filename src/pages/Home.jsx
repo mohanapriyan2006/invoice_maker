@@ -11,7 +11,7 @@ import greetingI from '../assets/greeting.png'
 
 const Home = () => {
 
-  const { navigate, userDeatils } = useContext(DataContext);
+  const { navigate, userDetails } = useContext(DataContext);
 
   return (
     <>
@@ -19,7 +19,7 @@ const Home = () => {
 
         <h1 className='text-lg sm:text-[20px] md:text-2xl font-semibold mt-3 md:ml-0 ml-6 flex justify-center items-center gap-2'>
           <img src={greetingI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon"/> Welcome back 
-          <span className="text-blue-800 underline">{userDeatils.user_name}</span>
+          <span className="text-blue-800 underline">{userDetails.user_name}</span>
           <img src={smileI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon"/>
           </h1>
 

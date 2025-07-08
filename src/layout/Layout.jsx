@@ -18,6 +18,7 @@ import CustomerDetail from '../components/CustomerDetail';
 import Invoices from '../pages/Invoices';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoiceDetail from '../components/InvoiceDetials';
+import ChangePassword from '../pages/login/ChangePassword';
 
 const Layout = () => {
     const { loginPage, width } = useContext(DataContext);
@@ -30,10 +31,10 @@ const Layout = () => {
             </div>
             <div className="div2">
                 <Header />
-
                 <Routes>
                     <Route path='/home' element={<Home />} />
                     <Route path='/' element={<Login />} />
+                    <Route path='/changePassword' element={<ChangePassword />} />
                     <Route path='/signup' element={<SignUp />} />
                     <Route path='/companies' element={<Companies />} />
                     <Route path='/companyDetail/:id' element={<CompanyDetail />} />
