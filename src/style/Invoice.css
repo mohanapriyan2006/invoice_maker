@@ -87,7 +87,7 @@
 .invoice-title {
     text-align: right;
     font-weight: bold;
-    font-size: 18px;
+    /* font-size: 18px; */
 }
 
 .invoice-info {

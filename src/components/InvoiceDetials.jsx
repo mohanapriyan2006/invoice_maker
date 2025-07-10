@@ -8,6 +8,7 @@ import { api } from '../API/api';
 import deleteI from '../assets/delete1.png';
 import editI from '../assets/edit.png';
 import { Download, FileText, Image } from 'lucide-react';
+import { convertNumberToWords } from '../hooks/NumToWord';
 
 const InvoiceDetail = () => {
     const { id } = useParams();
@@ -18,6 +19,7 @@ const InvoiceDetail = () => {
 
     const [changeTitle, setChangeTitle] = useState(false);
 
+    const moneyInWord = convertNumberToWords(Math.trunc(invoice.invoice_total));
 
     const product_name = (pID) => {
         // console.log(yourProducts)
@@ -32,11 +34,11 @@ const InvoiceDetail = () => {
 
         const clone = componentRef.current.cloneNode(true);
 
-        // 🔁 Force desktop classes
+
         clone.classList.remove("scale-[90%]");
         clone.classList.add("scale-100", "text-[12px]", "md:text-[12px]", "p-4");
 
-        // Force full width
+
         clone.style.width = "1024px";
         clone.style.maxWidth = "none";
         clone.style.position = 'absolute';
@@ -61,19 +63,8 @@ const InvoiceDetail = () => {
 
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
-            const imgHeight = (canvas.height * pageWidth) / canvas.width;
 
-            if (imgHeight < pageHeight) {
-                pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
-            } else {
-                let position = 0;
-                while (position < imgHeight) {
-                    pdf.addImage(imgData, 'PNG', 0, -position, pageWidth, imgHeight);
-                    position += pageHeight;
-                    if (position < imgHeight) pdf.addPage();
-                }
-            }
-
+            pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
             pdf.save(`Invoice_${invoice.invoice_number}.pdf`);
         } catch (error) {
             console.error("PDF Export Error:", error);
@@ -166,11 +157,11 @@ const InvoiceDetail = () => {
                 <h5 className='md:text-lg text-sm text-blue-800 font-semibold mr-2'>Choose Invoice Title : </h5>
                 <div className='flex md:flex-row flex-col gap-1'>
                     <div onClick={() => setChangeTitle(true)} className='cursor-pointer' >
-                        <input type="radio" name="invoice-title" id="invoice-title" checked={changeTitle} />
+                        <input type="radio" name="invoice-title" id="invoice-title" checked={changeTitle} onChange={() => setChangeTitle(true)}/>
                         <span className='md:text-lg text-sm font-medium mr-2' >Perfoma</span>
                     </div>
                     <div onClick={() => setChangeTitle(false)} className='cursor-pointer'>
-                        <input type="radio" name="invoice-title" id="invoice-title" checked={!changeTitle} />
+                        <input type="radio" name="invoice-title" id="invoice-title" checked={!changeTitle} onChange={() => setChangeTitle(false)}/>
                         <span className='md:text-lg text-sm  font-medium'>Tax</span>
                     </div>
                 </div>
@@ -178,10 +169,10 @@ const InvoiceDetail = () => {
 
             <div ref={componentRef} className="invoice-container">
                 {/* <!-- Header --> */}
-                <div className="invoice-header">
+                <div className="invoice-header p-2">
                     <div className="company-info">
                         <div className="logo">LOGO</div>
-                        <div className="company-details">
+                        <div className="company-details ml-10 border-l pl-4">
                             <h2>{invoice.invoice_by.company_name}</h2>
                             <p>{invoice.invoice_by.company_address}</p>
                             <p>GSTIN {invoice.invoice_by.company_gstin}</p>
@@ -189,19 +180,32 @@ const InvoiceDetail = () => {
                             <p>{invoice.invoice_by.company_email}</p>
                         </div>
                     </div>
-                    <div className="invoice-title">{changeTitle ? "PERFOMA" : "TAX"} INVOICE</div>
+                    <div className="invoice-title text-3xl">{changeTitle ? "PERFOMA" : "TAX"} INVOICE</div>
                 </div>
 
                 {/* <!-- Invoice Info --> */}
                 <div className="invoice-info">
-                    <div className="info-left">
-                        <div># Invoice: {invoice.invoice_number}</div>
-                        <div>Date: {new Date(invoice.invoice_date).toLocaleDateString()}</div>
-                        <div>Terms: {invoice.invoice_terms}</div>
-                        <div>Due Date: {new Date(invoice.invoice_due_date).toLocaleDateString()}</div>
+                    <div className="info-left flex border py-0.5 justify-around">
+                        <div>
+                            <p className='font-semibold'># Invoice</p>
+                            <p className='font-semibold'>Date</p>
+                            <p className='font-semibold'>Terms</p>
+                            <p className='font-semibold'>Due Date</p>
+                        </div>
+                        <div>
+                            <p>: {invoice.invoice_number}</p>
+                            <p>: {new Date(invoice.invoice_date).toLocaleDateString()}</p>
+                            <p>: {invoice.invoice_terms}</p>
+                            <p>: {new Date(invoice.invoice_due_date).toLocaleDateString()}</p>
+                        </div>
                     </div>
-                    <div className="info-right">
-                        <div>Place Of Supply: {invoice.invoice_place_of_supply}</div>
+                    <div className="info-right flex border py-0.5 justify-around">
+                        <div>
+                            <p className='font-semibold'>Place Of Supply </p>
+                        </div>
+                        <div>
+                            <p>: {invoice.invoice_place_of_supply}</p>
+                        </div>
                     </div>
                 </div>
 
@@ -274,8 +278,8 @@ const InvoiceDetail = () => {
                 {/* <!-- Totals --> */}
                 <div className="totals-section">
                     <div className="notes">
-                        <p><strong>Total In Words:</strong> Indian Rupee Fifteen Thousand Eight Hundred Seventy-One Only</p>
-                        <p><strong>Notes:</strong> {invoice.invoice_notes}</p>
+                        <p><strong className='mr-2'>Total In Words: </strong>{moneyInWord}</p>
+                        <p><strong className='mr-2'>Notes:</strong> {invoice.invoice_notes}</p>
                     </div>
                     <div className="amounts">
                         <div><span>Sub Total</span><span>{invoice.invoice_subtotal.toFixed(2)}</span></div>
