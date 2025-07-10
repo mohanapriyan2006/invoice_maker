@@ -19,6 +19,7 @@ import Invoices from '../pages/Invoices';
 import InvoiceForm from '../components/InvoiceForm';
 import InvoiceDetail from '../components/InvoiceDetials';
 import ChangePassword from '../pages/login/ChangePassword';
+import NotFound from '../pages/NotFound';
 
 const Layout = () => {
     const { loginPage, width } = useContext(DataContext);
@@ -52,6 +53,7 @@ const Layout = () => {
                     <Route path='/invoiceForm' element={<InvoiceForm />} />
                     <Route path='/invoiceForm/:id' element={<InvoiceForm editMode={true} />} />
                     <Route path='/invoiceDetail/:id' element={<InvoiceDetail />} />
+                    <Route path='*' element={<NotFound />} />
                 </Routes>
 
             </div>

@@ -46,20 +46,12 @@ const CompanyForm = ({ editMode = false }) => {
         try {
           if (editMode && editCompanyData) {
             // PUT request (Update)
-            await api.put(`/companies/${editCompanyData.company_id}`, values, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
+            await api.put(`/companies/${editCompanyData.company_id}`, values);
           } else {
             // POST request (Create)
             await api.post("/companies", {
               ...values,
               company_owner: userDetails.user_id,
-            }, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
             });
           }
 

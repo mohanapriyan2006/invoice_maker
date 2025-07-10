@@ -7,7 +7,7 @@ import { Eye, EyeOff } from 'lucide-react';
 
 const ChangePassword = () => {
 
-    const { navigate, userDetails } = useContext(DataContext);
+    const { navigate, userDetails, token } = useContext(DataContext);
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -35,7 +35,11 @@ const ChangePassword = () => {
             console.log('Form submitted:', values);
             const putUser = async (userID) => {
                 try {
-                    await api.put(`users/${userID}`, { user_name: values.user_name, password: values.newPassword })
+                    await api.put(`users/${userID}`, { user_name: values.user_name, password: values.newPassword }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
                     navigate("/");
                 } catch (e) {
                     if (e.response && e.response.data) {

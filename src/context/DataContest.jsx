@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../API/api';
+import { api, setBearerToken } from '../API/api';
 
 const DataContext = createContext();
 
@@ -36,6 +36,18 @@ export const DataProvider = ({ children }) => {
     const [token, setToken] = useState("");
     const [userDetails, setuserDetails] = useState({});
 
+    const initDataLoad = async () => {
+        const companies = await fetchCompany();
+        if (companies.length > 0) {
+            const companyId = companies[0].company_id;
+            await Promise.all([
+                fetchCustomers(companyId),
+                fetchProducts(companyId),
+                fetchInvoices(companyId),
+            ]);
+        }
+    };
+
 
     const fetchToken = async () => {
         const tokenStr = await localStorage.getItem("token");
@@ -45,6 +57,10 @@ export const DataProvider = ({ children }) => {
             setLoginPage(
                 { isActive: false, isLogined: true }
             )
+            setBearerToken(tokenStr);
+
+            initDataLoad();
+
             navigate("/home");
         }
 
@@ -55,7 +71,7 @@ export const DataProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        fetchToken();
+        fetchToken()
     }, [])
 
 
@@ -77,16 +93,14 @@ export const DataProvider = ({ children }) => {
 
     const fetchCompany = async () => {
         try {
-            const res = await api.get("companies", {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const res = await api.get("companies");
             setYourCompanies(res.data.data);
             setIsLoading((p) => ({ ...p, company: false }))
+            return res.data.data;
         } catch (e) {
             console.log("Get Companies Error : ", e);
             setIsLoading((p) => ({ ...p, company: false }));
+            return [];
         }
     }
 
@@ -100,11 +114,7 @@ export const DataProvider = ({ children }) => {
 
     const fetchProducts = async (cId) => {
         try {
-            const res = await api.get(`companies/${cId}/products`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const res = await api.get(`companies/${cId}/products`);
             setYourProducts(res.data.data);
             setIsLoading((p) => ({ ...p, product: false }));
         } catch (e) {
@@ -123,11 +133,7 @@ export const DataProvider = ({ children }) => {
 
     const fetchCustomers = async (cId) => {
         try {
-            const res = await api.get(`companies/${cId}/customers/`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const res = await api.get(`companies/${cId}/customers/`);
             setYourCustomers(res.data.data);
             setIsLoading((p) => ({ ...p, customer: false }));
         } catch (e) {
@@ -147,11 +153,7 @@ export const DataProvider = ({ children }) => {
 
     const fetchInvoices = async (cId) => {
         try {
-            const res = await api.get(`invoices?company_id=${cId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const res = await api.get(`invoices?company_id=${cId}`);
             setYourInvoices(res.data.data);
             setIsLoading((p) => ({ ...p, invoice: false }));
         } catch (e) {
@@ -163,9 +165,11 @@ export const DataProvider = ({ children }) => {
 
 
 
+
+
     return (
         <DataContext.Provider value={{
-            navigate,
+            navigate, initDataLoad,
             loginPage, setLoginPage, fetchToken,
             token, setToken,
             width, setWidth,

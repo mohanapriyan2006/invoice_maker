@@ -56,11 +56,9 @@ const InvoiceForm = ({ editMode = false }) => {
         try {
             if (editMode && editInvoiceData) {
                 await api.put(`/invoices/${id}?company_id=${values.owner_company}`, values, {
-                    headers: { Authorization: `Bearer ${token}` },
                 });
             } else {
                 await api.post(`/invoices?company_id=${values.owner_company}`, values, {
-                    headers: { Authorization: `Bearer ${token}` },
                 });
             }
 

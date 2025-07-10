@@ -1,17 +1,18 @@
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import DataContext from '../context/DataContest';
-import { api } from '../API/api';
-import deleteI from '../assets/delete1.png'
+// import { api } from '../API/api';
+// import deleteI from '../assets/delete1.png'
 import editI from '../assets/edit.png'
 
 
 const ProductDetail = () => {
     const { id } = useParams();
-    const { token, yourProducts, navigate, fetchProducts } = useContext(DataContext);
+    const { yourProducts, navigate , yourCompanies ,userDetails} = useContext(DataContext);
 
 
     const product = yourProducts.find(p => p.product_id === id);
+    const company_name = yourCompanies.find(val => val.company_id == product.company_id).company_name;
     // const product = yourProducts[0];
 
     // delete
@@ -61,8 +62,8 @@ const ProductDetail = () => {
                         <h4 className="model-title">{product.product_name}</h4>
 
                         <div className="text-sm text-gray-700 space-y-2 p-4">
-                            <p className='text-[18px]'><strong>Product ID:</strong> {product.product_id}</p>
-                            <p><strong>Company ID:</strong> {product.company_id}</p>
+                            <p className='text-[18px]'><strong>Owner Name:</strong> {userDetails.user_name}</p>
+                            <p className='text-[18px]'><strong>Company Name:</strong> {company_name}</p>
                             <p><strong>Description:</strong> {product.product_description}</p>
                             <p><strong>Unit of Measure:</strong> {product.product_unit_of_measure}</p>
                             <p><strong>HSN/SAC Code:</strong> {product.product_hsn_sac_code}</p>
@@ -71,7 +72,6 @@ const ProductDetail = () => {
                             <p><strong>CGST Rate:</strong> {product.product_default_cgst_rate}%</p>
                             <p><strong>SGST Rate:</strong> {product.product_default_sgst_rate}%</p>
                             <p><strong>IGST Rate:</strong> {product.product_default_igst_rate}%</p>
-                            <p><strong>Company ID:</strong> {product.company_id}</p>
                             <p><strong>Created At:</strong> {new Date(product.created_at).toLocaleString()}</p>
                         </div>
 

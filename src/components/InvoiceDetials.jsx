@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import '../style/Invoice.css';
 import { useParams } from 'react-router-dom';
 import html2canvas from 'html2canvas';
@@ -11,10 +11,19 @@ import { Download, FileText, Image } from 'lucide-react';
 
 const InvoiceDetail = () => {
     const { id } = useParams();
-    const { token, yourInvoices, navigate } = React.useContext(DataContext);
+    const { token, yourInvoices, yourProducts, navigate } = React.useContext(DataContext);
     const componentRef = useRef();
 
     const invoice = yourInvoices.find(val => val.invoice_id == id);
+
+    const [changeTitle, setChangeTitle] = useState(false);
+
+
+    const product_name = (pID) => {
+        // console.log(yourProducts)
+        const temp = yourProducts.find(val => val.product_id == pID).product_name;
+        return temp;
+    }
 
     const sanitizeColorsToBW = (element) => {
         if (!element) return;
@@ -142,7 +151,6 @@ const InvoiceDetail = () => {
         if (isOk) {
             try {
                 await api.delete(`invoices/${invoiceId}?company_id=${companyId}`, {
-                    headers: { 'Authorization': ` Bearer ${token}` }
                 });
                 alert("Invoice Deleted Successfully.");
                 navigate('/invoices');
@@ -167,7 +175,7 @@ const InvoiceDetail = () => {
                 Invoice Details
             </h3>
 
-            <div className="flex justify-center flex-wrap gap-1 md:gap-3 mb-5">
+            <div className="flex justify-center flex-wrap gap-1 md:gap-3 mb-2">
                 <button onClick={downloadAsImage} className="btn-1 px-5 py-2 flex gap-0 md:gap-2">
                     <Image className='icon' />
                     Download PNG
@@ -178,197 +186,137 @@ const InvoiceDetail = () => {
                 </button>
             </div>
 
-            <div ref={componentRef} className="bg-white rounded-lg shadow-lg border border-gray-200">
-                <div className="p-8">
-                    {/* Tax Invoice Header */}
-                    <div className="text-center mb-8">
-                        <div className="inline-block bg-blue-50 px-4 py-2 rounded-lg mb-2">
-                            <FileText className="w-5 h-5 text-blue-600 inline mr-2" />
-                            <span className="text-blue-800 text-2xl font-semibold">Tax Invoice</span>
-                        </div>
-                    </div>
+            <div className="flex justify-center mb-5 gap-1">
+                <h5 className='text-lg text-blue-800 font-semibold mr-2'>Choose Invoice Title : </h5>
+                <div onClick={() => setChangeTitle(true)} >
+                    <input type="radio" name="invoice-title" id="invoice-title" />
+                    <span className='text-lg font-medium mr-2'>Perfoma</span>
+                </div>
+                <div onClick={() => setChangeTitle(false)} >
+                    <input type="radio" name="invoice-title" id="invoice-title" checked={!changeTitle} />
+                    <span className='text-lg font-medium'>Tax</span>
+                </div>
+            </div>
 
-                    {/* Company Logo and Header Info */}
-                    <div className="flex justify-between items-start mb-8">
-                        <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
-                                <span className="text-2xl font-bold text-green-600">logo</span>
-                            </div>
-                            <div className='space-y-1.5'>
-                                <h2 className="text-xl font-bold text-gray-800">{invoice.invoice_by.company_name}</h2>
-                                <p className="text-sm text-gray-600">{invoice.invoice_by.company_address}</p>
-                                <p className="text-sm text-gray-600">India</p>
-                            </div>
+            <div ref={componentRef} className="max-w-4xl md:scale-1 scale-[50%] mx-auto border border-black text-[12px] font-sans bg-white p-4">
+                {/* Header */}
+                <div className="flex justify-between border-b border-black pb-2 mb-2">
+                    <div className="flex gap-2 items-center">
+                        <div className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center text-white font-bold">
+                            LOGO
                         </div>
-                        <div className="text-right text-sm text-gray-600 space-y-1.5">
-                            <p><strong>GSTIN:</strong> {invoice.invoice_by.company_gstin}</p>
-                            <p><strong>MSME:</strong> UDYAM-KR-03-0381264</p>
-                            <p><strong>Email:</strong> {invoice.invoice_by.company_email}</p>
-                        </div>
-                    </div>
-
-                    {/* Invoice Details Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        {/* Invoice Info */}
-                        <div className="space-y-2">
-                            <div className="text-sm">
-                                <span className="font-medium text-gray-700"># Invoice:</span>
-                                <span className="ml-2 font-semibold">{invoice.invoice_number}</span>
-                            </div>
-                            <div className="text-sm">
-                                <span className="font-medium text-gray-700">Date:</span>
-                                <span className="ml-2">{new Date(invoice.invoice_date).toLocaleDateString()}</span>
-                            </div>
-                            <div className="text-sm">
-                                <span className="font-medium text-gray-700">Terms:</span>
-                                <span className="ml-2">{invoice.invoice_terms}</span>
-                            </div>
-                            <div className="text-sm">
-                                <span className="font-medium text-gray-700">Due Date:</span>
-                                <span className="ml-2">{new Date(invoice.invoice_due_date).toLocaleDateString()}</span>
-                            </div>
-                        </div>
-
-                        {/* Place of Supply */}
-                        <div className="space-y-2">
-                            <div className="text-sm">
-                                <span className="font-medium text-gray-700">Place Of Supply:</span>
-                                <span className="ml-2">{invoice.invoice_place_of_supply}</span>
-                            </div>
-                        </div>
-
-                        <div></div>
-                    </div>
-
-                    {/* Bill To and Ship To */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                         <div>
-                            <h3 className="font-semibold text-gray-800 mb-3 pb-2 border-b">Bill To</h3>
-                            <div className="space-y-1 text-sm">
-                                <p className="font-medium">{invoice.client.customer_name}</p>
-                                <p>{invoice.client.customer_address_line1},</p>
-                                <p>{invoice.client.customer_address_line2},</p>
-                                <p>{invoice.client.customer_city} - {invoice.client.customer_postal_code}</p>
-                                <p>{invoice.client.customer_country}</p>
-                                <p><strong>GSTIN:</strong> {invoice.client.customer_gstin}</p>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h3 className="font-semibold text-gray-800 mb-3 pb-2 border-b">Ship To</h3>
-                            <div className="space-y-1 text-sm">
-                                <p className="font-medium">{invoice.client.customer_name}</p>
-                                <p>{invoice.client.customer_address_line1},</p>
-                                <p>{invoice.client.customer_address_line2},</p>
-                                <p>{invoice.client.customer_city} - {invoice.client.customer_postal_code}</p>
-                                <p>{invoice.client.customer_country}</p>
-                                <p><strong>GSTIN:</strong> {invoice.client.customer_gstin}</p>
-                            </div>
+                            <h2 className="font-bold text-base">{invoice.invoice_by.company_name}</h2>
+                            <p>{invoice.invoice_by.company_address}</p>
+                            <p>GSTIN {invoice.invoice_by.company_gstin}</p>
+                            <p>MSME: {invoice.invoice_by.company_msme}</p>
+                            <p>{invoice.invoice_by.company_email}</p>
                         </div>
                     </div>
+                    <div className="text-right font-bold text-xl">TAX INVOICE</div>
+                </div>
 
-                    {/* Products Table */}
-                    <div className="overflow-x-auto mb-8">
-                        <table className="w-full border-collapse border border-gray-300">
-                            <thead>
-                                <tr className="bg-gray-50">
-                                    <th className="border border-gray-300 px-3 py-2 text-left text-sm font-medium">#</th>
-                                    <th className="border border-gray-300 px-3 py-2 text-left text-sm font-medium">Item & Description</th>
-                                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">HSN</th>
-                                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">Qty</th>
-                                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">Rate</th>
-                                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">CGST<br />%</th>
-                                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">Amt</th>
-                                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">SGST<br />%</th>
-                                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">Amt</th>
-                                    <th className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">Amount</th>
+                {/* Invoice Info */}
+                <div className="grid grid-cols-2 gap-1 border-b border-black pb-2 mb-2">
+                    <div className="grid grid-cols-[100px_1fr] gap-y-1">
+                        <div># Invoice</div><div>: {invoice.invoice_number}</div>
+                        <div>Date</div><div>: {new Date(invoice.invoice_date).toLocaleDateString()}</div>
+                        <div>Terms</div><div>: {invoice.invoice_terms}</div>
+                        <div>Due Date</div><div>: {new Date(invoice.invoice_due_date).toLocaleDateString()}</div>
+                    </div>
+                    <div className="grid grid-cols-[100px_1fr]">
+                        <div>Place Of Supply</div><div>: {invoice.invoice_place_of_supply}</div>
+                    </div>
+                </div>
+
+                {/* Bill & Ship To */}
+                <div className="grid grid-cols-2 gap-2 border-b border-black pb-2 mb-2">
+                    <div className="border border-black">
+                        <div className="bg-gray-200 px-2 py-1 font-semibold border-b border-black">Bill To</div>
+                        <div className="px-2 py-1">
+                            <p className="font-bold">{invoice.client.customer_name}</p>
+                            <p>{invoice.client.customer_address_line1}</p>
+                            <p>{invoice.client.customer_address_line2}</p>
+                            <p>{invoice.client.customer_city} - {invoice.client.customer_postal_code}</p>
+                            <p>{invoice.client.customer_country}</p>
+                            <p>GSTIN {invoice.client.customer_gstin}</p>
+                        </div>
+                    </div>
+                    <div className="border border-black">
+                        <div className="bg-gray-200 px-2 py-1 font-semibold border-b border-black">Ship To</div>
+                        <div className="px-2 py-1">
+                            <p className="font-bold">{invoice.client.customer_name}</p>
+                            <p>{invoice.client.customer_address_line1}</p>
+                            <p>{invoice.client.customer_address_line2}</p>
+                            <p>{invoice.client.customer_city} - {invoice.client.customer_postal_code}</p>
+                            <p>{invoice.client.customer_country}</p>
+                            <p>GSTIN {invoice.client.customer_gstin}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Products */}
+                <table className="w-full border-black text-xs mb-2">
+                    <thead>
+                        <tr className="bg-gray-100 text-center font-medium">
+                            <th className="border p-1">#</th>
+                            <th className="border p-1">Item & Description</th>
+                            <th className="border p-1">HSN/SAC</th>
+                            <th className="border p-1">Qty</th>
+                            <th className="border p-1">Rate</th>
+                            <th className="border p-1">CGST%</th>
+                            <th className="border p-1">CGST Amt</th>
+                            <th className="border p-1">SGST%</th>
+                            <th className="border p-1">SGST Amt</th>
+                            <th className="border p-1">IGST%</th>
+                            <th className="border p-1">IGST Amt</th>
+                            <th className="border p-1">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {invoice.products.map((item, i) => {
+                            // const base = item.invoice_item_quantity * item.invoice_item_unit_price;
+                            // console.log(item)
+                            return (
+                                <tr key={i} className="text-center">
+                                    <td className="border p-1">{i + 1}</td>
+                                    <td className="border p-1 text-left">{product_name(item.product_id) || "Product"}</td>
+                                    <td className="border p-1">996819</td>
+                                    <td className="border p-1">{item.invoice_item_quantity}</td>
+                                    <td className="border p-1">{item.invoice_item_unit_price.toFixed(2)}</td>
+                                    <td className="border p-1">{item.invoice_item_cgst_rate}%</td>
+                                    <td className="border p-1">{item.invoice_item_cgst_amount.toFixed(2)}</td>
+                                    <td className="border p-1">{item.invoice_item_sgst_rate}%</td>
+                                    <td className="border p-1">{item.invoice_item_sgst_amount.toFixed(2)}</td>
+                                    <td className="border p-1">{item.invoice_item_igst_rate}%</td>
+                                    <td className="border p-1">{item.invoice_item_igst_amount.toFixed(2)}</td>
+                                    <td className="border p-1">{item.invoice_item_total_amount.toFixed(2)}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {invoice.products.map((item, idx) => (
-                                    <tr key={idx} className="hover:bg-gray-50">
-                                        <td className="border border-gray-300 px-3 py-2 text-sm">{idx + 1}</td>
-                                        <td className="border border-gray-300 px-3 py-2 text-sm">{item.product?.product_name}</td>
-                                        <td className="border border-gray-300 px-3 py-2 text-center text-sm">
-                                            {idx === 0 ? "9019201" : "996819"}
-                                        </td>
-                                        <td className="border border-gray-300 px-3 py-2 text-center text-sm">{item.invoice_item_quantity}</td>
-                                        <td className="border border-gray-300 px-3 py-2 text-center text-sm">₹{item.invoice_item_unit_price?.toFixed(2)}</td>
-                                        <td className="border border-gray-300 px-3 py-2 text-center text-sm">9%</td>
-                                        <td className="border border-gray-300 px-3 py-2 text-center text-sm">₹{item.invoice_item_cgst_amount?.toFixed(2)}</td>
-                                        <td className="border border-gray-300 px-3 py-2 text-center text-sm">9%</td>
-                                        <td className="border border-gray-300 px-3 py-2 text-center text-sm">₹{item.invoice_item_sgst_amount?.toFixed(2)}</td>
-                                        <td className="border border-gray-300 px-3 py-2 text-center text-sm font-medium">₹{item.invoice_item_total_amount?.toFixed(2)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                            );
+                        })}
+                    </tbody>
+                </table>
+
+                {/* Totals and Footer */}
+                <div className="flex justify-between">
+                    <div className="text-xs">
+                        <p><strong>Total In Words:</strong> Indian Rupee Fifteen Thousand Eight Hundred Seventy-One Only</p>
+                        <p><strong>Notes:</strong> {invoice.invoice_notes}</p>
                     </div>
-
-                    {/* Footer with totals and notes */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Left side - Notes and Terms */}
-                        <div className="space-y-4">
-                            <div>
-                                <h4 className="font-semibold text-gray-800 mb-2">Total In Words</h4>
-                                <p className="text-sm italic text-gray-600">Indian Rupee Fifteen Thousand Eight Hundred Seventy-One Only</p>
-                            </div>
-
-                            <div>
-                                <h4 className="font-semibold text-gray-800 mb-2">Notes</h4>
-                                <p className="text-sm text-gray-600">{invoice.invoice_notes}</p>
-                            </div>
-
-                            <div className="text-xs text-gray-500 space-y-1">
-                                <p><strong>Terms & Conditions</strong></p>
-                                <p>1. Price: Ex-Works Bangalore</p>
-                                <p>2. Payment terms: 30 Days after materials delivery.</p>
-                                <p><strong>Bank Details:</strong></p>
-                                <p>Account No: 79200200001767</p>
-                                <p>Bank Name: Bank of Baroda</p>
-                                <p>Account Holder: MS Traders and Solutions</p>
-                                <p>Branch: Bilekahalli</p>
-                                <p>IFSC Code: BARB0VJBILE</p>
-                            </div>
-                        </div>
-
-                        {/* Right side - Totals */}
-                        <div className="space-y-4">
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <div className="space-y-2 text-sm">
-                                    <div className="flex justify-between">
-                                        <span>Sub Total</span>
-                                        <span>₹{invoice.invoice_subtotal.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span>CGST9 (9%)</span>
-                                        <span>₹{invoice.invoice_total_cgst.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span>SGST9 (9%)</span>
-                                        <span>₹{invoice.invoice_total_sgst.toFixed(2)}</span>
-                                    </div>
-                                    <div className="border-t pt-2 mt-2 space-y-1.5">
-                                        <div className="flex justify-between font-semibold text-base">
-                                            <span>Total</span>
-                                            <span>₹{invoice.invoice_total.toFixed(2)}</span>
-                                        </div>
-                                        <div className="flex justify-between font-bold text-lg text-blue-600">
-                                            <span>Balance Due</span>
-                                            <span>₹{invoice.invoice_total.toFixed(2)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="text-right">
-                                <p className="text-sm text-gray-600 mb-8">Authorized Signature</p>
-                                <div className="border-t border-gray-300 pt-2">
-                                    <p className="text-xs text-gray-500">For {invoice.invoice_by.company_name}</p>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="text-xs">
+                        <div className="flex justify-between"><span>Sub Total</span><span>{invoice.invoice_subtotal.toFixed(2)}</span></div>
+                        <div className="flex justify-between"><span>CGST</span><span>{invoice.invoice_total_cgst.toFixed(2)}</span></div>
+                        <div className="flex justify-between"><span>SGST</span><span>{invoice.invoice_total_sgst.toFixed(2)}</span></div>
+                        <div className="flex justify-between"><span>IGST</span><span>{invoice.invoice_total_igst.toFixed(2)}</span></div>
+                        <div className="flex justify-between font-bold text-lg mt-1"><span>Total</span><span>₹{invoice.invoice_total.toFixed(2)}</span></div>
+                        <div className="flex justify-between font-bold bg-gray-100 py-1 mt-1"><span>Balance Due</span><span>₹{invoice.invoice_total.toFixed(2)}</span></div>
                     </div>
+                </div>
+
+                {/* Signature */}
+                <div className="text-right mt-4">
+                    <p>Authorized Signature</p>
+                    <div className="border-t border-black mt-2 pt-1 text-xs">For {invoice.invoice_by.company_name}</div>
                 </div>
             </div>
 

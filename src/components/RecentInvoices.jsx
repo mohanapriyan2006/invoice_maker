@@ -8,14 +8,14 @@ const RecentInvoices = () => {
     return (
         <>
             {yourInvoices.length === 0 ? (
-                <div className="text-center text-gray-500">No invoices found.</div>
+                <div className="text-center text-lg text-yellow-600">No invoices found!</div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:ml-0 ml-10">
                     {yourInvoices.map((invoice, index) => (
                         <div
                             key={index}
                             onClick={() => navigate(`/invoiceDetail/${invoice.invoice_id}`)}
-                            className="border-2 border-gray-300 rounded-lg shadow-md hover:shadow-xl hover:border-blue-600 border-dashed cursor-pointer bg-white md:w-auto w-[300px] overflow-hidden relative"
+                            className="border-2 border-gray-300 rounded-lg shadow-md hover:shadow-xl hover:border-blue-600 border-dashed cursor-pointer bg-white md:w-auto w-[220px] overflow-hidden relative"
                         >
                             <div className="scale-[0.40] origin-top-left w-[700px] h-[180px] pointer-events-none mt-5 p-5">
                                 <div className="p-8">

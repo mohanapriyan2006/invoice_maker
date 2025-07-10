@@ -8,22 +8,20 @@ import editI from '../assets/edit.png'
 
 const CustomerDetail = () => {
     const { id } = useParams();
-    const { token, yourCustomers, navigate } = useContext(DataContext);
+    const { token, yourCustomers, yourCompanies , navigate ,userDetails } = useContext(DataContext);
 
     const customer = yourCustomers.find(c => c.customer_id === id);
     // const customer = yourCustomers[0];
+
+    const company_name = yourCompanies.find(val => val.company_id == customer.customer_to).company_name;
+
 
     // delete
     const handleDeleteCustomer = async (id, cId) => {
         let isOk = confirm("Are you want to delete this Customer ?");
         if (isOk) {
             try {
-                await api.delete(`companies/${cId}/customers/${id}`,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    }
+                await api.delete(`companies/${cId}/customers/${id}`  
                 );
                 alert("Customer Deleted Successfully.");
                 navigate("/customers")
@@ -55,8 +53,8 @@ const CustomerDetail = () => {
                     <h4 className="model-title">{customer.customer_name}</h4>
 
                     <div className="text-sm text-gray-700 space-y-2 p-4">
-                        <p className='text-[18px]'><strong>Company ID:</strong> {customer.customer_to}</p>
-                        <p className='text-[18px]'><strong>Customer ID:</strong> {customer.customer_id}</p>
+                        <p className='text-[18px]'><strong>Owner Name:</strong> {userDetails.user_name}</p>
+                        <p className='text-[18px]'><strong>Company Name:</strong> {company_name}</p>
                         <p><strong>Email:</strong> {customer.customer_email}</p>
                         <p><strong>Phone:</strong> {customer.customer_phone}</p>
                         <p><strong>GSTIN:</strong> {customer.customer_gstin}</p>

@@ -3,13 +3,13 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../API/api';
+import { api, setBearerToken } from '../../API/api';
 import DataContext from '../../context/DataContest';
 
 const Login = () => {
 
   const navigate = useNavigate();
-  const { setLoginPage, setToken, setuserDetails } = useContext(DataContext);
+  const { setLoginPage, setToken, setuserDetails, initDataLoad } = useContext(DataContext);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,10 +35,13 @@ const Login = () => {
           if (res.data.access_token) {
             localStorage.setItem("token", res.data.access_token);
             setToken(res.data.access_token);
+            setBearerToken(res.data.access_token);
             localStorage.setItem("userDetail", JSON.stringify(res.data.user_details));
             setuserDetails(res.data.user_details);
+
           }
           alert("Successfully Logined");
+          initDataLoad();
           navigate("/home");
           setLoginPage({
             isActive: false,
@@ -115,9 +118,9 @@ const Login = () => {
           <div style={{ color: 'red' }}>{formik.errors.password}</div>
         )}
 
-        <p className='text-sm text-yellow-700 mt-4'>Forget <a 
+        {/* <p className='text-sm text-yellow-700 mt-4'>Forget <a 
         onClick={() => navigate('/changePassword')}
-        className='cursor-pointer hover:underline hover:text-blue-700'>password</a> ?</p>
+        className='cursor-pointer hover:underline hover:text-blue-700'>username/password</a> ?</p> */}
 
         <button type="submit" className='btn-1  mt-1'>Login</button>
       </form>

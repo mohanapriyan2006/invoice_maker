@@ -18,10 +18,10 @@ const Home = () => {
       <div className="home px-2">
 
         <h1 className='text-lg sm:text-[20px] md:text-2xl font-semibold mt-3 md:ml-0 ml-6 flex justify-center items-center gap-2'>
-          <img src={greetingI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon"/> Welcome back 
+          <img src={greetingI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon" /> Welcome back
           <span className="text-blue-800 underline">{userDetails.user_name}</span>
-          <img src={smileI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon"/>
-          </h1>
+          <img src={smileI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon" />
+        </h1>
 
         <div className="home-actions flex gap-5 flex-wrap justify-evenly p-8">
 
@@ -30,8 +30,8 @@ const Home = () => {
             className="action bg-cyan-500 hover:bg-cyan-600">
             <p className='action-text flex items-center gap-2 justify-center'>
               <span className='text-4xl'>+</span>  Add Company
-              <img src={companyI} className='h-auto md:w-14 w-8' alt='icon'/>
-              </p>
+              <img src={companyI} className='h-auto md:w-14 w-8' alt='icon' />
+            </p>
           </button>
 
           <button
@@ -39,8 +39,8 @@ const Home = () => {
             className="action bg-amber-600 hover:bg-amber-700">
             <p className='action-text  flex items-center gap-2 justify-center'>
               <span className='text-4xl'>+</span> Add Products
-              <img src={productI} className='h-auto md:w-14 w-8' alt='icon'/>
-              </p>
+              <img src={productI} className='h-auto md:w-14 w-8' alt='icon' />
+            </p>
           </button>
 
           <button
@@ -48,8 +48,8 @@ const Home = () => {
             className="action bg-emerald-500 hover:bg-emerald-600">
             <p className='action-text flex items-center gap-2 justify-center'>
               <span className='text-4xl'>+</span> Add Customer
-              <img src={customerI} className='h-auto md:w-14 w-8' alt='icon'/>
-              </p>
+              <img src={customerI} className='h-auto md:w-14 w-8' alt='icon' />
+            </p>
           </button>
 
           <button
@@ -57,8 +57,8 @@ const Home = () => {
             className="action bg-indigo-500 hover:bg-indigo-600">
             <p className='action-text flex items-center gap-2 justify-center'>
               <span className='text-4xl'>+</span> Create Invoice
-              <img src={invoiceI} className='h-auto md:w-14 w-8' alt='icon'/>
-              </p>
+              <img src={invoiceI} className='h-auto md:w-14 w-8' alt='icon' />
+            </p>
           </button>
         </div>
 
@@ -66,7 +66,7 @@ const Home = () => {
 
         <h2 className='text-[22px] font-medium text-center'> Recenty Added Invoices</h2>
 
-        <div className="recent-invoice flex flex-wrap my-8">
+        <div className="recent-invoice flex flex-wrap items-center justify-center my-8 ">
           <RecentInvoices />
         </div>
       </div>

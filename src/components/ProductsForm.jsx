@@ -51,14 +51,12 @@ const ProductForm = ({ editMode = false }) => {
                         await api.put(
                             `companies/${values.company_id}/products/${editProductData.product_id}`,
                             values,
-                            { headers: { Authorization: `Bearer ${token}` } }
                         );
                     } else {
                         // POST request
                         await api.post(
                             `companies/${values.company_id}/products/`,
                             values,
-                            { headers: { Authorization: `Bearer ${token}` } }
                         );
                     }
 

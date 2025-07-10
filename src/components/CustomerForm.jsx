@@ -53,14 +53,14 @@ const CustomerForm = ({ editMode = false }) => {
                         await api.put(
                             `companies/${values.company_id}/customers/${editCustomerData.customer_id}`,
                             values,
-                            { headers: { Authorization: `Bearer ${token}` } }
+                              
                         );
                     } else {
                         // POST
                         await api.post(
                             `companies/${values.company_id}/customers/`,
                             { ...values, customer_to: values.company_id },
-                            { headers: { Authorization: `Bearer ${token}` } }
+                              
                         );
                     }
 
