@@ -29,7 +29,6 @@ const ChangePassword = () => {
                 .required('Please confirm your new password')
         }),
         onSubmit: (values, { setFieldError }) => {
-            console.log('Form submitted:', values);
             const putUser = async (userID) => {
                 try {
                     await api.put(`users/${userID}`, { user_name: values.user_name, password: values.newPassword }, {

@@ -6,8 +6,7 @@ import companyI from '../assets/company1.png'
 import productI from '../assets/product1.png'
 import customerI from '../assets/customer1.png'
 import invoiceI from '../assets/invoice1.png'
-import smileI from '../assets/smile.png'
-import greetingI from '../assets/greeting.png'
+
 
 const Home = () => {
 
@@ -17,13 +16,12 @@ const Home = () => {
     <>
       <div className="home px-2">
 
-        <h1 className='text-lg sm:text-[14px] md:text-2xl font-semibold mt-3 md:ml-0 ml-6 flex justify-center items-center gap-0.5 sm:gap-2'>
-          <img src={greetingI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon" /> Welcome back
-          <span className="text-blue-800 underline">{userDetails.user_name}</span>
-          <img src={smileI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon" />
+        <h1 className='text-lg sm:text-[14px] md:text-2xl font-semibold md:ml-0 ml-6 flex sm:justify-start justify-center items-center gap-0.5 sm:gap-2'>
+          Welcome back
+          <span className="text-blue-800 underline">{userDetails.user_name}</span> !
         </h1>
 
-        <div className="home-actions flex gap-5 flex-wrap justify-evenly p-8">
+        <div className="home-actions flex gap-5 flex-wrap justify-evenly p-4 px-8">
 
           <button
             onClick={() => navigate('/companyForm')}

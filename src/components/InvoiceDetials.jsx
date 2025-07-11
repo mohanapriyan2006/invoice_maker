@@ -79,16 +79,54 @@ const InvoiceDetail = () => {
             });
 
             const imgData = canvas.toDataURL('image/png');
+
+            const divWidthPx = clone.offsetWidth;
+            const divHeightPx = clone.offsetHeight;
+
             const pdf = new jsPDF({
-                orientation: 'landscape',
+                orientation: divWidthPx > divHeightPx ? 'landscape' : 'portrait',
                 unit: 'mm',
-                format: 'a4'
+                format: 'a4',
             });
 
             const pageWidth = pdf.internal.pageSize.getWidth();
             const pageHeight = pdf.internal.pageSize.getHeight();
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
+            // Convert pixels to mm
+            const pxToMm = (px) => (px * 25.4) / 96;
+            const divWidthMm = pxToMm(divWidthPx);
+            const divHeightMm = pxToMm(divHeightPx);
+
+            // Define margins
+            const marginTop = 10; // mm
+            const marginLeft = 10; // mm
+            const marginRight = 10; // mm
+            const marginBottom = 10; // mm
+
+            const availableWidth = pageWidth - marginLeft - marginRight;
+
+            // Scale proportionally to fit available width
+            let renderWidth = divWidthMm;
+            let renderHeight = divHeightMm;
+
+            const availableHeight = pageHeight - marginTop - marginBottom;
+
+            // Adjust height if it overflows available height
+            if (renderHeight > availableHeight) {
+                const ratio = availableHeight / renderHeight;
+                renderHeight = availableHeight;
+                renderWidth = renderWidth * ratio;
+            }
+
+
+            if (renderWidth > availableWidth) {
+                const ratio = availableWidth / renderWidth;
+                renderWidth = availableWidth;
+                renderHeight = renderHeight * ratio;
+            }
+
+            pdf.addImage(imgData, 'PNG', marginLeft, marginTop, renderWidth, renderHeight);
+
             pdf.save(`Invoice_${invoice.invoice_number}.pdf`);
         } catch (error) {
             console.error("PDF Export Error:", error);
@@ -210,33 +248,33 @@ const InvoiceDetail = () => {
 
                 {/* <!-- Invoice Info --> */}
                 <div className="invoice-info">
-                    <div className="info-left flex border py-0.5 justify-around">
+                    <div className="info-left flex p-3 justify-around">
                         <div>
-                            <p className='font-semibold'># Invoice</p>
-                            <p className='font-semibold'>Date</p>
-                            <p className='font-semibold'>Terms</p>
-                            <p className='font-semibold'>Due Date</p>
+                            <p># Invoice</p>
+                            <p>Date</p>
+                            <p>Terms</p>
+                            <p>Due Date</p>
                         </div>
                         <div>
-                            <p>: {invoice.invoice_number}</p>
-                            <p>: {new Date(invoice.invoice_date).toLocaleDateString()}</p>
-                            <p>: {invoice.invoice_terms}</p>
-                            <p>: {new Date(invoice.invoice_due_date).toLocaleDateString()}</p>
+                            <p className='font-semibold'>: {invoice.invoice_number}</p>
+                            <p className='font-semibold'>: {new Date(invoice.invoice_date).toLocaleDateString()}</p>
+                            <p className='font-semibold'>: {invoice.invoice_terms}</p>
+                            <p className='font-semibold'>: {new Date(invoice.invoice_due_date).toLocaleDateString()}</p>
                         </div>
                     </div>
-                    <div className="info-right flex border py-0.5 justify-around">
+                    <div className="info-right flex p-3 border-l-2 min-h-[80px] justify-around">
                         <div>
-                            <p className='font-semibold'>Place Of Supply </p>
+                            <p>Place Of Supply </p>
                         </div>
                         <div>
-                            <p>: {invoice.invoice_place_of_supply}</p>
+                            <p className='font-semibold'>: {invoice.invoice_place_of_supply}</p>
                         </div>
                     </div>
                 </div>
 
                 {/* <!-- Bill & Ship To --> */}
                 <div className="billing-shipping">
-                    <div className="box">
+                    <div className="box pb-2">
                         <div className="box-title">Bill To</div>
                         <div className="box-body">
                             <p className="bold">{invoice.client.customer_name}</p>
@@ -247,7 +285,7 @@ const InvoiceDetail = () => {
                             <p>GSTIN {invoice.client.customer_gstin}</p>
                         </div>
                     </div>
-                    <div className="box">
+                    <div className="box pb-2">
                         <div className="box-title">Ship To</div>
                         <div className="box-body">
                             <p className="bold">{invoice.client.customer_name}</p>
@@ -265,18 +303,18 @@ const InvoiceDetail = () => {
                     <table className="product-table">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Item & Description</th>
-                                <th>HSN/SAC</th>
-                                <th>Qty</th>
-                                <th>Rate</th>
-                                <th>CGST%</th>
-                                <th>CGST Amt</th>
-                                <th>SGST%</th>
-                                <th>SGST Amt</th>
-                                <th>IGST%</th>
-                                <th>IGST Amt</th>
-                                <th>Amount</th>
+                                <th className='font-bold'>#</th>
+                                <th className='font-bold'>Item & Description</th>
+                                <th className='font-bold'>HSN/SAC</th>
+                                <th className='font-bold'>Qty</th>
+                                <th className='font-bold'>Rate</th>
+                                <th className='font-bold'>CGST%</th>
+                                <th className='font-bold'>CGST Amt</th>
+                                <th className='font-bold'>SGST%</th>
+                                <th className='font-bold'>SGST Amt</th>
+                                <th className='font-bold'>IGST%</th>
+                                <th className='font-bold'>IGST Amt</th>
+                                <th className='font-bold'>Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -300,11 +338,11 @@ const InvoiceDetail = () => {
                     </table>
                 </div>
 
-                {/* <!-- Totals --> */}
-                <div className="totals-section">
+                <div className="totals-section flex flex-row">
+                    {/* <!-- Totals --> */}
                     <div className="notes">
-                        <p><strong className='mr-2'>Total In Words: </strong>{moneyInWord}</p>
-                        <p><strong className='mr-2'>Notes:</strong> {invoice.invoice_notes}</p>
+                        <p className='my-2'>Total In Words: <br /><strong>{moneyInWord}</strong></p>
+                        <p>Notes: <br /><strong>{invoice.invoice_notes}</strong></p>
                     </div>
                     <div className="amounts">
                         <div><span>Sub Total</span><span>{invoice.invoice_subtotal.toFixed(2)}</span></div>
@@ -316,11 +354,21 @@ const InvoiceDetail = () => {
                     </div>
                 </div>
 
-                {/* <!-- Signature --> */}
-                <div className="signature">
-                    <p>Authorized Signature</p>
-                    <div>For {invoice.invoice_by.company_name}</div>
+                <div className='flex w-full justify-between'>
+                    <div>
+                        <p>bjadf sdjfb</p>
+                        <p>bjadf sdjfb</p>
+                        <p>bjadf sdjfb</p>
+                        <p>bjadf sdjfb</p>
+                        <p>bjadf sdjfb</p>
+                    </div>
+                    {/* <!-- Signature --> */}
+                    <div className="signature w-50 p-2 flex flex-col items-end-safe justify-end-safe">
+                        <p>Authorized Signature</p>
+                        <div>For <strong>{invoice.invoice_by.company_name}</strong></div>
+                    </div>
                 </div>
+
             </div>
 
 

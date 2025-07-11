@@ -46,9 +46,9 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    border-bottom: 1px solid black;
-    padding-bottom: 8px;
-    margin-bottom: 8px;
+    /* border-bottom: 1px solid black; */
+    padding-bottom: 10px;
+    /* margin-bottom: 8px; */
 }
 
 @media (min-width: 768px) {
@@ -94,9 +94,10 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 8px;
-    border-bottom: 1px solid black;
-    padding-bottom: 8px;
-    margin-bottom: 8px;
+    border: 1px solid black;
+    border-bottom: none;
+    /* padding: 8px; */
+    /* margin-bottom: 8px; */
     font-size: 12px;
 }
 
@@ -109,10 +110,10 @@
 .billing-shipping {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    border-bottom: 1px solid black;
+    /* gap: 8px; */
+    /* border-bottom: 1px solid black; */
     padding-bottom: 8px;
-    margin-bottom: 8px;
+    /* margin-bottom: 8px; */
 }
 
 .box {
@@ -136,7 +137,7 @@
 
 .product-table-wrapper {
     overflow-x: auto;
-    margin-bottom: 8px;
+    /* margin-bottom: 8px; */
 }
 
 .product-table {
@@ -154,7 +155,6 @@
 
 .product-table th {
     background: #f3f4f6;
-    font-weight: 500;
 }
 
 .product-table td.text-left {
@@ -176,7 +176,9 @@
 
 .amounts {
     min-width: 200px;
+    padding: 10px;
     font-size: 12px;
+    border: solid black 1px;
 }
 
 .amounts>div {
@@ -197,8 +199,10 @@
 
 .signature {
     text-align: right;
-    margin-top: 16px;
+    /* margin-top: 16px; */
+    /* width: 200px; */
     font-size: 12px;
-    border-top: 1px solid black;
+    border: 1px solid black;
+    border-top: none;
     padding-top: 4px;
 }

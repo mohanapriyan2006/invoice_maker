@@ -31,7 +31,6 @@ const SignUp = () => {
                 .required('Confirm Password is required')
         }),
         onSubmit: (values, { setFieldError }) => {
-            console.log('Form submitted:', values);
             const postUser = async () => {
                 try {
                     await api.post("users/signup", { ...values })

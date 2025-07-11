@@ -55,7 +55,6 @@ const Layout = () => {
                     <Route path='/invoiceDetail/:id' element={<InvoiceDetail />} />
                     <Route path='*' element={<NotFound />} />
                 </Routes>
-
             </div>
 
         </div>

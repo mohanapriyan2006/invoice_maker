@@ -19,6 +19,7 @@ const SideBar = () => {
     const { setLoginPage, logoutAlert, confirmUsernameBeforeDelete, setToken, width, isToggle, setIsToggle, userDetails, setYourCompanies, setYourProducts, setYourCustomers, setYourInvoices } = useContext(DataContext);
 
     const handleLogout = async () => {
+        setIsToggle(false);
         let isOk = await logoutAlert();
         if (isOk) {
             navigate('/');
@@ -34,16 +35,23 @@ const SideBar = () => {
 
     // delete
     const handleDeleteAccount = async (id) => {
+        setIsToggle(false);
         let isOK = await confirmUsernameBeforeDelete();
         if (isOK) {
             try {
                 await api.delete(`users/${id}`
                 );
                 navigate('/');
+                localStorage.removeItem("token");
                 setLoginPage({
                     isLogined: false,
                     isActive: true,
                 })
+                setToken("");
+                setYourCompanies([]);
+                setYourProducts([]);
+                setYourCustomers([]);
+                setYourInvoices([]);
             } catch (e) {
                 if (e.response && e.response.data) {
                     console.log("Error in Delete Account : ", e.response.data)

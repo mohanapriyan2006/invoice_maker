@@ -8,7 +8,7 @@ import editI from '../assets/edit.png'
 
 const ProductDetail = () => {
     const { id } = useParams();
-    const { yourProducts, navigate , yourCompanies ,userDetails} = useContext(DataContext);
+    const { yourProducts, navigate , yourCompanies } = useContext(DataContext);
 
 
     const product = yourProducts.find(p => p.product_id === id);
@@ -62,7 +62,7 @@ const ProductDetail = () => {
                         <h4 className="model-title">{product.product_name}</h4>
 
                         <div className="text-sm text-gray-700 space-y-2 p-4">
-                            <p className='text-[18px]'><strong>Owner Name:</strong> {userDetails.user_name}</p>
+                            {/* <p className='text-[18px]'><strong>Owner Name:</strong> {userDetails.user_name}</p> */}
                             <p className='text-[18px]'><strong>Company Name:</strong> {company_name}</p>
                             <p><strong>Description:</strong> {product.product_description}</p>
                             <p><strong>Unit of Measure:</strong> {product.product_unit_of_measure}</p>
