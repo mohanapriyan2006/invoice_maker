@@ -16,10 +16,10 @@ import { api } from '../API/api';
 
 const SideBar = () => {
     const navigate = useNavigate();
-    const { setLoginPage, token, setToken, width, isToggle, setIsToggle, userDetails, setYourCompanies, setYourProducts, setYourCustomers, setYourInvoices } = useContext(DataContext);
+    const { setLoginPage, logoutAlert, confirmUsernameBeforeDelete, setToken, width, isToggle, setIsToggle, userDetails, setYourCompanies, setYourProducts, setYourCustomers, setYourInvoices } = useContext(DataContext);
 
-    const handleLogout = () => {
-        let isOk = confirm("Are you want to Logout this Account ?");
+    const handleLogout = async () => {
+        let isOk = await logoutAlert();
         if (isOk) {
             navigate('/');
             localStorage.removeItem("token");
@@ -34,12 +34,11 @@ const SideBar = () => {
 
     // delete
     const handleDeleteAccount = async (id) => {
-        let username = prompt("Enter your username to delete this Account.");
-        if (userDetails.user_name === username) {
+        let isOK = await confirmUsernameBeforeDelete();
+        if (isOK) {
             try {
-                await api.delete(`users/${id}`  
+                await api.delete(`users/${id}`
                 );
-                alert("Account Deleted Successfully.");
                 navigate('/');
                 setLoginPage({
                     isLogined: false,
@@ -49,12 +48,12 @@ const SideBar = () => {
                 if (e.response && e.response.data) {
                     console.log("Error in Delete Account : ", e.response.data)
                 } else {
-                    alert("Server Error in Delete Account : ", e);
+                    console.log("Server Error in Delete Account : ", e);
                 }
             }
         }
         else {
-            alert("Wrong username !");
+            console.log("Wrong username !");
         }
     }
 
@@ -85,7 +84,7 @@ const SideBar = () => {
         <>
             <div
                 ref={sidebarRef}
-                className={`sideBar fixed top-0 h-screen bg-blue-900  p-4 transition-all ease-in-out z-[9999] ${width < 500 ? (isToggle ? "left-0 text-white w-60" : "-left-47 text-blue-900 w-56") : "block md:w-80 w-fit text-white"}`}>
+                className={`sideBar overflow-y-auto fixed top-0 h-screen bg-blue-900  p-4 transition-all ease-in-out z-[9999] ${width < 500 ? (isToggle ? "left-0 text-white w-60" : "-left-47 text-blue-900 w-56") : "block md:w-80 w-fit text-white"}`}>
                 {width < 500 && (
                     <div className="absolute right-1 top-2">
                         <img

@@ -9,7 +9,7 @@ const CompanyForm = ({ editMode = false }) => {
 
   const { id } = useParams();
 
-  const { token, navigate, fetchCompany, userDetails, yourCompanies } = useContext(DataContext);
+  const { navigate, fetchCompany, userDetails, yourCompanies, Toast } = useContext(DataContext);
 
   const [editCompanyData, setEditCompanyData] = useState(null);
 
@@ -47,11 +47,19 @@ const CompanyForm = ({ editMode = false }) => {
           if (editMode && editCompanyData) {
             // PUT request (Update)
             await api.put(`/companies/${editCompanyData.company_id}`, values);
+            Toast.fire({
+              icon: "success",
+              title: "Successfully company updated"
+            });
           } else {
             // POST request (Create)
             await api.post("/companies", {
               ...values,
               company_owner: userDetails.user_id,
+            });
+            Toast.fire({
+              icon: "success",
+              title: "Successfully company created"
             });
           }
 
@@ -59,7 +67,7 @@ const CompanyForm = ({ editMode = false }) => {
           navigate("/companies");
         } catch (e) {
           if (e.response && e.response.data) {
-            setFieldError("company_ifsc_code", "Invalid Details, check again");
+            setFieldError("company_ifsc_code", e.response.data.detail[0].msg || "Invalid data , check again!");
             console.error("Company Save Error: ", e.response.data);
           } else {
             alert("Server Error: " + e.message);

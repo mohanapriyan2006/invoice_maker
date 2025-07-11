@@ -7,12 +7,9 @@ import { Eye, EyeOff } from 'lucide-react';
 
 const ChangePassword = () => {
 
-    const { navigate, userDetails, token } = useContext(DataContext);
+    const { navigate, userDetails, token, Toast , setLoginPage } = useContext(DataContext);
 
     const [showPassword, setShowPassword] = useState(false);
-
-
-
 
     const formik = useFormik({
         initialValues: {
@@ -40,6 +37,10 @@ const ChangePassword = () => {
                             'Authorization': `Bearer ${token}`
                         }
                     })
+                    Toast.fire({
+                        icon: "success",
+                        title: "Successfully userdetail updated"
+                    });
                     navigate("/");
                 } catch (e) {
                     if (e.response && e.response.data) {
@@ -128,7 +129,13 @@ const ChangePassword = () => {
                 </button>
             </form>
 
-            <h4>Go to <button className='px-2 btn-1  mt-5' onClick={() => navigate('/')}>login</button></h4>
+            <h4><button className='back h-2' onClick={() => {
+                navigate('/home');
+                setLoginPage({
+                    isActive: false,
+                    isLogined: true
+                })
+            }}>Back</button> / Go to<button className='px-2 btn-1  mt-5' onClick={() => navigate('/')}>login</button></h4>
         </div>
     );
 };

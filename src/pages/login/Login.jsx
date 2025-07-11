@@ -9,7 +9,7 @@ import DataContext from '../../context/DataContest';
 const Login = () => {
 
   const navigate = useNavigate();
-  const { setLoginPage, setToken, setuserDetails, initDataLoad } = useContext(DataContext);
+  const { setLoginPage, setToken, setuserDetails, initDataLoad, Toast } = useContext(DataContext);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -38,9 +38,13 @@ const Login = () => {
             setBearerToken(res.data.access_token);
             localStorage.setItem("userDetail", JSON.stringify(res.data.user_details));
             setuserDetails(res.data.user_details);
-
           }
-          alert("Successfully Logined");
+
+          Toast.fire({
+            icon: "success",
+            title: "Logined successfully"
+          });
+          
           initDataLoad();
           navigate("/home");
           setLoginPage({
@@ -95,22 +99,24 @@ const Login = () => {
           <div style={{ color: 'red' }}>{formik.errors.user_name}</div>
         )}
 
-        <div className="relative w-full">
+        <div className=" w-full">
           <label htmlFor="password" className="sr-only">Enter password:</label>
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.password}
-            placeholder="  Enter password"
-            className="login-input pr-10"
-          />
-          <div
-            className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-            onClick={() => setShowPassword(prev => !prev)}
-          >
-            {showPassword ? <EyeOff className="w-auto h-5 mt-3 text-gray-500" /> : <Eye className="w-auto h-5 mt-3 text-gray-500" />}
+          <div className='relative'>
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              placeholder="  Enter password"
+              className="login-input pr-10"
+            />
+            <div
+              className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              onClick={() => setShowPassword(prev => !prev)}
+            >
+              {showPassword ? <EyeOff className="w-auto h-5 mt-3 text-gray-500" /> : <Eye className="w-auto h-5 mt-3 text-gray-500" />}
+            </div>
           </div>
         </div>
 

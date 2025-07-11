@@ -9,7 +9,7 @@ const ProductForm = ({ editMode = false }) => {
 
     const { id } = useParams();
 
-    const { token, navigate, fetchProducts, yourCompanies, yourProducts, fetchCompany } = useContext(DataContext);
+    const { navigate, fetchProducts, yourCompanies, yourProducts, fetchCompany , Toast } = useContext(DataContext);
     const [editProductData, setEditProductData] = useState(null)
 
     useEffect(() => {
@@ -52,19 +52,27 @@ const ProductForm = ({ editMode = false }) => {
                             `companies/${values.company_id}/products/${editProductData.product_id}`,
                             values,
                         );
+                        Toast.fire({
+                            icon: "success",
+                            title: "Successfully product updated"
+                        });
                     } else {
                         // POST request
                         await api.post(
                             `companies/${values.company_id}/products/`,
                             values,
                         );
+                        Toast.fire({
+                            icon: "success",
+                            title: "Successfully product created"
+                        });
                     }
 
                     fetchProducts();
                     navigate('/products');
                 } catch (e) {
                     if (e.response && e.response.data) {
-                        setFieldError('product_name', e.response.data.detail || 'Invalid Product');
+                        setFieldError('product_name', e.response.data.detail[0].msg || 'Invalid Product');
                         console.error("Error:", e.response.data);
                     } else {
                         console.error('Server Error:', e.message);

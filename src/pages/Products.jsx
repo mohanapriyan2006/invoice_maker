@@ -12,7 +12,7 @@ const Products = () => {
         fetchCompany
     } = useContext(DataContext);
 
-    const [selectedCompanyId, setSelectedCompanyId] = useState(null);
+    const [selectedCompanyId, setSelectedCompanyId] = useState(yourCompanies[0].company_id);
 
     useEffect(() => {
         fetchCompany()

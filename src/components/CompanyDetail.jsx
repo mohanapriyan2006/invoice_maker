@@ -11,18 +11,17 @@ const CompanyDetail = () => {
 
     const { id } = useParams();
 
-    const { token, navigate, yourCompanies, userDetails } = useContext(DataContext);
+    const { navigate, yourCompanies, userDetails , deleteAlert } = useContext(DataContext);
 
     const company = yourCompanies.find(val => val.company_id === id);
     // const company = yourCompanies[0];
 
     // delete
     const handleDeleteCompany = async (id) => {
-        let isOk = confirm("Are you want to delete this Company ?");
+        let isOk = await deleteAlert()
         if (isOk) {
             try {
                 await api.delete(`companies/${id}`);
-                alert("Company Deleted Successfully.");
                 navigate('/companies')
             } catch (e) {
                 if (e.response && e.response.data) {

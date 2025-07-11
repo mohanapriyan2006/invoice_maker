@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 
 const InvoiceForm = ({ editMode = false }) => {
     const { id } = useParams();
-    const { token, navigate, fetchInvoices, yourInvoices, yourCompanies, yourCustomers, yourProducts, fetchCustomers, fetchProducts } = useContext(DataContext);
+    const { navigate, Toast, fetchInvoices, yourInvoices, yourCompanies, yourCustomers, yourProducts, fetchCustomers, fetchProducts } = useContext(DataContext);
     const [editInvoiceData, setEditInvoiceData] = useState(null);
 
     useEffect(() => {
@@ -33,6 +33,7 @@ const InvoiceForm = ({ editMode = false }) => {
                 invoice_item_quantity: 1,
             },
         ],
+        invoice_info: ''
     };
 
     const validationSchema = Yup.object({
@@ -57,8 +58,16 @@ const InvoiceForm = ({ editMode = false }) => {
             if (editMode && editInvoiceData) {
                 await api.put(`/invoices/${id}?company_id=${values.owner_company}`, values, {
                 });
+                Toast.fire({
+                    icon: "success",
+                    title: "Successfully invoice updated"
+                });
             } else {
                 await api.post(`/invoices?company_id=${values.owner_company}`, values, {
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Successfully invoice created"
                 });
             }
 
@@ -67,7 +76,7 @@ const InvoiceForm = ({ editMode = false }) => {
         } catch (error) {
             if (error.response?.data) {
                 console.log("Error in post invoice : ", error.response.data)
-                setFieldError('invoice_number', 'Duplicate invoice number or invalid input');
+                setFieldError('invoice_info', error.response.data.detail || 'Invalid input , check Again !');
             } else {
                 alert('Server Error: ' + error.message);
             }
@@ -248,6 +257,10 @@ const InvoiceForm = ({ editMode = false }) => {
                                 )}
                             </FieldArray>
                         </div>
+
+                        {touched.invoice_info && errors.invoice_info && (
+                            <div className="text-red-500 text-sm">{errors.invoice_info}</div>
+                        )}
 
                         {/* Buttons */}
                         <div className="grid grid-cols-2 gap-4 mt-4">

@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, setBearerToken } from '../API/api';
+import Swal from 'sweetalert2'
 
 const DataContext = createContext();
 
@@ -23,6 +24,104 @@ export const DataProvider = ({ children }) => {
     // nav
 
     const [isToggle, setIsToggle] = useState(false);
+
+    // sweat alert
+
+    // success alert
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+
+    // delete alert
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "delete mr-2",
+            cancelButton: "back mr-2"
+        },
+        buttonsStyling: false
+    });
+
+    const deleteAlert = async () => {
+        const result = await swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+            await swalWithBootstrapButtons.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success"
+            });
+            return true;
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            await swalWithBootstrapButtons.fire({
+                title: "Cancelled",
+                text: "Your file is safe :)",
+                icon: "error"
+            });
+            return false;
+        }
+    };
+
+    // logout alert
+    const logoutAlert = async () => {
+        const result = await Swal.fire({
+            title: "Are you want to Logout?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes"
+        })
+
+        if (result.isConfirmed) return true;
+        else return false;
+    }
+
+    // deleteAccount alert
+    const confirmUsernameBeforeDelete = async () => {
+        const { value: usernameInput } = await Swal.fire({
+            title: "Enter your username to delete this Account",
+            input: "text",
+            inputLabel: "Username",
+            inputPlaceholder: "Enter your username",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Delete",
+            inputValidator: (value) => {
+                if (!value) {
+                    return "You need to write your username!";
+                }
+            }
+        });
+
+        if (usernameInput) {
+            if (userDetails.user_name === usernameInput) {
+                Swal.fire("Username matched!", "Proceeding with account deletion.", "success");
+                return true;
+            } else {
+                Swal.fire("Username does not match!", "Account deletion cancelled.", "error");
+                return false;
+            }
+        }
+    };
+
+
 
 
     // login page 
@@ -169,7 +268,7 @@ export const DataProvider = ({ children }) => {
 
     return (
         <DataContext.Provider value={{
-            navigate, initDataLoad,
+            navigate, initDataLoad, Toast, deleteAlert, logoutAlert, confirmUsernameBeforeDelete,
             loginPage, setLoginPage, fetchToken,
             token, setToken,
             width, setWidth,

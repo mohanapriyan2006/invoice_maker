@@ -9,10 +9,11 @@ import deleteI from '../assets/delete1.png';
 import editI from '../assets/edit.png';
 import { Download, FileText, Image } from 'lucide-react';
 import { convertNumberToWords } from '../hooks/NumToWord';
+import Swal from 'sweetalert2';
 
 const InvoiceDetail = () => {
     const { id } = useParams();
-    const { yourInvoices, yourProducts, navigate } = React.useContext(DataContext);
+    const { yourInvoices, yourProducts, navigate, deleteAlert } = React.useContext(DataContext);
     const componentRef = useRef();
 
     const invoice = yourInvoices.find(val => val.invoice_id == id);
@@ -20,6 +21,27 @@ const InvoiceDetail = () => {
     const [changeTitle, setChangeTitle] = useState(false);
 
     const moneyInWord = convertNumberToWords(Math.trunc(invoice.invoice_total));
+
+    // sweat alert
+    const GenerateInvoice = () => {
+        let timerInterval;
+        Swal.fire({
+            title: "Invoice Generating...",
+            html: "It will download in <b></b> milliseconds.",
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading();
+                const timer = Swal.getPopup().querySelector("b");
+                timerInterval = setInterval(() => {
+                    timer.textContent = `${Swal.getTimerLeft()}`;
+                }, 100);
+            },
+            willClose: () => {
+                clearInterval(timerInterval);
+            }
+        });
+    }
 
     const product_name = (pID) => {
         // console.log(yourProducts)
@@ -31,6 +53,8 @@ const InvoiceDetail = () => {
     const downloadAsPDF = async () => {
 
         if (!componentRef.current) return;
+
+        GenerateInvoice();
 
         const clone = componentRef.current.cloneNode(true);
 
@@ -77,6 +101,8 @@ const InvoiceDetail = () => {
     const downloadAsImage = async () => {
         if (!componentRef.current) return;
 
+        GenerateInvoice();
+
         const clone = componentRef.current.cloneNode(true);
 
 
@@ -114,15 +140,14 @@ const InvoiceDetail = () => {
     };
 
     const handleDeleteInvoice = async (invoiceId, companyId) => {
-        const isOk = window.confirm("Are you sure you want to delete this Invoice?");
+        const isOk = await deleteAlert();
         if (isOk) {
             try {
                 await api.delete(`invoices/${invoiceId}?company_id=${companyId}`, {
                 });
-                alert("Invoice Deleted Successfully.");
                 navigate('/invoices');
             } catch (e) {
-                console.error("Error deleting invoice:", e);
+                console.log("Error deleting invoice:", e);
                 alert(e.response?.data?.message || "Failed to delete invoice");
             }
         }
@@ -157,11 +182,11 @@ const InvoiceDetail = () => {
                 <h5 className='md:text-lg text-sm text-blue-800 font-semibold mr-2'>Choose Invoice Title : </h5>
                 <div className='flex md:flex-row flex-col gap-1'>
                     <div onClick={() => setChangeTitle(true)} className='cursor-pointer' >
-                        <input type="radio" name="invoice-title" id="invoice-title" checked={changeTitle} onChange={() => setChangeTitle(true)}/>
+                        <input type="radio" name="invoice-title" id="invoice-title" checked={changeTitle} onChange={() => setChangeTitle(true)} />
                         <span className='md:text-lg text-sm font-medium mr-2' >Perfoma</span>
                     </div>
                     <div onClick={() => setChangeTitle(false)} className='cursor-pointer'>
-                        <input type="radio" name="invoice-title" id="invoice-title" checked={!changeTitle} onChange={() => setChangeTitle(false)}/>
+                        <input type="radio" name="invoice-title" id="invoice-title" checked={!changeTitle} onChange={() => setChangeTitle(false)} />
                         <span className='md:text-lg text-sm  font-medium'>Tax</span>
                     </div>
                 </div>

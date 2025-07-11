@@ -17,7 +17,7 @@ const Home = () => {
     <>
       <div className="home px-2">
 
-        <h1 className='text-lg sm:text-[20px] md:text-2xl font-semibold mt-3 md:ml-0 ml-6 flex justify-center items-center gap-2'>
+        <h1 className='text-lg sm:text-[14px] md:text-2xl font-semibold mt-3 md:ml-0 ml-6 flex justify-center items-center gap-0.5 sm:gap-2'>
           <img src={greetingI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon" /> Welcome back
           <span className="text-blue-800 underline">{userDetails.user_name}</span>
           <img src={smileI} className='h-auto md:w-10 sm:w-8 w-6' alt="icon" />
@@ -64,7 +64,7 @@ const Home = () => {
 
         <div className="divider w-full border-t-3 border-dashed border-gray-500 mb-5"></div>
 
-        <h2 className='text-[22px] font-medium text-center'> Recenty Added Invoices</h2>
+        <h2 className='sm:text-[22px] text-[18px] font-medium text-center'> Recenty Added Invoices</h2>
 
         <div className="recent-invoice flex flex-wrap items-center justify-center my-8 ">
           <RecentInvoices />

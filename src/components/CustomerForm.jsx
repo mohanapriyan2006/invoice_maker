@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 
 const CustomerForm = ({ editMode = false }) => {
     const { id } = useParams();
-    const { token, navigate, fetchCustomers, yourCompanies, yourCustomers, fetchCompany } = useContext(DataContext);
+    const { navigate, fetchCustomers, yourCompanies, yourCustomers, fetchCompany , Toast } = useContext(DataContext);
     const [editCustomerData, setEditCustomerData] = useState(null);
 
     useEffect(() => {
@@ -53,22 +53,28 @@ const CustomerForm = ({ editMode = false }) => {
                         await api.put(
                             `companies/${values.company_id}/customers/${editCustomerData.customer_id}`,
                             values,
-                              
                         );
+                        Toast.fire({
+                            icon: "success",
+                            title: "Successfully customer updated"
+                        });
                     } else {
                         // POST
                         await api.post(
                             `companies/${values.company_id}/customers/`,
                             { ...values, customer_to: values.company_id },
-                              
                         );
+                        Toast.fire({
+                            icon: "success",
+                            title: "Successfully customer created"
+                        });
                     }
 
                     fetchCustomers(values.company_id);
                     navigate('/customers');
                 } catch (e) {
                     if (e.response && e.response.data) {
-                        setFieldError('customer_phone', 'Invalid customer input. Check again.');
+                        setFieldError('customer_phone', e.response.data.detail[0].msg || 'Invalid customer input. Check again.');
                         console.error('API Error:', e.response.data);
                     } else {
                         alert('Server Error: ' + e.message);

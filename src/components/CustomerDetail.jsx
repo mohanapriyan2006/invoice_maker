@@ -8,7 +8,7 @@ import editI from '../assets/edit.png'
 
 const CustomerDetail = () => {
     const { id } = useParams();
-    const { token, yourCustomers, yourCompanies , navigate ,userDetails } = useContext(DataContext);
+    const { deleteAlert, yourCustomers, yourCompanies, navigate, userDetails } = useContext(DataContext);
 
     const customer = yourCustomers.find(c => c.customer_id === id);
     // const customer = yourCustomers[0];
@@ -18,12 +18,11 @@ const CustomerDetail = () => {
 
     // delete
     const handleDeleteCustomer = async (id, cId) => {
-        let isOk = confirm("Are you want to delete this Customer ?");
+        let isOk = await deleteAlert()
         if (isOk) {
             try {
-                await api.delete(`companies/${cId}/customers/${id}`  
+                await api.delete(`companies/${cId}/customers/${id}`
                 );
-                alert("Customer Deleted Successfully.");
                 navigate("/customers")
             } catch (e) {
                 if (e.response && e.response.data) {
