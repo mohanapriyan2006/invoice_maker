@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import avatar from '../assets/avatar.png'
+import avatar from '../assets/avatar.jpg'
 import { useNavigate } from 'react-router-dom';
 import DataContext from '../context/DataContest';
 import profileI from '../assets/profile.png'

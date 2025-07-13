@@ -267,7 +267,7 @@ const InvoiceForm = ({ editMode = false }) => {
                             <button
                                 type="button"
                                 onClick={() => navigate('/invoices')}
-                                className="border-2 border-blue-600 text-blue-700 h-12 px-6 rounded-2xl hover:bg-blue-600 hover:text-white"
+                                className="border-2 border-blue-600 text-blue-700 h-12 px-6 rounded-2xl hover:bg-blue-600 cursor-pointer hover:text-white"
                             >
                                 Cancel
                             </button>

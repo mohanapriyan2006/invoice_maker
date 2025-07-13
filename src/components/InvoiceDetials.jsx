@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../style/Invoice.css';
 import { useParams } from 'react-router-dom';
 import html2canvas from 'html2canvas';
@@ -16,17 +16,34 @@ import EditableField from '../hooks/OnEdit';
 
 const InvoiceDetail = () => {
     const { id } = useParams();
-    const { yourInvoices, yourProducts, navigate, deleteAlert } = React.useContext(DataContext);
+    const { yourInvoices, yourProducts, yourCompanies, navigate, deleteAlert, isEditing, setIsEditing } = React.useContext(DataContext);
     const componentRef = useRef();
-
-    const invoice = yourInvoices.find(val => val.invoice_id == id);
-
     const [changeTitle, setChangeTitle] = useState(false);
 
-    let moneyInWord = convertNumberToWords(Math.trunc(invoice.invoice_total));
-
-    const [isEditing, setIsEditing] = useState(false);
+    const invoice = yourInvoices.find(val => val.invoice_id == id);
     const [editableInvoice, setEditableInvoice] = useState(invoice);
+    const [companyDetail, setCompanyDetail] = useState({});
+
+    useEffect(() => { setIsEditing(false) }, [])
+
+    useEffect(() => {
+        setEditableInvoice(invoice);
+        if (invoice) {
+            const company = getCompanyDetails(invoice.invoice_by.company_id);
+            setCompanyDetail(company);
+        }
+    }, [invoice]);
+
+
+    const product_name = (pID) => {
+        // console.log(yourProducts)
+        const temp = yourProducts.find(val => val.product_id == pID).product_name;
+        return temp;
+    }
+
+    let moneyInWord = convertNumberToWords(Math.trunc(editableInvoice?.invoice_total || 0));
+
+    const getCompanyDetails = (cID) => { return (yourCompanies.find((val) => val.company_id === cID)) }
 
 
     // sweat alert
@@ -48,12 +65,6 @@ const InvoiceDetail = () => {
                 clearInterval(timerInterval);
             }
         });
-    }
-
-    const product_name = (pID) => {
-        // console.log(yourProducts)
-        const temp = yourProducts.find(val => val.product_id == pID).product_name;
-        return temp;
     }
 
 
@@ -251,7 +262,15 @@ const InvoiceDetail = () => {
                 {/* <!-- Header --> */}
                 <div className="invoice-header p-2">
                     <div className="company-info">
-                        <div className="logo">LOGO</div>
+                        <div className="logo">
+                            {(() => {
+                                let logoName = "LOGO";
+                                return (<EditableField
+                                    value={logoName}
+                                    onChange={(val) => logoName = val}
+                                    className='w-20 text-center'
+                                />)
+                            })()}</div>
                         <div className="company-details ml-10 border-l pl-4">
                             <h2>
                                 <EditableField
@@ -321,7 +340,7 @@ const InvoiceDetail = () => {
                                     })}
                                 />
                             </p>
-                            <p className='font-semibold flex gap-1'>:
+                            <p className='font-semibold flex gap-2'>:
                                 {(() => {
                                     let date = new Date(invoice.invoice_date).toLocaleDateString();
                                     return (
@@ -340,7 +359,7 @@ const InvoiceDetail = () => {
                                     })}
                                 />
                             </p>
-                            <p className='font-semibold flex gap-1'>:
+                            <p className='font-semibold flex gap-2'>:
                                 {(() => {
                                     let date = new Date(invoice.invoice_due_date).toLocaleDateString();
                                     return (
@@ -353,7 +372,7 @@ const InvoiceDetail = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="info-right flex p-3 border-l-2 min-h-[80px] justify-around">
+                    <div className="info-right flex p-3 border-t-2 sm:border-l-2 sm:border-t-0 min-h-[80px] justify-around">
                         <div>
                             <p>Place Of Supply </p>
                         </div>
@@ -571,15 +590,42 @@ const InvoiceDetail = () => {
                 </div>
 
                 <div className='flex w-full justify-between'>
-                    <div>
-                        <p>bjadf sdjfb</p>
-                        <p>bjadf sdjfb</p>
-                        <p>bjadf sdjfb</p>
-                        <p>bjadf sdjfb</p>
-                        <p>bjadf sdjfb</p>
+                    <div className='text-[12px]'>
+                        <h6 className='font-semibold'>Bank Details:</h6>
+                        <p>Account No:  <EditableField
+                            value={companyDetail.company_bank_account_no}
+                            onChange={(val) => setCompanyDetail({
+                                ...companyDetail, company_bank_account_no: val
+                            })}
+                            className='font-medium'
+                        /></p>
+                        <p>Bank Name: <EditableField
+                            value={companyDetail.company_bank_name}
+                            onChange={(val) => setCompanyDetail({
+                                ...companyDetail, company_bank_name: val
+                            })} className='font-medium'
+                        /></p>
+                        <p>Account Holder: <EditableField
+                            value={companyDetail.company_name}
+                            onChange={(val) => setCompanyDetail({
+                                ...companyDetail, company_name: val
+                            })} className='font-medium'
+                        /></p>
+                        <p>Branch: <EditableField
+                            value={companyDetail.company_branch}
+                            onChange={(val) => setCompanyDetail({
+                                ...companyDetail, company_branch: val
+                            })} className='font-medium'
+                        /></p>
+                        <p>IFSC Code: <EditableField
+                            value={companyDetail.company_ifsc_code}
+                            onChange={(val) => setCompanyDetail({
+                                ...companyDetail, company_ifsc_code: val
+                            })} className='font-medium'
+                        /></p>
                     </div>
                     {/* <!-- Signature --> */}
-                    <div className="signature w-50 p-2 flex flex-col items-end-safe justify-end-safe">
+                    <div className="signature w-25 sm:w-50 p-2 flex flex-col items-end-safe justify-end-safe">
                         <p>Authorized Signature</p>
                         <div className='flex gap-1'>For <strong>
                             <EditableField

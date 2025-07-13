@@ -14,7 +14,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="home px-2">
+      <div className="home px-2 text-gray-700">
 
         <h1 className='text-lg sm:text-[14px] md:text-2xl font-semibold md:ml-0 ml-6 flex sm:justify-start justify-center items-center gap-0.5 sm:gap-2'>
           Welcome back
