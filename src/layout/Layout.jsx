@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import SignUp from '../pages/login/signUp';
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Home from '../pages/Home';
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
@@ -20,9 +20,13 @@ import InvoiceForm from '../components/InvoiceForm';
 import InvoiceDetail from '../components/InvoiceDetials';
 import ChangePassword from '../pages/login/ChangePassword';
 import NotFound from '../pages/NotFound';
+import AIChatBox from '../components/AIChatBox';
+import AIButton from '../components/AIButton';
 
 const Layout = () => {
-    const { loginPage, width } = useContext(DataContext);
+    const { loginPage, width, isAIActive } = useContext(DataContext);
+
+    const location = useLocation();
 
     return (
         <div className={`${width < 500 ? "-mt-2" : loginPage.isActive ? "" : "parent"} `}>
@@ -30,7 +34,7 @@ const Layout = () => {
             <div className={`${loginPage.isActive ? "hidden" : "div1"} `}>
                 <SideBar />
             </div>
-            <div className="div2">
+            <div className="div2 relative">
                 <Header />
                 <Routes>
                     <Route path='/home' element={<Home />} />
@@ -55,6 +59,10 @@ const Layout = () => {
                     <Route path='/invoiceDetail/:id' element={<InvoiceDetail />} />
                     <Route path='*' element={<NotFound />} />
                 </Routes>
+
+                {isAIActive && <AIChatBox />}
+                {location.pathname !== '/home' && <AIButton />}
+
             </div>
 
         </div>

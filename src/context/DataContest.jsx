@@ -130,7 +130,7 @@ export const DataProvider = ({ children }) => {
         isLogined: false,
         isActive: true,
     });
-    
+
 
     // JWT token
     const [token, setToken] = useState("");
@@ -265,9 +265,11 @@ export const DataProvider = ({ children }) => {
     const [isEditing, setIsEditing] = useState(false);
 
 
+    // -----------------------------
+    // AI 
+    // -----------------------------
 
-
-
+    const [isAIActive, setIsAIActive] = useState(false);
 
 
     return (
@@ -282,7 +284,8 @@ export const DataProvider = ({ children }) => {
             yourCompanies, setYourCompanies, fetchCompany,
             yourProducts, setYourProducts, fetchProducts,
             yourCustomers, setYourCustomers, fetchCustomers,
-            yourInvoices, setYourInvoices, fetchInvoices, isEditing, setIsEditing
+            yourInvoices, setYourInvoices, fetchInvoices, isEditing, setIsEditing,
+            isAIActive, setIsAIActive,
         }}>
             {children}
         </DataContext.Provider>
