@@ -143,7 +143,7 @@ const Home = () => {
             </div>
 
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-              <div className="p-6">
+              <div className="p-1 md:p-6">
                 <RecentInvoices />
               </div>
             </div>

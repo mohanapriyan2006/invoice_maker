@@ -230,7 +230,7 @@ const InvoiceDetail = () => {
                         className='bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
                         onClick={() => navigate('/invoices')}
                     >
-                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         Go Back to Invoices
@@ -253,7 +253,7 @@ const InvoiceDetail = () => {
                                 </svg>
                             </div>
                             <div>
-                                <h1 className="text-4xl font-bold text-gray-900 mb-2">Invoice Details</h1>
+                                <h1 className="md:text-4xl text-2xl font-bold text-gray-900 mb-2">Invoice Details</h1>
                                 <p className="text-lg text-gray-600">Manage and customize your invoice</p>
                             </div>
                         </div>
@@ -261,7 +261,7 @@ const InvoiceDetail = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border border-gray-200">
+                <div className="bg-white rounded-2xl shadow-xl p-2 md:p-6 mb-8 border border-gray-200">
                     <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
                         {/* Primary Actions */}
                         <div className="flex flex-wrap justify-center gap-3">
@@ -284,9 +284,9 @@ const InvoiceDetail = () => {
                         </div>
 
                         {/* Invoice Type Selection */}
-                        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                            <div className="flex items-center gap-4">
-                                <h5 className='text-lg font-semibold text-gray-700'>Invoice Type:</h5>
+                        <div className="bg-gray-50 rounded-xl p-1 md:p-4 border border-gray-200">
+                            <div className="flex items-centermd:gap-4 gap-1">
+                                <h5 className='md:text-lg text-sm  font-semibold text-gray-700'>Invoice Type:</h5>
                                 <div className='flex gap-4'>
                                     <label className='flex items-center gap-2 cursor-pointer group'>
                                         <div className="relative">
@@ -301,7 +301,7 @@ const InvoiceDetail = () => {
                                                 {changeTitle && <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>}
                                             </div>
                                         </div>
-                                        <span className='text-lg font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Proforma</span>
+                                        <span className='md:text-lg text-sm  font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Proforma</span>
                                     </label>
                                     <label className='flex items-center gap-2 cursor-pointer group'>
                                         <div className="relative">
@@ -316,7 +316,7 @@ const InvoiceDetail = () => {
                                                 {!changeTitle && <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>}
                                             </div>
                                         </div>
-                                        <span className='text-lg font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Tax</span>
+                                        <span className='md:text-lg text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Tax</span>
                                     </label>
                                 </div>
                             </div>
@@ -325,7 +325,7 @@ const InvoiceDetail = () => {
                 </div>
 
                 {/* Invoice Container */}
-                <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8 border border-gray-200">
+                <div className="bg-white rounded-2xl shadow-2xl md:p-8 p-2 mb-8 border border-gray-200">
                     <div ref={componentRef} className="invoice-container">
                         {/* <!-- Header --> */}
                         <div className="invoice-header p-2">
