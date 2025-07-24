@@ -135,7 +135,7 @@ const ProductForm = ({ editMode = false }) => {
             product_default_sgst_rate: 'Enter SGST rate (%)',
             product_default_igst_rate: 'Enter IGST rate (%)',
             product_unit_price: 'Enter unit price',
-            product_hsn_sac_code: 'Enter HSN/SAC code',
+            product_hsn_sac_code: 'Ask AI For HSN/SAC code',
             company_id: 'Select a company'
         };
         return placeholderMap[key] || 'Enter value';

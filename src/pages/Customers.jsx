@@ -12,7 +12,7 @@ const Customers = () => {
         fetchCompany
     } = useContext(DataContext);
 
-    const [selectedCompany, setSelectedCompany] = useState(yourCompanies[0]);
+    const [selectedCompany, setSelectedCompany] = useState(yourCompanies[0]?.company_id);
 
     useEffect(() => {
         fetchCompany()
@@ -99,7 +99,7 @@ const Customers = () => {
                         </div>
                         <div className="relative">
                             <select
-                                value={selectedCompany.company_id}
+                                value={selectedCompany}
                                 onChange={handleCompanyChange}
                                 className="w-full border-2 border-blue-200 focus:border-blue-500 bg-white p-4 rounded-xl text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 appearance-none cursor-pointer shadow-sm hover:shadow-md"
                             >
@@ -123,9 +123,9 @@ const Customers = () => {
                     {yourCustomers.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16">
                             <div className="bg-white rounded-2xl shadow-2xl p-12 border border-gray-200 max-w-md w-full text-center">
-                                <div className="w-24 h-24 bg-gradient-to-r from-orange-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                                    <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                <div className="w-24 h-24 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                 </div>
                                 <h3 className="text-2xl font-bold text-gray-800 mb-4">No Customers Found</h3>

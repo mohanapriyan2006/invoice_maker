@@ -1,10 +1,13 @@
 import React, { useContext, useState } from 'react';
 import DataContext from '../context/DataContest';
+import { useLocation } from 'react-router-dom';
 
 const AIButton = () => {
     const { isAIActive, setIsAIActive } = useContext(DataContext);
     const [isHovered, setIsHovered] = useState(false);
     const [isClick, setIsClick] = useState(false);
+
+    const location = useLocation();
 
     const handleClick = () => {
         setIsAIActive((p) => !p);
@@ -54,7 +57,7 @@ const AIButton = () => {
                     {/* AI Icon */}
                     <div className='relative flex items-center justify-center h-full'>
                         <div className='text-cyan-400 font-bold text-lg md:text-xl'>
-                           {isAIActive?  'X':'AI'}
+                            {isAIActive ? 'X' : 'AI'}
                         </div>
                     </div>
 
@@ -83,6 +86,14 @@ const AIButton = () => {
                     <div className='absolute bottom-full right-0 mb-2 px-3 py-1 bg-slate-900/90 backdrop-blur-sm border border-cyan-400/50 rounded-lg shadow-lg animate-fade-in'>
                         <div className='text-cyan-400 text-sm font-mono whitespace-nowrap'>
                             Ask AI Assistant
+                        </div>
+                        <div className='absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-cyan-400/50'></div>
+                    </div>
+                )}
+                {location.pathname == '/productForm' && !isAIActive && (
+                    <div className='absolute bottom-full right-0 mb-2 px-3 py-1 bg-slate-900/90 backdrop-blur-sm border border-cyan-400/50 rounded-lg shadow-lg shadow-cyan-500 animate-fade-in'>
+                        <div className='text-cyan-400 text-sm font-mono whitespace-nowrap'>
+                            Ask AI For HSN/SAC code
                         </div>
                         <div className='absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-cyan-400/50'></div>
                     </div>

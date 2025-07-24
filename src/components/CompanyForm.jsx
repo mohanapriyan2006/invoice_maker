@@ -164,6 +164,8 @@ const CompanyForm = ({ editMode = false }) => {
     initialValues: {
       company_name: '',
       company_address: '',
+      company_city: '',
+      company_state: '',
       company_gstin: '',
       company_msme: '',
       company_email: '',
@@ -177,6 +179,8 @@ const CompanyForm = ({ editMode = false }) => {
     validationSchema: Yup.object({
       company_name: Yup.string().required('Company name is required'),
       company_address: Yup.string().required('Address is required'),
+      company_city: Yup.string().required('City is required'),
+      company_state: Yup.string().required('State is required'),
       company_gstin: Yup.string().required('GSTIN is required'),
       company_msme: Yup.string().required('MSME is required'),
       company_email: Yup.string().email('Invalid email').required('Email is required'),
@@ -187,7 +191,7 @@ const CompanyForm = ({ editMode = false }) => {
       company_ifsc_code: Yup.string().required('IFSC Code is required'),
     }),
 
-    onSubmit: (values, { setFieldError ,setSubmitting  }) => {
+    onSubmit: (values, { setFieldError, setSubmitting }) => {
       const saveCompany = async () => {
         try {
           if (editMode && editCompanyData) {
@@ -238,6 +242,8 @@ const CompanyForm = ({ editMode = false }) => {
       formik.setValues({
         company_name: editCompanyData.company_name || '',
         company_address: editCompanyData.company_address || '',
+        company_city: editCompanyData.company_city || '',
+        company_state: editCompanyData.company_state || '',
         company_gstin: editCompanyData.company_gstin || '',
         company_msme: editCompanyData.company_msme || '',
         company_email: editCompanyData.company_email || '',
@@ -255,6 +261,8 @@ const CompanyForm = ({ editMode = false }) => {
     const iconMap = {
       company_name: <Building2 className="w-5 h-5" />,
       company_address: <MapPin className="w-5 h-5" />,
+      company_city: <MapPin className="w-5 h-5" />,
+      company_state: <MapPin className="w-5 h-5" />,
       company_gstin: <Hash className="w-5 h-5" />,
       company_msme: <Award className="w-5 h-5" />,
       company_email: <Mail className="w-5 h-5" />,
@@ -277,6 +285,8 @@ const CompanyForm = ({ editMode = false }) => {
     const placeholderMap = {
       company_name: 'Enter your company name',
       company_address: 'Enter complete address',
+      company_city: 'Enter city name',
+      company_state: 'Enter state name',
       company_gstin: 'Enter GSTIN number',
       company_msme: 'Enter MSME registration number',
       company_email: 'Enter company email address',
@@ -293,7 +303,7 @@ const CompanyForm = ({ editMode = false }) => {
     {
       title: 'Company Information',
       icon: <Building2 className="w-5 h-5" />,
-      fields: ['company_name', 'company_address', 'company_email']
+      fields: ['company_name', 'company_address', 'company_city', 'company_state', 'company_email']  // MODIFIED THIS LINE
     },
     {
       title: 'Registration Details',

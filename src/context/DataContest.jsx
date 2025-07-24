@@ -63,14 +63,14 @@ export const DataProvider = ({ children }) => {
         if (result.isConfirmed) {
             await swalWithBootstrapButtons.fire({
                 title: "Deleted!",
-                text: "Your file has been deleted.",
+                text: "Your data has been deleted.",
                 icon: "success"
             });
             return true;
         } else if (result.dismiss === Swal.DismissReason.cancel) {
             await swalWithBootstrapButtons.fire({
                 title: "Cancelled",
-                text: "Your file is safe :)",
+                text: "Your data is safe :)",
                 icon: "error"
             });
             return false;
@@ -196,6 +196,11 @@ export const DataProvider = ({ children }) => {
             const res = await api.get("companies");
             setYourCompanies(res.data.data);
             setIsLoading((p) => ({ ...p, company: false }))
+            await Promise.all([
+                fetchCustomers(res.data.data.company_id),
+                fetchProducts(res.data.data.company_id),
+                fetchInvoices(res.data.data.company_id),
+            ]);
             return res.data.data;
         } catch (e) {
             console.log("Get Companies Error : ", e);
@@ -256,6 +261,9 @@ export const DataProvider = ({ children }) => {
             const res = await api.get(`invoices?company_id=${cId}`);
             setYourInvoices(res.data.data);
             setIsLoading((p) => ({ ...p, invoice: false }));
+            await Promise.all([
+                fetchProducts(cId)
+            ]);
         } catch (e) {
             console.log("Get Invoice Error : ", e);
             setIsLoading((p) => ({ ...p, invoice: false }));

@@ -33,7 +33,7 @@ const InvoiceDetail = () => {
     }, [invoice]);
 
 
-    const product_name = (pID) => {
+    const productName = (pID) => {
         // console.log(yourProducts)
         const temp = yourProducts.find(val => val.product_id == pID).product_name;
         return temp;
@@ -616,7 +616,7 @@ const InvoiceDetail = () => {
                                     {invoice.products.map((item, i) => (
                                         <tr key={i}>
                                             <td>{i + 1}</td>
-                                            <td>{product_name(item.product_id) || `Product ${i + 1}`}</td>
+                                            <td>{productName(item.product_id) || `Product ${i + 1}`}</td>
                                             <td>996819</td>
                                             <td>{item.invoice_item_quantity}</td>
                                             <td>{item.invoice_item_unit_price.toFixed(2)}</td>

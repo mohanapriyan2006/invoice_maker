@@ -47,7 +47,7 @@ const EditableField = ({ value, onChange, className = '' }) => {
                 if (isEditing) {
                     setEditing(true);
                 }
-            }} className={`${isEditing ? `cursor-pointer ${className} hover:text-cyan-500` : ''} `}>
+            }} className={`${isEditing ? `cursor-pointer ${className} hover:text-cyan-500 hover:border` : ''} `}>
                 {value || "Click to edit"}
             </span>
         )
