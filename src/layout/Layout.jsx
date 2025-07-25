@@ -22,6 +22,8 @@ import ChangePassword from '../pages/login/ChangePassword';
 import NotFound from '../pages/NotFound';
 import AIChatBox from '../components/AIChatBox';
 import AIButton from '../components/AIButton';
+import AboutPage from '../pages/About';
+import TermsAndConditions from '../pages/Terms&Conditions';
 
 const Layout = () => {
     const { loginPage, width, isAIActive } = useContext(DataContext);
@@ -36,7 +38,7 @@ const Layout = () => {
             </div>
             <div className="div2 relative">
                 <Header />
-                
+
                 <Routes>
                     <Route path='/home' element={<Home />} />
                     <Route path='/' element={<Login />} />
@@ -58,11 +60,13 @@ const Layout = () => {
                     <Route path='/invoiceForm' element={<InvoiceForm />} />
                     <Route path='/invoiceForm/:id' element={<InvoiceForm editMode={true} />} />
                     <Route path='/invoiceDetail/:id' element={<InvoiceDetail />} />
+                    <Route path='/about' element={<AboutPage />} />
+                    <Route path='/terms' element={<TermsAndConditions />} />
                     <Route path='*' element={<NotFound />} />
                 </Routes>
 
                 {isAIActive && <AIChatBox />}
-                {!['/home','/','/signup','/changePassword'].find(val => val === location.pathname) && <AIButton />}
+                {!['/home', '/', '/signup', '/changePassword'].find(val => val === location.pathname) && <AIButton />}
 
             </div>
 

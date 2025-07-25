@@ -219,7 +219,7 @@ const Invoices = () => {
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                                     </svg>
                                                 </div>
-                                                <div className="bg-white/20 px-3 py-1 rounded-full text-xs font-medium">
+                                                <div className="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold">
                                                     {invoice.invoice_number}
                                                 </div>
                                             </div>
@@ -241,10 +241,10 @@ const Invoices = () => {
                                                         {/* Save Button */}
                                                         <button
                                                             onClick={() => handleStatusSave(invoiceId)}
-                                                            className="group relative p-1.5 rounded-full bg-green-500/20 hover:bg-green-500/30 border border-green-400/30 hover:border-green-400/50 transition-all duration-200 hover:scale-110"
+                                                            className="group relative p-1.5 rounded-full bg-green-500/60  hover:bg-green-500/80 border border-green-400/50 hover:border-green-400/90 transition-all duration-200 hover:scale-110"
                                                             title="Save changes"
                                                         >
-                                                            <svg className="w-3.5 h-3.5 text-green-300 group-hover:text-green-200 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <svg className="w-3.5 h-3.5 font-bold text-green-100 group-hover:text-green-200 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                                                             </svg>
                                                         </button>

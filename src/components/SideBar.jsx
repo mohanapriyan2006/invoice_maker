@@ -12,6 +12,7 @@ import logoutI from '../assets/logout.png'
 import deleteI from '../assets/delete2.png'
 import menuWI from '../assets/menuwhite.svg';
 import { api } from '../API/api';
+import { Info } from 'lucide-react';
 
 
 const SideBar = () => {
@@ -83,7 +84,7 @@ const SideBar = () => {
     }, [isToggle, width]);
 
     const style = {
-        links: 'font-semibold hover:underline cursor-pointer w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg transition-all duration-200 hover:bg-blue-800 hover:shadow-md hover:transform hover:scale-105',
+        links: 'font-semibold hover:underline cursor-pointer w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg transition-all duration-200 hover:bg-blue-600 hover:shadow-md hover:transform hover:scale-103',
     }
 
     return (
@@ -190,8 +191,8 @@ const SideBar = () => {
                 <div className="flex-1"></div>
 
                 {/* Action Buttons */}
-                <div className="px-4 mb-6">
-                    <div className="bg-blue-800/30 rounded-xl p-3 border border-blue-600/30">
+                <div className="px-4 mb-2">
+                    <div className="bg-blue-800/30 rounded-xl p-3 border border-blue-600">
                         <h3 className="text-xs font-semibold text-blue-300 uppercase tracking-wide mb-3 px-2">Actions</h3>
 
                         <p onClick={handleLogout}
@@ -213,7 +214,8 @@ const SideBar = () => {
                 {/* Footer */}
                 <div className="px-4 pb-4">
                     <div className="bg-blue-800/30 backdrop-blur-sm rounded-xl p-3 border border-blue-600/30 text-center">
-                        <p className="text-xs text-blue-300">&copy; 2025</p>
+                        <p onClick={() => navigate('/about')} className={style.links}> <Info/> <span>About</span></p>
+                        <p onClick={() => navigate('/terms')} className='font-semibold text-sm mt-4 cursor-pointer hover:underline' >Terms & Conditions <span className="text-xs text-blue-200">&copy; {new Date().getFullYear()}</span></p>
                         <p className="text-sm font-medium text-blue-100">Invoice Manager</p>
                     </div>
                 </div>
