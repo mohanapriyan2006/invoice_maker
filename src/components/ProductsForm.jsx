@@ -275,7 +275,7 @@ const ProductForm = ({ editMode = false }) => {
                                                             placeholder={getFieldPlaceholder(key)}
                                                             step={getFieldType(key) === 'number' ? '0.01' : undefined}
                                                             min={getFieldType(key) === 'number' ? '0' : undefined}
-                                                            className={`w-full pl-12 pr-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${formik.touched[key] && formik.errors[key]
+                                                            className={`w-full pl-12  pr-4 py-3 ${key == 'product_hsn_sac_code' ? 'text-cyan-500 ':'text-gray-600'} border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${formik.touched[key] && formik.errors[key]
                                                                 ? 'border-red-300 focus:border-red-500'
                                                                 : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
                                                                 }`}

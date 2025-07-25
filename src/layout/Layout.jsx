@@ -36,6 +36,7 @@ const Layout = () => {
             </div>
             <div className="div2 relative">
                 <Header />
+                
                 <Routes>
                     <Route path='/home' element={<Home />} />
                     <Route path='/' element={<Login />} />

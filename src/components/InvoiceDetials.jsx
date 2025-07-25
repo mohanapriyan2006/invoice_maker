@@ -207,12 +207,7 @@ const InvoiceDetail = () => {
         }
     };
 
-    // const style = {
-    //     onEditBtn: {
-    //         isActive: 'btn-1 px-5 py-2 flex gap-2 inset-ring-2 inset-ring-green-600 shadow shadow-blue-600 animate-pulse',
-    //         notActive: 'btn-1 px-5 py-2 flex gap-2 inset-ring-2 inset-ring-yellow-300'
-    //     }
-    // }
+   
 
 
     if (!invoice) {
