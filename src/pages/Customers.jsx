@@ -36,13 +36,12 @@ const Customers = () => {
 
     if (isLoading.customer) {
         return (
-            <div className="min-h-screen overflow-x-hidden flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+            <div className="model-loading-div">
                 <div className="bg-white rounded-2xl shadow-2xl p-8 border border-blue-200">
                     <div className="flex flex-col items-center space-y-4">
                         <div className="relative">
                             <img className='w-16 h-16 animate-spin' src={loadingI} alt="loading" />
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full opacity-20 animate-pulse"></div>
-                        </div>
+                                         </div>
                         <div className="text-center">
                             <h3 className="text-xl font-semibold text-blue-800 mb-2">Loading Customers</h3>
                             <div className="flex items-center justify-center space-x-1">
@@ -66,7 +65,7 @@ const Customers = () => {
 
                 {/* Header Section */}
                 <div className="mb-8">
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-blue-200">
+                    <div className="model-header-div">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center sm:space-x-4">
                                 <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-3 sm:mr-0 mr-2 rounded-xl shadow-lg">
@@ -88,9 +87,9 @@ const Customers = () => {
 
                 {/* Company Selector */}
                 <div className="mb-8">
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-blue-200">
+                    <div className="model-header-div">
                         <div className="flex items-center space-x-4 mb-4">
-                            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg">
+                            <div className="model-details-subheader">
                                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                 </svg>
@@ -122,8 +121,8 @@ const Customers = () => {
                 <div className="mb-8">
                     {yourCustomers.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16">
-                            <div className="bg-white rounded-2xl shadow-2xl p-12 border border-gray-200 max-w-md w-full text-center">
-                                <div className="w-24 h-24 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                            <div className="model-not-found">
+                                <div className="model-not-found-icon">
                                     <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
@@ -131,7 +130,7 @@ const Customers = () => {
                                 <h3 className="text-2xl font-bold text-gray-800 mb-4">No Customers Found</h3>
                                 <p className="text-gray-600 mb-8">You haven't added any products yet. Start by creating your first customer!</p>
                                 <button
-                                    className='bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                                    className='model-not-found-btn'
                                     onClick={() => navigate('/home')}
                                 >
                                     <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,10 +143,10 @@ const Customers = () => {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {yourCustomers.map((customer, index) => (
-                                <div key={index} className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 hover:border-blue-300 transition-all duration-300 overflow-hidden transform hover:scale-105">
+                                <div key={index} className="model-overview">
 
                                     {/* Product Header */}
-                                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white">
+                                    <div className="model-overview-header">
                                         <div className="flex items-center justify-between">
                                             <div className="bg-white/20 p-2 rounded-lg">
                                                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,7 +162,7 @@ const Customers = () => {
                                     {/* Product Content */}
                                     <div className="p-6">
                                         <div className="mb-4">
-                                            <h4 className='text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors duration-200'>
+                                            <h4 className='model-overview-content'>
                                                 {customer.customer_name}
                                             </h4>
 
@@ -176,7 +175,7 @@ const Customers = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                                            <div className="model-details-content-div ">
                                                 <div className="flex items-start text-gray-700">
                                                     <svg className="w-4 h-4 mr-2 mt-0.5 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -190,7 +189,7 @@ const Customers = () => {
                                         <div className="pt-4 border-t border-gray-100">
                                             <button
                                                 onClick={() => navigate(`/customersDetail/${customer.customer_id}`)}
-                                                className='w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center space-x-2'
+                                                className='model-overview-btn'
                                             >
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -202,7 +201,7 @@ const Customers = () => {
                                     </div>
 
                                     {/* Hover Effect Gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                                    <div className="model-overview-hover"></div>
                                 </div>
                             ))}
                         </div>
@@ -213,9 +212,9 @@ const Customers = () => {
                 <div className="fixed bottom-8 right-8 z-50">
                     <button
                         onClick={() => navigate('/customerForm')}
-                        className='bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-full shadow-2xl hover:from-blue-600 hover:to-blue-700 transform hover:scale-110 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 group'
+                        className='model-overview-floating-add group '
                     >
-                        <svg className="w-6 h-6 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="model-overview-floating-add-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
                     </button>
@@ -223,10 +222,10 @@ const Customers = () => {
 
                 {/* Desktop Add Button */}
                 <div className="hidden md:block">
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-blue-200">
+                    <div className="model-header-div">
                         <button
                             onClick={() => navigate('/customerForm')}
-                            className='w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center space-x-3'
+                            className='model-overview-add'
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

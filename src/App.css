@@ -28,18 +28,7 @@ body {
 }
 
 
-/* @media only screen and (max-width: 500px) {
-    .parent {
-        display: block;
-        position: fixed;
-    }
 
-    .parent .div1 {
-    }
-
-    .parent .div2 {
-    }
-} */
 
 
 /* scrool bar */
@@ -69,68 +58,6 @@ body {
     @apply border rounded-2xl bg-linear-30 to-blue-400 from-blue-600 text-white font-semibold py-1 cursor-pointer hover:to-blue-700
 }
 
-/* ------------------------------------- */
-/* loading data */
-/* ------------------------------------- */
-
-.loading-div {
-    @apply text-center text-[20px] md:text-2xl font-semibold text-blue-600 tracking-wider mt-15 ml-5 flex items-center justify-center gap-2
-}
-
-.loading-div .load-icon {
-    @apply h-auto w-8 animate-spin
-}
-
-.loading-div .load-span {
-    @apply animate-pulse -ml-1
-}
-
-
-/* ------------------------------------- */
-/* model overview */
-/* ------------------------------------- */
-
-.model-overview-div {
-    @apply ml-10 p-1 relative
-}
-
-.heading {
-    @apply md:text-2xl text-[20px] font-semibold text-blue-900 text-center underline
-}
-
-.model-overview-div .model-space {
-    @apply p-2 flex flex-col gap-4 mt-5
-}
-
-.model-overview-div .not-found {
-    @apply text-lg sm:text-2xl font-semibold text-red-700
-}
-
-.model-overview-div .model {
-    @apply shadow hover:shadow-blue-600 max-w-200 min-w-60 p-2 px-5 flex md:flex-row flex-col justify-between gap-1 border border-gray-200 rounded
-}
-
-.model-overview-div .add-btn {
-    @apply text-3xl font-semibold p-2 h-10 hover:scale-[108%] fixed bottom-4 right-4 flex justify-center items-center
-}
-
-
-/* ------------------------------------- */
-/* model details */
-/* ------------------------------------- */
-
-.model-details {
-    @apply border border-gray-300 rounded-xl p-4 mt-10 ml-10 md:mx-auto shadow-md bg-white min-w-fit md:max-w-150 justify-center items-center
-}
-
-.model-details .model-title {
-    @apply md:text-3xl text-xl font-bold text-blue-800 mb-2 text-center
-}
-
-.details-btns {
-    @apply flex justify-center gap-0 md:gap-10 mt-6
-}
-
 .back {
     @apply border-3 border-blue-600 h-12 px-2 md:px-6 rounded-2xl hover:bg-blue-500 hover:text-white cursor-pointer
 }
@@ -143,37 +70,154 @@ body {
     @apply h-auto w-5 -ml-2
 }
 
-.details-btns .edit {
-    @apply px-6 h-12 flex items-center gap-2
+
+/* --------------------------- */
+/* Model Loading */
+/* --------------------------- */
+
+.model-loading-div {
+    @apply min-h-screen overflow-x-hidden flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100
+}
+
+/* ------------- */
+
+.model-header-div {
+    @apply bg-white rounded-2xl shadow-lg p-6 border border-blue-200
+}
+
+.model-header-icon {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 p-3 rounded-xl shadow-lg
+}
+
+/* --------------------- */
+/* Model overview*/
+/* --------------------- */
+
+.model-not-found {
+    @apply bg-white rounded-2xl shadow-2xl p-12 border border-gray-200 max-w-md w-full text-center
+}
+
+.model-not-found-icon {
+    @apply w-24 h-24 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg
+}
+
+.model-not-found-btn {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transform hover:scale-102 transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+}
+
+.model-overview {
+    @apply bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 hover:border-blue-300 transition-all duration-300 overflow-hidden transform hover:scale-102
+}
+
+.model-overview-header {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white
+}
+
+.model-overview-content {
+    @apply text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-700 transition-colors duration-200
+}
+
+.model-overview-btn {
+    @apply w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transform hover:scale-103 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center space-x-2
+}
+
+.model-overview-hover {
+    @apply absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none
+}
+
+.model-overview-floating-add {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-full shadow-2xl hover:from-blue-600 hover:to-blue-700 transform hover:scale-110 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2
+}
+
+.model-overview-floating-add-icon {
+    @apply w-6 h-6 group-hover:rotate-90 transition-transform duration-200
+}
+
+.model-overview-add {
+    @apply w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transform hover:scale-101 transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center space-x-3
 }
 
 
-/* ------------------------------------- */
-/* model form */
-/* ------------------------------------- */
+/* --------------------- */
+/* Model details*/
+/* --------------------- */
 
-.model-form {
-    @apply ml-15 md:mx-auto p-4 space-y-4 bg-white shadow rounded
+.model-details-card {
+    @apply bg-white rounded-2xl shadow-lg border border-blue-200 overflow-hidden
 }
 
-.model-form .form-title {
-    @apply text-2xl font-bold mb-4 text-center text-blue-800
+.model-details-header {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 p-6 text-white
 }
 
-.model-form .cancel {
-    @apply border-3 border-blue-600 h-12 px-6 rounded-2xl hover:bg-blue-500 hover:text-white cursor-pointer
+.model-details-header {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 p-6 text-white
+}
+
+.model-details-subheader {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg
+}
+
+.model-details-content-div {
+    @apply bg-blue-50 p-4 rounded-xl border border-blue-100
+}
+
+.model-details-content-icon {
+    @apply w-5 h-5 text-blue-500 mt-0.5
+}
+
+.model-details-actions-div {
+    @apply bg-gray-50 p-6 border-t border-gray-200
+}
+
+.model-details-actions-subdiv {
+    @apply flex flex-col sm:flex-row gap-4 justify-end
+}
+
+.model-details-actions-back {
+    @apply bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 flex items-center space-x-2
+}
+
+.model-details-actions-delete {
+    @apply bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 flex items-center space-x-2
+}
+
+.model-details-actions-edit {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center space-x-2
 }
 
 
-/* ------------------------------------- */
-/* model choose company */
-/* ------------------------------------- */
+/* --------------------- */
+/* Model form */
+/* --------------------- */
 
-
-.model-choose {
-    @apply mt-4 mb-5 max-w-md mx-auto
+.model-form-header {
+    @apply bg-white rounded-2xl shadow-xl overflow-hidden
 }
 
-.model-choose .select {
-    @apply border-2 border-gray-300 focus:border-blue-600 p-2 w-full rounded
+.model-form-header-div {
+    @apply bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-6
+}
+
+.model-form-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6
+}
+
+.model-form-field {
+    @apply w-full pl-12 pr-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20
+}
+
+.model-form-actions {
+    @apply flex flex-col sm:flex-row gap-4 pt-8 mt-8 border-t border-gray-200
+}
+
+.model-form-actions-cancel {
+    @apply flex-1 px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500/20
+}
+
+.model-form-actions-submit {
+    @apply flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl
+}
+.model-form-actions-submiting {
+    @apply w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin
 }

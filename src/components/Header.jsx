@@ -1,14 +1,8 @@
-// import React, { useContext } from 'react'
-import DataContext from '../context/DataContest';
+
 import invoiceLogo from '../assets/invoice-logo.png'
 
 const Header = () => {
-  // const { userDetails } = useContext(DataContext);
 
-  // const styles = {
-  //   header: "header p-2 relative mt-2 mb-2 md:mb-4 border-b border-gray-300 flex justify-center items-center",
-  //   // button: "bg-blue-600 text-white rounded-lg text-[20px] font-semibold px-4 py-1 cursor-pointer hover:bg-blue-800 absolute right-3 top-3"
-  // }
 
   return (
     <>

@@ -152,47 +152,6 @@ const InvoiceDetail = () => {
         }
     };
 
-    // const downloadAsImage = async () => {
-    //     if (!componentRef.current) return;
-
-    //     GenerateInvoice();
-
-    //     const clone = componentRef.current.cloneNode(true);
-
-
-    //     clone.classList.remove("scale-[90%]");
-    //     clone.classList.add("scale-100", "text-[12px]", "md:text-[12px]", "p-4");
-
-    //     clone.style.width = "1024px";
-    //     clone.style.maxWidth = "none";
-    //     clone.style.position = 'absolute';
-    //     clone.style.left = '-9999px';
-    //     clone.style.top = '0';
-    //     document.body.appendChild(clone);
-
-
-    //     try {
-    //         const canvas = await html2canvas(clone, {
-    //             scale: 2,
-    //             useCORS: true,
-    //             backgroundColor: '#ffffff',
-    //         });
-
-    //         const imgData = canvas.toDataURL('image/png');
-    //         const link = document.createElement('a');
-    //         link.href = imgData;
-    //         link.download = `Invoice_${invoice.invoice_number}.png`;
-    //         document.body.appendChild(link);
-    //         link.click();
-    //         document.body.removeChild(link);
-    //     } catch (error) {
-    //         console.error("Image Export Error:", error);
-    //         alert("Failed to generate image.");
-    //     } finally {
-    //         document.body.removeChild(clone);
-    //     }
-    // };
-
     const handleDeleteInvoice = async (invoiceId, companyId) => {
         const isOk = await deleteAlert();
         if (isOk) {
@@ -207,14 +166,14 @@ const InvoiceDetail = () => {
         }
     };
 
-   
+
 
 
     if (!invoice) {
         return (
             <div className='min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-6'>
-                <div className="bg-white rounded-2xl shadow-2xl p-12 border border-gray-200 max-w-md w-full text-center">
-                    <div className="w-24 h-24 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <div className="model-not-found">
+                    <div className="model-not-found-icon">
                         <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                         </svg>
@@ -222,7 +181,7 @@ const InvoiceDetail = () => {
                     <h3 className="text-2xl font-bold text-gray-800 mb-4">Invoice Not Found!</h3>
                     <p className="text-gray-600 mb-8">The Invoice you're looking for doesn't exist or has been removed.</p>
                     <button
-                        className='bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                        className='model-not-found-btn'
                         onClick={() => navigate('/invoices')}
                     >
                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,9 +199,9 @@ const InvoiceDetail = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
                 <div className="mb-8">
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-blue-200">
+                    <div className="model-header-div">
                         <div className="flex items-center space-x-4">
-                            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-3 rounded-xl shadow-lg">
+                            <div className="model-header-icon">
                                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
@@ -709,7 +668,7 @@ const InvoiceDetail = () => {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <button
                             onClick={() => navigate("/invoices")}
-                            className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 min-w-[120px]"
+                            className="model-details-actions-back "
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -718,7 +677,7 @@ const InvoiceDetail = () => {
                         </button>
                         <button
                             onClick={() => handleDeleteInvoice(invoice.invoice_id, invoice.owner_company)}
-                            className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 min-w-[120px]"
+                            className="model-details-actions-delete "
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -727,7 +686,7 @@ const InvoiceDetail = () => {
                         </button>
                         <button
                             onClick={() => navigate(`/invoiceForm/${invoice.invoice_id}`)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 min-w-[120px]"
+                            className="model-details-actions-edit "
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

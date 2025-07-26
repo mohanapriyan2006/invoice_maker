@@ -181,9 +181,9 @@ const CustomerForm = ({ editMode = false }) => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 px-4">
             <div className="max-w-4xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div className="model-form-header">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-6">
+                    <div className="model-form-header-div">
                         <div className="flex items-center space-x-3">
                             <div className="p-2 bg-white/20 rounded-lg">
                                 <Users className="w-6 h-6 text-white" />
@@ -210,10 +210,10 @@ const CustomerForm = ({ editMode = false }) => {
                                     </div>
 
                                     {/* Group Fields */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="model-form-grid">
                                         {group.fields.map((key) => (
                                             <div key={key} className={`flex flex-col ${key === 'customer_address_line1' || key === 'customer_address_line2'
-                                                    ? 'md:col-span-2' : ''
+                                                ? 'md:col-span-2' : ''
                                                 }`}>
                                                 <label htmlFor={key} className="text-sm font-medium text-gray-700 mb-2">
                                                     {key.replace(/customer_/g, '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
@@ -232,8 +232,8 @@ const CustomerForm = ({ editMode = false }) => {
                                                             onBlur={formik.handleBlur}
                                                             value={formik.values[key]}
                                                             className={`w-full pl-12 pr-10 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 appearance-none ${formik.touched[key] && formik.errors[key]
-                                                                    ? 'border-red-300 focus:border-red-500'
-                                                                    : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
+                                                                ? 'border-red-300 focus:border-red-500'
+                                                                : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
                                                                 }`}
                                                         >
                                                             <option value="">-- Select Company --</option>
@@ -267,9 +267,9 @@ const CustomerForm = ({ editMode = false }) => {
                                                             onBlur={formik.handleBlur}
                                                             value={formik.values[key]}
                                                             placeholder={getFieldPlaceholder(key)}
-                                                            className={`w-full pl-12 pr-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${formik.touched[key] && formik.errors[key]
-                                                                    ? 'border-red-300 focus:border-red-500'
-                                                                    : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
+                                                            className={`model-form-field ${formik.touched[key] && formik.errors[key]
+                                                                ? 'border-red-300 focus:border-red-500'
+                                                                : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
                                                                 }`}
                                                         />
                                                         {formik.touched[key] && formik.errors[key] && (
@@ -294,19 +294,25 @@ const CustomerForm = ({ editMode = false }) => {
                             ))}
 
                             {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row gap-4 pt-8 mt-8 border-t border-gray-200">
+                            <div className="model-form-actions">
                                 <button
                                     onClick={() => navigate('/customers')}
                                     type="button"
-                                    className="flex-1 px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500/20"
+                                    className=" model-form-actions-cancel"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-lg hover:shadow-xl"
-                                >
-                                    {editMode ? 'Update Customer' : 'Add Customer'}
+                                    className="model-form-actions-submit"
+                                > {formik.isSubmitting ? (
+                                    <div className="flex items-center justify-center space-x-2">
+                                        <div className=" model-form-actions-submiting"></div>
+                                        <span>Processing...</span>
+                                    </div>
+                                ) : (
+                                    editMode ? 'Update Customer' : 'Add Customer'
+                                )}
                                 </button>
                             </div>
                         </form>

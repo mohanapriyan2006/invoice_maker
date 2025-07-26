@@ -150,9 +150,9 @@ const InvoiceForm = ({ editMode = false }) => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 px-4">
             <div className="max-w-6xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div className="model-form-header">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-6">
+                    <div className="model-form-header-div">
                         <div className="flex items-center space-x-3">
                             <div className="p-2 bg-white/20 rounded-lg">
                                 <Receipt className="w-6 h-6 text-white" />
@@ -176,7 +176,7 @@ const InvoiceForm = ({ editMode = false }) => {
                             validationSchema={validationSchema}
                             onSubmit={handleSubmit}
                         >
-                            {({ values, errors, touched, handleChange, handleBlur }) => (
+                            {({ values, errors, touched, handleChange, handleBlur, isSubmitting }) => (
                                 <Form className="space-y-8">
                                     {/* Company Information */}
                                     {fieldGroups.slice(0, 1).map((group, groupIndex) => (
@@ -188,7 +188,7 @@ const InvoiceForm = ({ editMode = false }) => {
                                                 <h3 className="text-lg font-semibold text-gray-800">{group.title}</h3>
                                             </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="model-form-grid">
                                                 {/* Owner Company */}
                                                 <div className="flex flex-col">
                                                     <label htmlFor="owner_company" className="text-sm font-medium text-gray-700 mb-2">
@@ -292,7 +292,7 @@ const InvoiceForm = ({ editMode = false }) => {
                                                 <h3 className="text-lg font-semibold text-gray-800">{group.title}</h3>
                                             </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="model-form-grid">
                                                 {group.fields.map((key) => (
                                                     <div key={key} className={`flex flex-col ${key === 'invoice_place_of_supply' ? 'md:col-span-2' : ''}`}>
                                                         <label htmlFor={key} className="text-sm font-medium text-gray-700 mb-2">
@@ -311,7 +311,7 @@ const InvoiceForm = ({ editMode = false }) => {
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
                                                                 placeholder={getFieldPlaceholder(key)}
-                                                                className={`w-full pl-12 pr-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${touched[key] && errors[key]
+                                                                className={`model-form-field ${touched[key] && errors[key]
                                                                     ? 'border-red-300 focus:border-red-500'
                                                                     : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
                                                                     }`}
@@ -345,7 +345,7 @@ const InvoiceForm = ({ editMode = false }) => {
                                                 <h3 className="text-lg font-semibold text-gray-800">{group.title}</h3>
                                             </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="model-form-grid">
                                                 {group.fields.map((key) => (
                                                     <div key={key} className="flex flex-col">
                                                         <label htmlFor={key} className="text-sm font-medium text-gray-700 mb-2">
@@ -363,7 +363,7 @@ const InvoiceForm = ({ editMode = false }) => {
                                                                 value={values[key]?.slice(0, 10)}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                                className={`w-full pl-12 pr-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${touched[key] && errors[key]
+                                                                className={`model-form-field ${touched[key] && errors[key]
                                                                     ? 'border-red-300 focus:border-red-500'
                                                                     : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
                                                                     }`}
@@ -476,7 +476,7 @@ const InvoiceForm = ({ editMode = false }) => {
                                                                             value={item.invoice_item_quantity}
                                                                             onChange={handleChange}
                                                                             placeholder="Enter quantity"
-                                                                            className={`w-full pl-12 pr-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 ${touched.invoice_items?.[index]?.invoice_item_quantity && errors.invoice_items?.[index]?.invoice_item_quantity
+                                                                            className={`model-form-field ${touched.invoice_items?.[index]?.invoice_item_quantity && errors.invoice_items?.[index]?.invoice_item_quantity
                                                                                 ? 'border-red-300 focus:border-red-500'
                                                                                 : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
                                                                                 }`}
@@ -542,9 +542,9 @@ const InvoiceForm = ({ editMode = false }) => {
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
                                                                 placeholder={getFieldPlaceholder(key)}
-                                                                className={`w-full pl-12 pr-4 py-3 border-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none ${touched[key] && errors[key]
-                                                                        ? 'border-red-300 focus:border-red-500'
-                                                                        : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
+                                                                className={`model-form-field resize-none ${touched[key] && errors[key]
+                                                                    ? 'border-red-300 focus:border-red-500'
+                                                                    : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
                                                                     }`}
                                                             />
                                                             {touched[key] && errors[key] && (
@@ -585,15 +585,21 @@ const InvoiceForm = ({ editMode = false }) => {
                                         <button
                                             type="button"
                                             onClick={() => navigate('/invoices')}
-                                            className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all duration-200 font-medium"
+                                            className="model-form-actions-cancel"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
-                                            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                                        >
-                                            {editMode ? 'Update Invoice' : 'Create Invoice'}
+                                            className="model-form-actions-submit"
+                                        > {isSubmitting ? (
+                                            <div className="flex items-center justify-center space-x-2">
+                                                <div className=" model-form-actions-submiting"></div>
+                                                <span>Processing...</span>
+                                            </div>
+                                        ) : (
+                                            editMode ? 'Update Invoice' : 'Create Invoice'
+                                        )}
                                         </button>
                                     </div>
                                 </Form>
