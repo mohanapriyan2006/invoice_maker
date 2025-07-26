@@ -41,6 +41,14 @@ body {
     }
 } */
 
+
+/* scrool bar */
+
+.scroll-bar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(110, 146, 255, 0.941) transparent;
+}
+
 /* --------------------- */
 /* login css*/
 /* --------------------- */
@@ -162,12 +170,10 @@ body {
 /* ------------------------------------- */
 
 
-.model-choose{
+.model-choose {
     @apply mt-4 mb-5 max-w-md mx-auto
 }
 
-.model-choose .select{
+.model-choose .select {
     @apply border-2 border-gray-300 focus:border-blue-600 p-2 w-full rounded
 }
-
-

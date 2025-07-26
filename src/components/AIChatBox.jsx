@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import gemini from '../API/AiAPI';
 import aiI from '../assets/ai-logo.png'
 import DataContext from '../context/DataContest';
@@ -11,7 +11,7 @@ const AIChatBox = () => {
     const [text, setText] = useState("");
     const [showChat, setShowChat] = useState(false);
 
-    
+
     const {
         yourCompanies,
         yourProducts,
@@ -38,6 +38,14 @@ const AIChatBox = () => {
         }
     }, [yourCompanies, yourProducts, yourCustomers, yourInvoices]);
 
+
+    const chatBoxRef = useRef()
+
+    useEffect(() => {
+        if (showChat) {
+            chatBoxRef.current.scrollTo({ top: chatBoxRef.current.scrollHeight, behavior: 'smooth' })
+        }
+    }, [messages])
 
 
     const handleSend = async () => {
@@ -135,7 +143,7 @@ const AIChatBox = () => {
                             </div>
 
                             {/* Messages Container */}
-                            <div className="p-4 space-y-4 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-400/20 scrollbar-track-transparent">
+                            <div ref={chatBoxRef} className="p-4 space-y-4 max-h-64 scroll-bar overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-400/20 scrollbar-track-transparent">
                                 {messages.map((message) => (
                                     <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                                         {message.sender != 'user' && <div className='relative'>

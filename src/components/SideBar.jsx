@@ -19,6 +19,7 @@ const SideBar = () => {
     const navigate = useNavigate();
     const { setLoginPage, logoutAlert, confirmUsernameBeforeDelete, setToken, width, isToggle, setIsToggle, userDetails, setYourCompanies, setYourProducts, setYourCustomers, setYourInvoices } = useContext(DataContext);
 
+
     const handleLogout = async () => {
         setIsToggle(false);
         let isOk = await logoutAlert();
@@ -68,7 +69,10 @@ const SideBar = () => {
 
     const sidebarRef = useRef();
 
+
     useEffect(() => {
+        sidebarRef.current.scrollTo({ top: 0, behavior: 'smooth' })
+
         const handleClickOutside = (event) => {
             if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
                 if (width < 500 && isToggle) {
@@ -91,7 +95,7 @@ const SideBar = () => {
         <>
             <div
                 ref={sidebarRef}
-                className={`sideBar fixed top-0 h-screen bg-gradient-to-b from-blue-900 to-blue-800 shadow-2xl border-r border-blue-700 transition-all ease-in-out duration-300 z-[9999] ${width < 500 ? (isToggle ? "left-0 text-white w-64 overflow-y-scroll overflow-x-hidden" : "-left-55 text-blue-900 w-56") : "block overflow-y-scroll md:w-80 w-fit text-white"}`}>
+                className={`sideBar scroll-bar fixed top-0 h-screen bg-gradient-to-b from-blue-900 to-blue-800 shadow-2xl border-r border-blue-700 transition-all ease-in-out duration-300 z-[9999] ${width < 500 ? (isToggle ? "left-0 text-white w-64 overflow-y-scroll  overflow-x-hidden" : "-left-55 text-blue-900 w-56") : "block overflow-y-scroll md:w-80 w-fit text-white"}`}>
 
                 {/* Mobile Menu Toggle */}
                 {width < 500 && (
