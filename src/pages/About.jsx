@@ -105,16 +105,25 @@ export default function AboutPage() {
                             <div className="flex flex-wrap gap-4">
                                 <div className="flex items-center text-blue-200 hover:text-white transition-colors">
                                     <Smartphone className="w-4 h-4 mr-2" />
-                                    <span className="text-sm">9159604934</span>
+                                    <span className="text-sm">+91 9159604934</span>
                                 </div>
                                 <div className="flex items-center text-blue-200 hover:text-white transition-colors">
                                     <Mail className="w-4 h-4 mr-2" />
                                     <span className="text-sm">mohanapriyan.m2006@gmail.com</span>
                                 </div>
                                 <div className="flex gap-3">
-                                    <Linkedin className="w-5 h-5 text-blue-200 hover:text-white cursor-pointer transition-colors" />
-                                    <Globe className="w-5 h-5 text-blue-200 hover:text-white cursor-pointer transition-colors" />
-                                    <Github className="w-5 h-5 text-blue-200 hover:text-white cursor-pointer transition-colors" />
+                                    <div className="flex gap-1 text-blue-200 hover:text-white cursor-pointer transition-colors">
+                                        <Linkedin className="w-5 h-5 " />
+                                        <a target='new' href='https://www.linkedin.com/in/mohanapriyan-m2006/'>LinkedIn</a>
+                                    </div>
+                                    <div className="flex gap-1 text-blue-200 hover:text-white cursor-pointer transition-colors">
+                                        <Globe className="w-5 h-5 " />
+                                        <a target='new' href='https://mohanapriyan.netlify.app/'>Website</a>
+                                    </div>
+                                    <div className="flex gap-1 text-blue-200 hover:text-white cursor-pointer transition-colors">
+                                        <Github className="w-5 h-5 " />
+                                        <a target='new' href='https://github.com/mohanapriyan2006'>GitHub</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -156,15 +165,21 @@ export default function AboutPage() {
                             <div className="flex flex-wrap gap-4">
                                 <div className="flex items-center text-blue-200 hover:text-white transition-colors">
                                     <Smartphone className="w-4 h-4 mr-2" />
-                                    <span className="text-sm">9159604934</span>
+                                    <span className="text-sm">+91 9361802547</span>
                                 </div>
                                 <div className="flex items-center text-blue-200 hover:text-white transition-colors">
                                     <Mail className="w-4 h-4 mr-2" />
-                                    <span className="text-sm">mohanapriyan.m2006@gmail.com</span>
+                                    <span className="text-sm">ssakthitselvan7@gmail.com</span>
                                 </div>
                                 <div className="flex gap-3">
-                                    <Linkedin className="w-5 h-5 text-blue-200 hover:text-white cursor-pointer transition-colors" />
-                                    <Github className="w-5 h-5 text-blue-200 hover:text-white cursor-pointer transition-colors" />
+                                    <div className="flex gap-1 text-blue-200 hover:text-white cursor-pointer transition-colors">
+                                        <Linkedin className="w-5 h-5 " />
+                                        <a target='new' href='http://www.linkedin.com/in/ssakthitselvan'>LinkedIn</a>
+                                    </div>
+                                    <div className="flex gap-1 text-blue-200 hover:text-white cursor-pointer transition-colors">
+                                        <Github className="w-5 h-5 " />
+                                        <a target='new' href='https://github.com/SSAKTHITSELVAN/'>GitHub</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

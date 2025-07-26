@@ -160,11 +160,11 @@ const ProductForm = ({ editMode = false }) => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-8 px-4">
             <div className="max-w-4xl mx-auto">
                 <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6">
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-6">
                         <div className="flex items-center space-x-3">
                             <div className="p-2 bg-white/20 rounded-lg">
                                 <Package className="w-6 h-6 text-white" />
@@ -315,7 +315,7 @@ const ProductForm = ({ editMode = false }) => {
                                 onClick={formik.handleSubmit}
                                 type="button"
                                 disabled={!formik.isValid || formik.isSubmitting}
-                                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-500 text-white rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
                             >
                                 {formik.isSubmitting ? (
                                     <div className="flex items-center justify-center space-x-2">

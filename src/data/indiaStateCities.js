@@ -1,7 +1,7 @@
 const indiaStateCities = [
     {
         state: "Tamil Nadu",
-        districts: [
+        cities: [
             "Ariyalur",
             "Chengalpattu",
             "Chennai",
@@ -44,7 +44,7 @@ const indiaStateCities = [
     },
     {
         state: "Kerala",
-        districts: [
+        cities: [
             "Alappuzha",
             "Ernakulam",
             "Idukki",
@@ -63,7 +63,7 @@ const indiaStateCities = [
     },
     {
         state: "Andhra Pradesh",
-        districts: [
+        cities: [
             "Alluri Sitharama Raju",
             "Anakapalli",
             "Ananthapuramu",

@@ -214,8 +214,8 @@ const SideBar = () => {
                 {/* Footer */}
                 <div className="px-4 pb-4">
                     <div className="bg-blue-800/30 backdrop-blur-sm rounded-xl p-3 border border-blue-600/30 text-center">
-                        <p onClick={() => navigate('/about')} className={style.links}> <Info/> <span>About</span></p>
-                        <p onClick={() => navigate('/terms')} className='font-semibold text-sm mt-4 cursor-pointer hover:underline' >Terms & Conditions <span className="text-xs text-blue-200">&copy; {new Date().getFullYear()}</span></p>
+                        <p onClick={() => { navigate('/about'); setIsToggle(false); }} className={style.links}> <Info /> <span>About</span></p>
+                        <p onClick={() => { navigate('/terms'); setIsToggle(false); }} className='font-semibold text-sm mt-4 cursor-pointer hover:underline' >Terms & Conditions <span className="text-xs text-blue-200">&copy; {new Date().getFullYear()}</span></p>
                         <p className="text-sm font-medium text-blue-100">Invoice Manager</p>
                     </div>
                 </div>
