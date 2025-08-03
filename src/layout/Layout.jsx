@@ -65,7 +65,7 @@ const Layout = () => {
                     <Route path='*' element={<NotFound />} />
                 </Routes>
 
-                {isAIActive && <AIChatBox />}
+                {!['/home', '/', '/signup', '/changePassword'].find(val => val === location.pathname) && isAIActive && <AIChatBox />}
                 {!['/home', '/', '/signup', '/changePassword'].find(val => val === location.pathname) && <AIButton />}
 
             </div>
