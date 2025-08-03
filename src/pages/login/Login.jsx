@@ -44,7 +44,7 @@ const Login = () => {
             icon: "success",
             title: "Logined successfully"
           });
-          
+
           initDataLoad();
           navigate("/home");
           setLoginPage({
