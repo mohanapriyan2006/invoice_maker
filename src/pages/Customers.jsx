@@ -12,15 +12,17 @@ const Customers = () => {
         fetchCompany
     } = useContext(DataContext);
 
-    const [selectedCompany, setSelectedCompany] = useState(yourCompanies[0]?.company_id);
+    const [selectedCompany, setSelectedCompany] = useState(
+        yourCompanies?.length > 0 ? yourCompanies[0]?.company_id : null
+    );
 
     useEffect(() => {
         fetchCompany()
     }, [])
 
     useEffect(() => {
-        if (yourCompanies.length > 0 && !selectedCompany) {
-            setSelectedCompany(yourCompanies[0].company_id);
+        if (yourCompanies?.length > 0 && !selectedCompany) {
+            setSelectedCompany(yourCompanies[0]?.company_id);
         }
     }, [yourCompanies]);
 
@@ -79,7 +81,7 @@ const Customers = () => {
                                 </div>
                             </div>
                             <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold">
-                                {yourCustomers.length}
+                                {yourCustomers?.length}
                             </div>
                         </div>
                     </div>
@@ -102,7 +104,7 @@ const Customers = () => {
                                 onChange={handleCompanyChange}
                                 className="w-full border-2 border-blue-200 focus:border-blue-500 bg-white p-4 rounded-xl text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 appearance-none cursor-pointer shadow-sm hover:shadow-md"
                             >
-                                {yourCompanies.map((company) => (
+                                {yourCompanies?.map((company) => (
                                     <option key={company.company_id} value={company.company_id}>
                                         {company.company_name}
                                     </option>
@@ -119,7 +121,7 @@ const Customers = () => {
 
                 {/* Customers Grid */}
                 <div className="mb-8">
-                    {yourCustomers.length === 0 ? (
+                    { yourCustomers == null || yourCustomers?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16">
                             <div className="model-not-found">
                                 <div className="model-not-found-icon">
@@ -142,7 +144,7 @@ const Customers = () => {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {yourCustomers.map((customer, index) => (
+                            {yourCustomers?.map((customer, index) => (
                                 <div key={index} className="model-overview">
 
                                     {/* Product Header */}

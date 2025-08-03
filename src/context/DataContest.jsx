@@ -138,8 +138,8 @@ export const DataProvider = ({ children }) => {
 
     const initDataLoad = async () => {
         const companies = await fetchCompany();
-        if (companies.length > 0) {
-            const companyId = companies[0].company_id;
+        if (companies?.length > 0) {
+            const companyId = companies[0]?.company_id;
             await Promise.all([
                 fetchCustomers(companyId),
                 fetchProducts(companyId),

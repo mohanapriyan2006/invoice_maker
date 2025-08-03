@@ -407,7 +407,7 @@ const InvoiceForm = ({ editMode = false }) => {
                                                                     <Package className="w-4 h-4 text-blue-600" />
                                                                     <span>Item {index + 1}</span>
                                                                 </h4>
-                                                                {values.invoice_items.length > 1 && (
+                                                                {values.invoice_items?.length > 1 && (
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => remove(index)}

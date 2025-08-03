@@ -55,7 +55,7 @@ const Companies = () => {
                 </div>
               </div>
               <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold">
-                {yourCompanies.length}
+                {yourCompanies?.length}
               </div>
             </div>
           </div>
@@ -63,7 +63,7 @@ const Companies = () => {
 
         {/* Companies Grid */}
         <div className="mb-8">
-          {yourCompanies.length === 0 ? (
+          { yourCompanies == null || yourCompanies?.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16">
               <div className="model-not-found">
                 <div className="model-not-found-icon">
@@ -86,7 +86,7 @@ const Companies = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {yourCompanies.map((company, index) => (
+              {yourCompanies?.map((company, index) => (
                 <div key={index} className="group model-overview">
 
                   {/* Company Header */}

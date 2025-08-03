@@ -567,7 +567,7 @@ const InvoiceDetail = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {invoice.products.map((item, i) => (
+                                    {invoice.products?.map((item, i) => (
                                         <tr key={i}>
                                             <td>{i + 1}</td>
                                             <td>{productName(item.product_id) || `Product ${i + 1}`}</td>

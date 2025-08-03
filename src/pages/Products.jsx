@@ -12,15 +12,17 @@ const Products = () => {
         fetchCompany
     } = useContext(DataContext);
 
-    const [selectedCompanyId, setSelectedCompanyId] = useState(yourCompanies[0]?.company_id);
+    const [selectedCompanyId, setSelectedCompanyId] = useState(
+        yourCompanies?.length > 0 ? yourCompanies[0]?.company_id : null
+    );
 
     useEffect(() => {
         fetchCompany()
     }, [])
 
     useEffect(() => {
-        if (yourCompanies.length > 0 && !selectedCompanyId) {
-            setSelectedCompanyId(yourCompanies[0].company_id);
+        if (yourCompanies?.length > 0 && !selectedCompanyId) {
+            setSelectedCompanyId(yourCompanies[0]?.company_id);
         }
     }, [yourCompanies]);
 
@@ -41,7 +43,7 @@ const Products = () => {
                     <div className="flex flex-col items-center space-y-4">
                         <div className="relative">
                             <img className='w-16 h-16 animate-spin' src={loadingI} alt="loading" />
-                                         </div>
+                        </div>
                         <div className="text-center">
                             <h3 className="text-xl font-semibold text-blue-800 mb-2">Loading Products</h3>
                             <div className="flex items-center justify-center space-x-1">
@@ -79,7 +81,7 @@ const Products = () => {
                                 </div>
                             </div>
                             <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold">
-                                {yourProducts.length}
+                                {yourProducts?.length}
                             </div>
                         </div>
                     </div>
@@ -102,7 +104,7 @@ const Products = () => {
                                 onChange={handleCompanyChange}
                                 className="w-full border-2 border-blue-200 focus:border-blue-500 bg-white p-4 rounded-xl text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 appearance-none cursor-pointer shadow-sm hover:shadow-md"
                             >
-                                {yourCompanies.map((company) => (
+                                {yourCompanies?.map((company) => (
                                     <option key={company.company_id} value={company.company_id}>
                                         {company.company_name}
                                     </option>
@@ -119,7 +121,7 @@ const Products = () => {
 
                 {/* Products Grid */}
                 <div className="mb-8">
-                    {yourProducts.length === 0 ? (
+                    { yourProducts == null || yourProducts?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16">
                             <div className="model-not-found">
                                 <div className="model-not-found-icon">
@@ -142,7 +144,7 @@ const Products = () => {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {yourProducts.map((product, index) => (
+                            {yourProducts?.map((product, index) => (
                                 <div key={index} className="model-overview">
 
                                     {/* Product Header */}
