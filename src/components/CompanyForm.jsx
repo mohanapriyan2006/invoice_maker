@@ -73,10 +73,11 @@ const CompanyForm = ({ editMode = false }) => {
             });
           } else {
             console.log("posting..");
-            await api.post("/companies", {
+            const res = await api.post("/companies", {
               ...values,
               company_owner: userDetails.user_id,
             });
+            console.log("Posting Response: ", res);
             Toast.fire({
               icon: "success",
               title: "Successfully company created"

@@ -7,7 +7,7 @@ const RecentInvoices = () => {
 
     return (
         <>
-            {yourInvoices.length === 0 ? (
+            {yourInvoices?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 px-4">
                     <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl p-8 shadow-lg border border-yellow-200 max-w-md w-full text-center">
                         <div className="w-20 h-20 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">

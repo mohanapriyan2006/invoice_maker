@@ -154,6 +154,7 @@ export const DataProvider = ({ children }) => {
         const userdetail = await localStorage.getItem("userDetail");
         if (tokenStr) {
             setToken(tokenStr);
+            // console.log("Token fetched from localStorage:", tokenStr);
             setLoginPage(
                 { isActive: false, isLogined: true }
             )
@@ -191,9 +192,10 @@ export const DataProvider = ({ children }) => {
 
     const [yourCompanies, setYourCompanies] = useState([]);
 
+
     const fetchCompany = async () => {
         try {
-            const res = await api.get("companies");
+            const res = await api.get("/companies");
             console.log("Get Companies Response : ", res);
             setYourCompanies(res.data.data);
             setIsLoading((p) => ({ ...p, company: false }))
@@ -221,6 +223,7 @@ export const DataProvider = ({ children }) => {
     const fetchProducts = async (cId) => {
         try {
             const res = await api.get(`companies/${cId}/products`);
+            console.log("Get Products Response : ", res);
             setYourProducts(res.data.data);
             setIsLoading((p) => ({ ...p, product: false }));
         } catch (e) {
@@ -240,6 +243,7 @@ export const DataProvider = ({ children }) => {
     const fetchCustomers = async (cId) => {
         try {
             const res = await api.get(`companies/${cId}/customers/`);
+            console.log("Get Customers Response : ", res);
             setYourCustomers(res.data.data);
             setIsLoading((p) => ({ ...p, customer: false }));
         } catch (e) {
@@ -260,6 +264,7 @@ export const DataProvider = ({ children }) => {
     const fetchInvoices = async (cId) => {
         try {
             const res = await api.get(`invoices?company_id=${cId}`);
+            console.log("Get Invoices Response : ", res);
             setYourInvoices(res.data.data);
             setIsLoading((p) => ({ ...p, invoice: false }));
             await Promise.all([
