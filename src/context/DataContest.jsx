@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, setBearerToken } from '../API/api';
 import Swal from 'sweetalert2'
+import { setupAutoLogout } from '../API/auth';
 
 const DataContext = createContext();
 
@@ -171,9 +172,46 @@ export const DataProvider = ({ children }) => {
 
     }
 
+    const checkTokenExpiry = () => {
+        const tokenStr = localStorage.getItem("token");
+        if (tokenStr) {
+            const isExpired = setupAutoLogout(tokenStr, navigate, setLoginPage, setToken, setYourCompanies, setYourProducts, setYourCustomers, setYourInvoices, Toast);
+            return isExpired;
+        }
+        return true; // No token means expired
+    };
+
     useEffect(() => {
         fetchToken();
     }, [])
+
+
+    // Auto logout setup - only run once when token changes
+    useEffect(() => {
+        if (token) {
+            setupAutoLogout(token, navigate, setLoginPage, setToken, setYourCompanies, setYourProducts, setYourCustomers, setYourInvoices, Toast);
+
+            // Check token on user activity
+            const checkOnActivity = () => {
+                checkTokenExpiry();
+            };
+
+            // Add event listeners for user activity
+            const events = ['click', 'keypress', 'scroll', 'mousemove', 'touchstart'];
+
+            events.forEach(event => {
+                document.addEventListener(event, checkOnActivity);
+            });
+
+            // Cleanup event listeners
+            return () => {
+                events.forEach(event => {
+                    document.removeEventListener(event, checkOnActivity);
+                });
+            };
+        }
+    }, [token]);
+
 
 
     const [isLoading, setIsLoading] = useState({
