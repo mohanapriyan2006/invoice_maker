@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
-import SignUp from '../pages/login/signUp';
+import SignUp from '../pages/login/SignUp';
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Home from '../pages/Home';
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 import DataContext from '../context/DataContest';
-import Login from '../pages/login/login';
+import Login from '../pages/login/Login';
 import Companies from '../pages/Companies';
 import CompanyForm from '../components/CompanyForm';
 import CompanyDetail from '../components/CompanyDetail';
