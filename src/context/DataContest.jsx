@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, setBearerToken } from '../API/api';
 import Swal from 'sweetalert2'
+import { setupAutoLogout } from '../API/auth';
 
 const DataContext = createContext();
 
@@ -172,7 +173,7 @@ export const DataProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        fetchToken()
+        fetchToken();
     }, [])
 
 
@@ -277,6 +278,12 @@ export const DataProvider = ({ children }) => {
     }
 
     const [isEditing, setIsEditing] = useState(false);
+
+    // Auto logout setup
+
+    useEffect(() => {
+        setupAutoLogout(token, navigate , fetchToken ,setLoginPage);
+    }, [token, navigate,yourCompanies, yourProducts, yourCustomers, yourInvoices ]);
 
 
     // -----------------------------
