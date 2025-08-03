@@ -247,7 +247,7 @@ const AIChatBox = () => {
                                     onClick={handleSend}
                                     disabled={!text.trim()}
                                     className='
-                  ml-2 md:ml-4 w-8 h-8 md:w-10 md:h-10 
+                  ml-0 md:ml-4 w-10 h-8 md:w-10 md:h-10 
                   bg-gradient-to-r from-cyan-500 to-blue-600 
                   hover:from-cyan-400 hover:to-blue-500
                   disabled:from-gray-600 disabled:to-gray-700

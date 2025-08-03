@@ -194,6 +194,7 @@ export const DataProvider = ({ children }) => {
     const fetchCompany = async () => {
         try {
             const res = await api.get("companies");
+            console.log("Get Companies Response : ", res);
             setYourCompanies(res.data.data);
             setIsLoading((p) => ({ ...p, company: false }))
             await Promise.all([
