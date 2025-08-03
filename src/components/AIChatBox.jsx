@@ -121,7 +121,7 @@ const AIChatBox = () => {
     return (
         <>
 
-            <div className='fixed bottom-4 md:bottom-5 left-10 right-4 md:left-50 md:right-0 flex justify-center items-center z-50 px-4'>
+            <div className='fixed bottom-4 md:bottom-5 left-2 right-2 md:left-50 md:right-0 flex justify-center items-center z-50 px-0 md:px-4'>
                 {showChat && (
                     <div className="absolute bottom-12 md:bottom-18 left-0 right-0 w-full max-w-2xl mx-auto">
                         {/* Chat Space Container */}
@@ -214,7 +214,7 @@ const AIChatBox = () => {
                             <div className='absolute inset-0 rounded-full border-2 border-cyan-400/20 animate-ping pointer-events-none'></div>
 
                             {/* Content container */}
-                            <div className='relative flex items-center h-full px-3 md:px-6 z-10'>
+                            <div className='relative flex items-center h-full px-2 md:px-6 z-10'>
                                 {/* AI indicator */}
                                 <div className='flex items-center mr-2 md:mr-4'>
                                     <div className='w-2 h-2 md:w-3 md:h-3 bg-cyan-400 rounded-full animate-pulse mr-1 md:mr-2'></div>
@@ -247,7 +247,7 @@ const AIChatBox = () => {
                                     onClick={handleSend}
                                     disabled={!text.trim()}
                                     className='
-                  ml-0 md:ml-4 w-10 h-8 md:w-10 md:h-10 
+                  ml-0 md:ml-4 w-8 h-8 md:w-10 md:h-10 
                   bg-gradient-to-r from-cyan-500 to-blue-600 
                   hover:from-cyan-400 hover:to-blue-500
                   disabled:from-gray-600 disabled:to-gray-700
