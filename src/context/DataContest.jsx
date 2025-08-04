@@ -237,11 +237,11 @@ export const DataProvider = ({ children }) => {
             console.log("Get Companies Response : ", res);
             setYourCompanies(res.data.data);
             setIsLoading((p) => ({ ...p, company: false }))
-            await Promise.all([
-                fetchCustomers(res.data.data.company_id),
-                fetchProducts(res.data.data.company_id),
-                fetchInvoices(res.data.data.company_id),
-            ]);
+            // await Promise.all([
+            //     fetchCustomers(res.data.data.company_id),
+            //     fetchProducts(res.data.data.company_id),
+            //     fetchInvoices(res.data.data.company_id),
+            // ]);
             return res.data.data;
         } catch (e) {
             console.log("Get Companies Error : ", e);

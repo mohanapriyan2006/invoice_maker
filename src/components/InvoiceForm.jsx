@@ -119,7 +119,7 @@ const InvoiceForm = ({ editMode = false }) => {
             invoice_number: 'Enter invoice number',
             invoice_terms: 'Enter payment terms',
             invoice_place_of_supply: 'Enter place of supply',
-            invoice_notes: 'Enter additional notes (optional)'
+            invoice_notes: 'Enter additional notes'
         };
         return placeholderMap[key] || 'Enter value';
     };
@@ -591,7 +591,12 @@ const InvoiceForm = ({ editMode = false }) => {
                                         </button>
                                         <button
                                             type="submit"
-                                            className="model-form-actions-submit"
+                                            disabled={
+                                                isSubmitting ||
+                                                Object.keys(errors).length > 0
+                                            }
+                                            className={`model-form-actions-submit  ${Object.keys(errors).length > 0 ? 'border-2 border-red-500' : ''}`}
+
                                         > {isSubmitting ? (
                                             <div className="flex items-center justify-center space-x-2">
                                                 <div className=" model-form-actions-submiting"></div>

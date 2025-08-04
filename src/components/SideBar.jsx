@@ -88,32 +88,32 @@ const SideBar = () => {
     }, [isToggle, width]);
 
     const style = {
-        links: 'font-semibold hover:underline cursor-pointer w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg transition-all duration-100 hover:bg-blue-600 hover:shadow-md hover:transform hover:scale-103',
+        links: 'font-semibold cursor-pointer w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg hover:bg-blue-600 hover:shadow-md hover:transform hover:scale-103',
     }
 
     return (
         <>
             <div
                 ref={sidebarRef}
-                className={`sideBar scroll-bar fixed top-0 h-screen bg-gradient-to-b from-blue-900 to-blue-800 shadow-2xl border-r border-blue-700 transition-all ease-in-out duration-100 z-[9999] ${width < 500 ? (isToggle ? "translate-x-0 text-white w-64 overflow-y-scroll overflow-x-hidden" : "-translate-x-full text-blue-900 w-56") : "block overflow-y-scroll md:w-80 w-fit text-white"}`}>
+                className={`sideBar scroll-bar fixed top-0 h-screen bg-gradient-to-b from-blue-900 to-blue-800 shadow-2xl border-r border-blue-700 transition-transform ease-in-out z-[9999] ${width < 500 ? (isToggle ? "translate-x-0 text-white w-60 overflow-y-scroll overflow-x-hidden" : "-translate-x-full w-60") : "block overflow-y-scroll md:w-60 lg:w-80 w-fit text-white"}`}>
                 {/* Mobile Menu Toggle */}
                 {width < 500 && (
                     <div className="absolute -right-10 top-3 z-10">
-                        <div className="bg-blue-800 p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-100">
+                        <div className="bg-blue-800 p-2 rounded-full shadow-lg hover:bg-blue-700  md:transition-colors  ">
                             <img
                                 onClick={() => setIsToggle((p) => (!p))}
                                 src={menuWI} alt="Menu Icon"
-                                className={`w-5 h-5 hover:scale-110 cursor-pointer transition-transform duration-100 ${isToggle ? "" : "rotate-180"}`} />
+                                className={`w-5 h-5 hover:scale-110 cursor-pointer  md:transition-transform   ${isToggle ? "" : "rotate-180"}`} />
                         </div>
                     </div>
                 )}
                 {isToggle && (
                     <div className="absolute right-3 top-3 z-10">
-                        <div className="bg-blue-800 p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-100">
+                        <div className="bg-blue-800 p-2 rounded-full shadow-lg hover:bg-blue-700  md:transition-colors  ">
                             <img
                                 onClick={() => setIsToggle((p) => (!p))}
                                 src={menuWI} alt="Menu Icon"
-                                className={`w-5 h-5 hover:scale-110 cursor-pointer transition-transform duration-100 ${isToggle ? "" : "rotate-180"}`} />
+                                className={`w-5 h-5 hover:scale-110 cursor-pointer  md:transition-transform   ${isToggle ? "" : "rotate-180"}`} />
                         </div>
                     </div>
                 )}
@@ -139,8 +139,8 @@ const SideBar = () => {
 
                     <div className="mt-3 pt-3 border-t border-blue-600/30">
                         <h2
-                            onClick={() => { navigate('/changePassword'); setIsToggle(false); setLoginPage((p) => ({ ...p, isActive: true })) }}
-                            className="text-sm font-medium hover:underline cursor-pointer w-fit flex gap-2 items-center py-2 px-3 rounded-lg transition-all duration-100 hover:bg-blue-700 hover:shadow-md text-blue-100 hover:text-white">
+                            onClick={() => { navigate('/changePassword'); setIsToggle(false); }}
+                            className="text-sm font-medium hover:underline cursor-pointer w-fit flex gap-2 items-center py-2 px-3 rounded-lg  md:transition-all   hover:bg-blue-700 hover:shadow-md text-blue-100 hover:text-white">
                             <img src={profileI} alt='icon' className='h-4 w-4' />
                             Change username/password
                         </h2>
@@ -199,14 +199,14 @@ const SideBar = () => {
                         <h3 className="text-xs font-semibold text-blue-300 uppercase tracking-wide mb-3 px-2">Actions</h3>
 
                         <p onClick={handleLogout}
-                            className='font-semibold cursor-pointer text-red-300 hover:text-red-200 w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg transition-all duration-100 hover:bg-red-900/30 hover:shadow-md mb-2 hover:transform hover:scale-105'
+                            className='font-semibold cursor-pointer text-red-300 hover:text-red-200 w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg  md:transition-all   hover:bg-red-900/30 hover:shadow-md mb-2 hover:transform hover:scale-105'
                         >
                             <img src={logoutI} alt='icon' className='h-5 w-5' />
                             <span>Logout</span>
                         </p>
 
                         <p onClick={() => handleDeleteAccount(userDetails.user_id)}
-                            className='font-semibold cursor-pointer text-red-400 hover:text-red-300 w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg transition-all duration-100 hover:bg-red-900/30 hover:shadow-md hover:transform hover:scale-105'
+                            className='font-semibold cursor-pointer text-red-400 hover:text-red-300 w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg  md:transition-all   hover:bg-red-900/30 hover:shadow-md hover:transform hover:scale-105'
                         >
                             <img src={deleteI} alt='icon' className='h-5 w-5' />
                             <span>Delete Account</span>

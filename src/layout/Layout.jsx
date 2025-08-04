@@ -24,6 +24,7 @@ import AIChatBox from '../components/AIChatBox';
 import AIButton from '../components/AIButton';
 import AboutPage from '../pages/About';
 import TermsAndConditions from '../pages/Terms&Conditions';
+import ProtectedRoute from '../hooks/ProtectedRoute';
 
 const Layout = () => {
     const { loginPage, width, isAIActive } = useContext(DataContext);
@@ -40,28 +41,113 @@ const Layout = () => {
                 <Header />
 
                 <Routes>
-                    <Route path='/home' element={<Home />} />
+                    {/* Public Routes */}
                     <Route path='/' element={<Login />} />
-                    <Route path='/changePassword' element={<ChangePassword />} />
                     <Route path='/signup' element={<SignUp />} />
-                    <Route path='/companies' element={<Companies />} />
-                    <Route path='/companyDetail/:id' element={<CompanyDetail />} />
-                    <Route path='/companyForm' element={<CompanyForm />} />
-                    <Route path='/companyForm/:id' element={<CompanyForm editMode={true} />} />
-                    <Route path='/products' element={<Products />} />
-                    <Route path='/productForm' element={<ProductForm />} />
-                    <Route path='/productForm/:id' element={<ProductForm editMode={true} />} />
-                    <Route path='/productsDetail/:id' element={<ProductDetail />} />
-                    <Route path='/customers' element={<Customers />} />
-                    <Route path='/customerForm' element={<CustomerForm />} />
-                    <Route path='/customerForm/:id' element={<CustomerForm editMode={true} />} />
-                    <Route path='/customersDetail/:id' element={<CustomerDetail />} />
-                    <Route path='/invoices' element={<Invoices />} />
-                    <Route path='/invoiceForm' element={<InvoiceForm />} />
-                    <Route path='/invoiceForm/:id' element={<InvoiceForm editMode={true} />} />
-                    <Route path='/invoiceDetail/:id' element={<InvoiceDetail />} />
-                    <Route path='/about' element={<AboutPage />} />
-                    <Route path='/terms' element={<TermsAndConditions />} />
+
+                    {/* Protected Routes */}
+                    <Route path='/changePassword' element={
+                        <ProtectedRoute>
+                            <ChangePassword />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/home' element={
+                        <ProtectedRoute>
+                            <Home />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/companies' element={
+                        <ProtectedRoute>
+                            <Companies />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/companyDetail/:id' element={
+                        <ProtectedRoute>
+                            <CompanyDetail />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/companyForm' element={
+                        <ProtectedRoute>
+                            <CompanyForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/companyForm/:id' element={
+                        <ProtectedRoute>
+                            <CompanyForm editMode={true} />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/products' element={
+                        <ProtectedRoute>
+                            <Products />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/productForm' element={
+                        <ProtectedRoute>
+                            <ProductForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/productForm/:id' element={
+                        <ProtectedRoute>
+                            <ProductForm editMode={true} />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/productsDetail/:id' element={
+                        <ProtectedRoute>
+                            <ProductDetail />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/customers' element={
+                        <ProtectedRoute>
+                            <Customers />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/customerForm' element={
+                        <ProtectedRoute>
+                            <CustomerForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/customerForm/:id' element={
+                        <ProtectedRoute>
+                            <CustomerForm editMode={true} />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/customersDetail/:id' element={
+                        <ProtectedRoute>
+                            <CustomerDetail />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/invoices' element={
+                        <ProtectedRoute>
+                            <Invoices />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/invoiceForm' element={
+                        <ProtectedRoute>
+                            <InvoiceForm />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/invoiceForm/:id' element={
+                        <ProtectedRoute>
+                            <InvoiceForm editMode={true} />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/invoiceDetail/:id' element={
+                        <ProtectedRoute>
+                            <InvoiceDetail />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/about' element={
+                        <ProtectedRoute>
+                            <AboutPage />
+                        </ProtectedRoute>
+                    } />
+                    <Route path='/terms' element={
+                        <ProtectedRoute>
+                            <TermsAndConditions />
+                        </ProtectedRoute>
+                    } />
+                    
+                    {/* 404 Route */}
                     <Route path='*' element={<NotFound />} />
                 </Routes>
 

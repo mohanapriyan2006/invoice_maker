@@ -8,7 +8,7 @@ const Companies = () => {
 
   useEffect(() => {
     fetchCompany();
-  }, [yourCompanies])
+  }, [])
 
   if (isLoading.company) {
     return (

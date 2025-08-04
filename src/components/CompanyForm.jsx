@@ -89,10 +89,14 @@ const CompanyForm = ({ editMode = false }) => {
           navigate("/companies");
         } catch (e) {
           setSubmitting(false);
-          if (e.response && e.response.data) {
-            setFieldError(e.response?.data?.detail[0]?.loc[1] || 'company_ifsc_code', e.response?.data?.detail[0].msg || "Invalid data , check again!");
+          if (e.response && e.response.data && Array.isArray(e.response.data.detail) && e.response.data.detail.length > 0) {
+            const detail = e.response.data.detail[0];
+            const field = (detail.loc && detail.loc.length > 1) ? detail.loc[1] : 'company_ifsc_code';
+            const msg = detail.msg || "Invalid data, check again!";
+            setFieldError(field, msg);
             console.error("Company Save Error: ", e.response.data);
           } else {
+            setFieldError('company_ifsc_code', "Invalid data, check again!");
             alert("Server Error: " + e.message);
           }
         }
@@ -178,7 +182,7 @@ const CompanyForm = ({ editMode = false }) => {
     {
       title: 'Company Information',
       icon: <Building2 className="w-5 h-5" />,
-      fields: ['company_name', 'company_address', 'company_state', 'company_city',  'company_email']   
+      fields: ['company_name', 'company_address', 'company_state', 'company_city', 'company_email']
     },
     {
       title: 'Registration Details',
@@ -320,14 +324,19 @@ const CompanyForm = ({ editMode = false }) => {
                 >
                   Cancel
                 </button>
+              
                 <button
                   type="submit"
-                  disabled={!formik.isValid || formik.isSubmitting}
-                  className="model-form-actions-submit"
+                  disabled={
+                    !formik.isValid ||
+                    formik.isSubmitting ||
+                    Object.keys(formik.errors).length > 0
+                  }
+                  className={`model-form-actions-submit  ${Object.keys(formik.errors).length > 0 ? 'border-2 border-red-500' : ''}`}
                 >
                   {formik.isSubmitting ? (
                     <div className="flex items-center justify-center space-x-2">
-                      <div className=" model-form-actions-submiting"></div>
+                      <div className="model-form-actions-submiting"></div>
                       <span>Processing...</span>
                     </div>
                   ) : (

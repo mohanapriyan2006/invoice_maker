@@ -40,6 +40,12 @@ const ChangePassword = () => {
                         icon: "success",
                         title: "Successfully userdetail updated"
                     });
+                    setLoginPage({
+                        isActive: true,
+                        isLogined: false
+                    });
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("userDetails");
                     navigate("/");
                 } catch (e) {
                     if (e.response && e.response.data) {
@@ -61,7 +67,7 @@ const ChangePassword = () => {
 
 
     return (
-        <div className="place-content-center place-items-center py-5">
+        <div className="place-content-center place-items-center py-8 md:py-20">
 
             <form onSubmit={formik.handleSubmit} className='login-form' >
                 <div className='w-full text-center  -mt-4 '>

@@ -54,7 +54,7 @@ const SignUp = () => {
     });
 
     return (
-        <div className='place-content-center place-items-center py-5'>
+        <div className='place-content-center place-items-center py-5 md:py-10'>
             <h2 className='login-title'>Create an account 😊</h2>
             <form onSubmit={formik.handleSubmit} className='login-form'>
 

@@ -56,7 +56,7 @@ const CustomerForm = ({ editMode = false }) => {
             customer_phone: Yup.string().required('Phone number is required'),
         }),
 
-        onSubmit: (values, { setFieldError }) => {
+        onSubmit: (values, { setFieldError ,setSubmitting}) => {
             const saveCustomer = async () => {
                 try {
                     if (editMode && editCustomerData) {
@@ -83,7 +83,9 @@ const CustomerForm = ({ editMode = false }) => {
 
                     fetchCustomers(values.company_id);
                     navigate('/customers');
+                    setSubmitting(false);
                 } catch (e) {
+                    setSubmitting(false);
                     if (e.response && e.response.data) {
                         setFieldError(e.response?.data?.detail[0]?.loc[1] || 'customer_gstin', e.response.data.detail[0].msg || 'Invalid customer input. Check again.');
                         console.error('API Error:', e.response.data);
@@ -304,7 +306,12 @@ const CustomerForm = ({ editMode = false }) => {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="model-form-actions-submit"
+                                    disabled={
+                                        !formik.isValid ||
+                                        formik.isSubmitting ||
+                                        Object.keys(formik.errors).length > 0
+                                    }
+                                    className={`model-form-actions-submit  ${Object.keys(formik.errors).length > 0 ? 'border-2 border-red-500' : ''}`}
                                 > {formik.isSubmitting ? (
                                     <div className="flex items-center justify-center space-x-2">
                                         <div className=" model-form-actions-submiting"></div>
