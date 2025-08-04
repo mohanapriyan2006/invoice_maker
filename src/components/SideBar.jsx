@@ -95,7 +95,7 @@ const SideBar = () => {
         <>
             <div
                 ref={sidebarRef}
-                className={`sideBar scroll-bar fixed top-0 h-screen bg-gradient-to-b from-blue-900 to-blue-800 shadow-2xl border-r border-blue-700 transition-transform ease-in-out z-[9999] ${width < 500 ? (isToggle ? "translate-x-0 text-white w-60 overflow-y-scroll overflow-x-hidden" : "-translate-x-full w-60") : "block overflow-y-scroll md:w-60 lg:w-80 w-fit text-white"}`}>
+                className={`sideBar scroll-bar fixed top-0 h-screen bg-gradient-to-b from-blue-900 to-blue-800 shadow-2xl border-r border-blue-700 z-[9999] ${width < 500 ? (isToggle ? "translate-x-0 text-white w-60 overflow-y-scroll overflow-x-hidden" : "-translate-x-full w-60") : "block overflow-y-scroll md:w-60 lg:w-80 w-fit text-white"}`}>
                 {/* Mobile Menu Toggle */}
                 {width < 500 && (
                     <div className="absolute -right-10 top-3 z-10">
