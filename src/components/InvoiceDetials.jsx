@@ -221,11 +221,11 @@ const InvoiceDetail = () => {
                         <div className="flex flex-wrap justify-center gap-3">
                             <button
                                 onClick={() => setIsEditing(!isEditing)}
-                                className={`${isEditing ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse border-2 border-green-500' : 'bg-blue-500 hover:bg-blue-600 text-white'} px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 min-w-[140px]`}
+                                className={`${isEditing ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse border-2 border-green-500 edit-btn-glow' : 'bg-blue-500 hover:bg-blue-600 text-white'} px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 min-w-[140px]`}
                             >
                                 <Pencil className='w-5 h-5' />
                                 <span className="hidden sm:inline">{isEditing ? "Stop Editing" : "Edit Invoice"}</span>
-                                <span className="sm:hidden">{isEditing ? "Stop" : "Edit"}</span>
+                                <span className="sm:hidden">{isEditing ? "Stop Editing" : "Edit Invoice"}</span>
                             </button>
                             <button
                                 onClick={downloadAsPDF}
@@ -279,7 +279,7 @@ const InvoiceDetail = () => {
                 </div>
 
                 {/* Invoice Container */}
-                <div className="bg-white rounded-2xl shadow-2xl md:p-8 p-2 mb-8 border border-gray-200">
+                <div className={`bg-white rounded-2xl shadow-2xl md:p-8 p-2 mb-8 border border-gray-200 ${isEditing ? 'invoice-container-glow' : ''}`}>
                     <div ref={componentRef} className="invoice-container">
                         {/* <!-- Header --> */}
                         <div className="invoice-header p-2">
