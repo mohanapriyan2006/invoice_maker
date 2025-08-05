@@ -1,7 +1,10 @@
 
+import { useNavigate } from 'react-router-dom';
 import invoiceLogo from '../assets/invoice-logo.png'
 
 const Header = () => {
+
+  const navigate = useNavigate();
 
 
   return (
@@ -28,7 +31,7 @@ const Header = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full blur-lg opacity-0 group-hover:opacity-30 transition-all duration-300 scale-150"></div>
               <div 
-              onClick={() => window.location.href = '/home'}
+              onClick={() => navigate('/home')}
               className="relative bg-gradient-to-r from-blue-50 to-blue-100 p-3 rounded-full shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
                 <img
                   src={invoiceLogo}
