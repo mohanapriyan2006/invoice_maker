@@ -27,7 +27,9 @@ const Header = () => {
             {/* Logo container with hover effect */}
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full blur-lg opacity-0 group-hover:opacity-30 transition-all duration-300 scale-150"></div>
-              <div className="relative bg-gradient-to-r from-blue-50 to-blue-100 p-3 rounded-full shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+              <div 
+              onClick={() => window.location.href = '/home'}
+              className="relative bg-gradient-to-r from-blue-50 to-blue-100 p-3 rounded-full shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
                 <img
                   src={invoiceLogo}
                   className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 relative z-10"

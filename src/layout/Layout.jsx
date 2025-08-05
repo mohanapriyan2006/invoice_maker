@@ -32,7 +32,7 @@ const Layout = () => {
     const location = useLocation();
 
     return (
-        <div className={`${width < 500 ? "-mt-2" : loginPage.isActive ? "" : "parent"} `}>
+        <div className={`${width < 1000 ? "-mt-2" : loginPage.isActive ? "" : "parent"} `}>
 
             <div className={`${loginPage.isActive ? "hidden" : "div1"} `}>
                 <SideBar />
