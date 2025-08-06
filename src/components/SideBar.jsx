@@ -103,7 +103,7 @@ const SideBar = () => {
                             <img
                                 onClick={() => setIsToggle((p) => (!p))}
                                 src={menuWI} alt="Menu Icon"
-                                className={`w-5 h-5 hover:scale-110 cursor-pointer  md:transition-transform   ${isToggle ? "" : "rotate-180"}`} />
+                                className={`w-5 h-5  cursor-pointer  md:transition-transform   ${isToggle ? "hover:scale-110" : "rotate-180 scale-130 hover:scale-140"}`} />
                         </div>
                     </div>
                 )}
