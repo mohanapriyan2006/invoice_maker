@@ -7,9 +7,10 @@ import { Eye, EyeOff } from 'lucide-react';
 
 const ChangePassword = () => {
 
-    const { navigate, userDetails, token, Toast , setLoginPage } = useContext(DataContext);
+    const { navigate, userDetails, token, Toast, setLoginPage } = useContext(DataContext);
 
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -30,6 +31,7 @@ const ChangePassword = () => {
         }),
         onSubmit: (values, { setFieldError }) => {
             const putUser = async (userID) => {
+                setIsLoading(true);
                 try {
                     await api.put(`users/${userID}`, { user_name: values.user_name, password: values.newPassword }, {
                         headers: {
@@ -58,6 +60,9 @@ const ChangePassword = () => {
                     } else {
                         setFieldError("user_name", "Server error. Try again later.");
                     }
+                }
+                finally {
+                    setIsLoading(false);
                 }
 
             }
@@ -129,8 +134,15 @@ const ChangePassword = () => {
                     ) : null}
                 </div>
 
-                <button type="submit" className='btn-1  mt-1'>
-                    Change Password
+                <button
+                    type="submit"
+                    className='btn-1 mt-1 flex items-center justify-center gap-2'
+                    disabled={isLoading}
+                >
+                    {isLoading && (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    )}
+                    {isLoading ? 'Changing...' : 'Change Password'}
                 </button>
             </form>
 

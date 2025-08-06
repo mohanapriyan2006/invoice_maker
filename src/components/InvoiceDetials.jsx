@@ -12,15 +12,37 @@ import ContentEditable from 'react-contenteditable';
 import EditableField from '../hooks/OnEdit';
 // import cloneDeep from 'lodash.clonedeep';
 
+
 const InvoiceDetail = () => {
     const { id } = useParams();
     const { yourInvoices, yourProducts, yourCompanies, navigate, deleteAlert, isEditing, setIsEditing } = React.useContext(DataContext);
     const componentRef = useRef();
     const [changeTitle, setChangeTitle] = useState(false);
 
+    const getProductName = (pID) => {
+        const temp = yourProducts.find(val => val.product_id == pID).product_name;
+        return temp;
+    }
+    const getProductCode = (pID) => {
+        const temp = yourProducts.find(val => val.product_id == pID).product_hsn_sac_code;
+        return temp;
+    }
+
     const invoice = yourInvoices.find(val => val.invoice_id == id);
     const [editableInvoice, setEditableInvoice] = useState(invoice);
     const [companyDetail, setCompanyDetail] = useState({});
+    const [editableField, setEditableField] = useState({
+        date: {
+            invoice_date: new Date(invoice.invoice_date).toLocaleDateString(),
+            invoice_due_date: new Date(invoice.invoice_due_date).toLocaleDateString()
+        },
+        products: [
+            ...invoice.products.map(product => ({
+                invoice_item_name: getProductName(product.product_id) || 'Product Name',
+                product_hsn_sac_code: getProductCode(product.product_id) || '1111',
+            }))
+        ]
+    });
 
     useEffect(() => { setIsEditing(false) }, [])
 
@@ -33,11 +55,7 @@ const InvoiceDetail = () => {
     }, [invoice]);
 
 
-    const productName = (pID) => {
-        // console.log(yourProducts)
-        const temp = yourProducts.find(val => val.product_id == pID).product_name;
-        return temp;
-    }
+
 
     let moneyInWord = convertNumberToWords(Math.trunc(editableInvoice?.invoice_total || 0));
 
@@ -74,74 +92,113 @@ const InvoiceDetail = () => {
 
         const clone = componentRef.current.cloneNode(true);
 
-
+        // Set up the clone for PDF generation with proper A4 width
         clone.classList.remove("scale-[90%]");
-        clone.classList.add("scale-100", "text-[12px]", "md:text-[12px]", "p-4");
+        clone.classList.add("scale-100");
 
-
-        clone.style.width = "1024px";
-        clone.style.maxWidth = "none";
+        // Set A4 proportional width (210mm = ~794px at 96dpi)
+        clone.style.width = "794px";
+        clone.style.maxWidth = "794px";
         clone.style.position = 'absolute';
         clone.style.left = '-9999px';
         clone.style.top = '0';
+        clone.style.padding = '20px 20px 60px 20px'; // Extra bottom padding for complete layout
+        clone.style.boxSizing = 'border-box';
+        clone.style.backgroundColor = '#ffffff';
+        clone.style.minHeight = 'fit-content';
 
         document.body.appendChild(clone);
 
         try {
-            const canvas = await html2canvas(clone, {
-                scale: 2,
-                backgroundColor: '#ffffff',
-                useCORS: true
-            });
-
-            const imgData = canvas.toDataURL('image/png');
-
-            const divWidthPx = clone.offsetWidth;
-            const divHeightPx = clone.offsetHeight;
-
+            // Create PDF in portrait A4 format
             const pdf = new jsPDF({
-                orientation: divWidthPx > divHeightPx ? 'landscape' : 'portrait',
+                orientation: 'portrait',
                 unit: 'mm',
                 format: 'a4',
             });
 
-            const pageWidth = pdf.internal.pageSize.getWidth();
-            const pageHeight = pdf.internal.pageSize.getHeight();
+            const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
+            const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
-            // Convert pixels to mm
-            const pxToMm = (px) => (px * 25.4) / 96;
-            const divWidthMm = pxToMm(divWidthPx);
-            const divHeightMm = pxToMm(divHeightPx);
+            // Define margins for better layout
+            const marginTop = 12;
+            const marginLeft = 10;
+            const marginRight = 15;
+            const marginBottom = 20;
 
-            // Define margins
-            const marginTop = 10; // mm
-            const marginLeft = 10; // mm
-            const marginRight = 10; // mm
-            const marginBottom = 10; // mm
+            const contentWidth = pageWidth - marginLeft - marginRight; // 183mm
+            const contentHeight = pageHeight - marginTop - marginBottom; // 265mm
 
-            const availableWidth = pageWidth - marginLeft - marginRight;
+            // Capture the invoice with html2canvas
+            const canvas = await html2canvas(clone, {
+                scale: 2, // Higher scale for better quality
+                backgroundColor: '#ffffff',
+                useCORS: true,
+                allowTaint: true,
+                height: clone.scrollHeight + 100, // Extra height to capture bottom borders
+                width: clone.scrollWidth,
+                windowWidth: 794, // A4 width equivalent
+                scrollX: 0,
+                scrollY: 0,
+            });
 
-            // Scale proportionally to fit available width
-            let renderWidth = divWidthMm;
-            let renderHeight = divHeightMm;
+            // Calculate dimensions
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
 
-            const availableHeight = pageHeight - marginTop - marginBottom;
+            // Convert to mm (assuming 96 DPI)
+            const pxToMm = 25.4 / 96;
+            const imgWidthMm = imgWidth * pxToMm;
+            const imgHeightMm = imgHeight * pxToMm;
 
-            // Adjust height if it overflows available height
-            if (renderHeight > availableHeight) {
-                const ratio = availableHeight / renderHeight;
-                renderHeight = availableHeight;
-                renderWidth = renderWidth * ratio;
+            // Scale to fit page width while maintaining aspect ratio
+            const scale = contentWidth / imgWidthMm;
+            const scaledWidth = contentWidth;
+            const scaledHeight = imgHeightMm * scale;
+
+            // Calculate how many pages we need
+            const pagesNeeded = Math.ceil(scaledHeight / contentHeight);
+
+            // Add content to PDF pages
+            for (let page = 0; page < pagesNeeded; page++) {
+                if (page > 0) {
+                    pdf.addPage();
+                }
+
+                // Calculate the portion of the image for this page
+                const sourceY = (page * contentHeight) / scale; // Convert back to original scale
+                const sourceHeight = Math.min(contentHeight / scale, imgHeightMm - sourceY);
+
+                // Create a temporary canvas for this page section
+                const pageCanvas = document.createElement('canvas');
+                const pageCtx = pageCanvas.getContext('2d');
+
+                // Set canvas size for this page section
+                pageCanvas.width = imgWidth;
+                pageCanvas.height = (sourceHeight / imgHeightMm) * imgHeight;
+
+                // Draw the portion of the original image for this page
+                pageCtx.drawImage(
+                    canvas,
+                    0, (sourceY / imgHeightMm) * imgHeight, // Source x, y
+                    imgWidth, (sourceHeight / imgHeightMm) * imgHeight, // Source width, height
+                    0, 0, // Destination x, y
+                    imgWidth, (sourceHeight / imgHeightMm) * imgHeight // Destination width, height
+                );
+
+                const pageImgData = pageCanvas.toDataURL('image/png');
+
+                // Add this page section to PDF
+                const pageRenderHeight = Math.min(contentHeight, scaledHeight - (page * contentHeight));
+                pdf.addImage(
+                    pageImgData,
+                    'PNG',
+                    marginLeft,
+                    marginTop,
+                    scaledWidth,
+                    pageRenderHeight
+                );
             }
-
-
-            if (renderWidth > availableWidth) {
-                const ratio = availableWidth / renderWidth;
-                renderWidth = availableWidth;
-                renderHeight = renderHeight * ratio;
-            }
-
-            pdf.addImage(imgData, 'PNG', marginLeft, marginTop, renderWidth, renderHeight);
 
             pdf.save(`Invoice_${invoice.invoice_number}.pdf`);
         } catch (error) {
@@ -363,15 +420,13 @@ const InvoiceDetail = () => {
                                         />
                                     </p>
                                     <p className='font-semibold flex gap-2'>:
-                                        {(() => {
-                                            let date = new Date(invoice.invoice_date).toLocaleDateString();
-                                            return (
-                                                isEditing ? <EditableField
-                                                    value={date}
-                                                    onChange={(val) => date = val}
-                                                /> : date
-                                            )
-                                        })()}
+                                        <EditableField
+                                            value={editableField.date.invoice_date}
+                                            onChange={(val) => setEditableField({
+                                                ...editableField,
+                                                date: { ...editableField.date, invoice_date: val }
+                                            })}
+                                        />
                                     </p>
                                     <p className='font-semibold flex gap-1'>:
                                         <EditableField
@@ -382,15 +437,13 @@ const InvoiceDetail = () => {
                                         />
                                     </p>
                                     <p className='font-semibold flex gap-2'>:
-                                        {(() => {
-                                            let date = new Date(invoice.invoice_due_date).toLocaleDateString();
-                                            return (
-                                                isEditing ? <EditableField
-                                                    value={date}
-                                                    onChange={(val) => date = val}
-                                                /> : date
-                                            )
-                                        })()}
+                                        <EditableField
+                                            value={editableField.date.invoice_due_date}
+                                            onChange={(val) => setEditableField({
+                                                ...editableField,
+                                                date: { ...editableField.date, invoice_due_date: val }
+                                            })}
+                                        />
                                     </p>
                                 </div>
                             </div>
@@ -570,8 +623,40 @@ const InvoiceDetail = () => {
                                     {invoice.products?.map((item, i) => (
                                         <tr key={i}>
                                             <td>{i + 1}</td>
-                                            <td>{productName(item.product_id) || `Product ${i + 1}`}</td>
-                                            <td>996819</td>
+                                            <td>
+                                                <EditableField
+                                                    value={editableField.products[i]?.invoice_item_name || item.invoice_item_name}
+                                                    onChange={(val) => {
+                                                        setEditableField({
+                                                            ...editableField,
+                                                            products: {
+                                                                ...editableField.products,
+                                                                [i]: {
+                                                                    ...editableField.products[i],
+                                                                    invoice_item_name: val
+                                                                }
+                                                            }
+                                                        });
+                                                    }}
+                                                />
+                                            </td>
+                                            <td>
+                                                <EditableField
+                                                    value={editableField.products[i]?.product_hsn_sac_code}
+                                                    onChange={(val) => {
+                                                        setEditableField({
+                                                            ...editableField,
+                                                            products: {
+                                                                ...editableField.products,
+                                                                [i]: {
+                                                                    ...editableField.products[i],
+                                                                    product_hsn_sac_code: val
+                                                                }
+                                                            }
+                                                        });
+                                                    }}
+                                                />
+                                            </td>
                                             <td>{item.invoice_item_quantity}</td>
                                             <td>{item.invoice_item_unit_price.toFixed(2)}</td>
                                             <td>{item.invoice_item_cgst_rate}%</td>

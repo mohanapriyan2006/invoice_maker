@@ -234,14 +234,9 @@ export const DataProvider = ({ children }) => {
     const fetchCompany = async () => {
         try {
             const res = await api.get("/companies");
-            console.log("Get Companies Response : ", res);
+            // console.log("Get Companies Response : ", res);
             setYourCompanies(res.data.data);
             setIsLoading((p) => ({ ...p, company: false }))
-            // await Promise.all([
-            //     fetchCustomers(res.data.data.company_id),
-            //     fetchProducts(res.data.data.company_id),
-            //     fetchInvoices(res.data.data.company_id),
-            // ]);
             return res.data.data;
         } catch (e) {
             console.log("Get Companies Error : ", e);
@@ -261,7 +256,7 @@ export const DataProvider = ({ children }) => {
     const fetchProducts = async (cId) => {
         try {
             const res = await api.get(`companies/${cId}/products`);
-            console.log("Get Products Response : ", res);
+            // console.log("Get Products Response : ", res);
             setYourProducts(res.data.data);
             setIsLoading((p) => ({ ...p, product: false }));
         } catch (e) {
@@ -281,7 +276,7 @@ export const DataProvider = ({ children }) => {
     const fetchCustomers = async (cId) => {
         try {
             const res = await api.get(`companies/${cId}/customers/`);
-            console.log("Get Customers Response : ", res);
+            // console.log("Get Customers Response : ", res);
             setYourCustomers(res.data.data);
             setIsLoading((p) => ({ ...p, customer: false }));
         } catch (e) {
@@ -302,7 +297,7 @@ export const DataProvider = ({ children }) => {
     const fetchInvoices = async (cId) => {
         try {
             const res = await api.get(`invoices?company_id=${cId}`);
-            console.log("Get Invoices Response : ", res);
+            // console.log("Get Invoices Response : ", res);
             setYourInvoices(res.data.data);
             setIsLoading((p) => ({ ...p, invoice: false }));
             await Promise.all([

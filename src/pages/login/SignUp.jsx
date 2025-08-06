@@ -11,6 +11,7 @@ const SignUp = () => {
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const formik = useFormik({
@@ -32,6 +33,7 @@ const SignUp = () => {
         }),
         onSubmit: (values, { setFieldError }) => {
             const postUser = async () => {
+                setIsLoading(true);
                 try {
                     await api.post("users/signup", { ...values })
                     navigate("/");
@@ -46,6 +48,8 @@ const SignUp = () => {
                     } else {
                         setFieldError("user_name", "Server error. Try again later.");
                     }
+                } finally {
+                    setIsLoading(false);
                 }
 
             }
@@ -115,7 +119,12 @@ const SignUp = () => {
                     <div style={{ color: 'red' }}>{formik.errors.confirmPassword}</div>
                 )}
 
-                <button type="submit" className='btn-1  mt-5'>Sign Up</button>
+                <button type="submit" className='btn-1  mt-5' disabled={isLoading}>
+                    {isLoading && (
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    )}
+                    {isLoading ? 'Signing Up...' : 'Sign Up'}
+                </button>
             </form>
 
             <h4>I already have account, click to <button className='px-2 btn-1  mt-5' onClick={() => navigate('/')}>Login</button></h4>
