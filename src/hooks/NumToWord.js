@@ -40,5 +40,5 @@ export function convertNumberToWords(num) {
             (a[rest] || b[Math.floor(rest / 10)] + ' ' + a[rest % 10]) + ' ';
     }
 
-    return 'Indian Rupees ' + str.trim() + ' Only';
+    return 'Indian Rupees: ' + str.trim() + ' Only';
 }
