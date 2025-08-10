@@ -30,6 +30,8 @@ const InvoiceDetail = () => {
         return temp;
     }
 
+    const [isDownloading, setIsDownloading] = useState(false);
+
     const invoice = yourInvoices.find(val => val.invoice_id == id);
     const [editableInvoice, setEditableInvoice] = useState(invoice);
     const [companyDetail, setCompanyDetail] = useState({});
@@ -67,6 +69,7 @@ const InvoiceDetail = () => {
     const renderSelectedTemplate = () => {
         const templateProps = {
             componentRef,
+            isDownloading,
             invoice: editableInvoice,
             editableInvoice,
             setEditableInvoice,
@@ -79,6 +82,8 @@ const InvoiceDetail = () => {
         };
 
         switch (selectedTemplate) {
+            case 'template1':
+                return <Template1 {...templateProps} />;
             case 'template2':
                 return <Template2 {...templateProps} />;
             case 'template3':
@@ -533,7 +538,7 @@ const InvoiceDetail = () => {
     const downloadAsPDF = async () => {
 
         if (!componentRef.current) return;
-
+        await setIsDownloading(true);
         GenerateInvoice();
 
         const clone = componentRef.current.cloneNode(true);
@@ -568,10 +573,10 @@ const InvoiceDetail = () => {
             const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
             // Define margins for better layout
-            const marginTop = 12;
+            const marginTop = 8;
             const marginLeft = 8;
             const marginRight = 8;
-            const marginBottom = 20;
+            const marginBottom = 2;
 
             const contentWidth = pageWidth - marginLeft - marginRight; // 183mm
             const contentHeight = pageHeight - marginTop - marginBottom; // 265mm
@@ -658,6 +663,7 @@ const InvoiceDetail = () => {
             alert("Failed to generate PDF.");
         } finally {
             document.body.removeChild(clone);
+            setIsDownloading(false);
         }
     };
 
@@ -789,7 +795,7 @@ const InvoiceDetail = () => {
 
 
                 {/* Template Selection */}
-                <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-4">
+                <div className="bg-white shadow-md rounded-xl p-4 border border-gray-200 mb-4">
                     <div className="flex gap-4">
                         <h5 className='text-lg font-semibold text-gray-700'>Select Invoice Template:</h5>
                         <div className='flex flex-wrap gap-4'>
@@ -806,7 +812,22 @@ const InvoiceDetail = () => {
                                         {selectedTemplate === 'default' && <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>}
                                     </div>
                                 </div>
-                                <span className='text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Default Template</span>
+                                <span className='text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Default</span>
+                            </label>
+                            <label className='flex items-center gap-2 cursor-pointer group'>
+                                <div className="relative">
+                                    <input
+                                        type="radio"
+                                        name="template-selection"
+                                        checked={selectedTemplate === 'template1'}
+                                        onChange={() => setSelectedTemplate('template1')}
+                                        className="sr-only"
+                                    />
+                                    <div className={`w-5 h-5 rounded-full border-2 transition-all duration-200 ${selectedTemplate === 'template1' ? 'border-blue-500 bg-blue-500' : 'border-gray-300 group-hover:border-blue-400'}`}>
+                                        {selectedTemplate === 'template1' && <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>}
+                                    </div>
+                                </div>
+                                <span className='text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Modern</span>
                             </label>
                             <label className='flex items-center gap-2 cursor-pointer group'>
                                 <div className="relative">
@@ -821,7 +842,7 @@ const InvoiceDetail = () => {
                                         {selectedTemplate === 'template2' && <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>}
                                     </div>
                                 </div>
-                                <span className='text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Modern Template</span>
+                                <span className='text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Classic</span>
                             </label>
                             <label className='flex items-center gap-2 cursor-pointer group'>
                                 <div className="relative">
@@ -836,7 +857,7 @@ const InvoiceDetail = () => {
                                         {selectedTemplate === 'template3' && <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>}
                                     </div>
                                 </div>
-                                <span className='text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Elegant Template</span>
+                                <span className='text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors'>Elegant</span>
                             </label>
                         </div>
                     </div>
@@ -844,7 +865,7 @@ const InvoiceDetail = () => {
 
                 {/* Invoice Container */}
                 <div className={`bg-white rounded-2xl shadow-2xl md:p-8 p-2 mb-8 border border-gray-200 ${isEditing ? 'invoice-container-glow' : ''}`}>
-                    <div ref={componentRef} className="invoice-container">
+                    <div ref={componentRef} className="invoice-container overflow-x-hidden">
                         {renderSelectedTemplate()}
                     </div>
                 </div>

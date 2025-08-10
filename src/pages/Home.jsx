@@ -50,7 +50,7 @@ const Home = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {/* Company Card */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-50 to-cyan-100 hover:from-cyan-100 hover:to-cyan-200 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-50 to-cyan-100 hover:from-cyan-100 hover:to-cyan-200 transition-all duration-300 transform hover:scale-105 shadow-sm border border-blue-600/40 hover:shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <button
                   onClick={() => navigate('/companyForm')}
@@ -68,7 +68,7 @@ const Home = () => {
               </div>
 
               {/* Product Card */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 hover:from-amber-100 hover:to-amber-200 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100 hover:from-amber-100 hover:to-amber-200 transition-all duration-300 transform hover:scale-105  shadow-sm border border-amber-600/40  hover:shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-amber-400/10 to-amber-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <button
                   onClick={() => navigate('/productForm')}
@@ -86,7 +86,7 @@ const Home = () => {
               </div>
 
               {/* Customer Card */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 transition-all duration-300 transform hover:scale-105  shadow-sm border border-emerald-600/40  hover:shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/10 to-emerald-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <button
                   onClick={() => navigate('/customerForm')}
@@ -104,7 +104,7 @@ const Home = () => {
               </div>
 
               {/* Invoice Card */}
-              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100 hover:from-indigo-100 hover:to-indigo-200 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100 hover:from-indigo-100 hover:to-indigo-200 transition-all duration-300 transform hover:scale-105  shadow-sm border border-indigo-600/40 hover:shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-400/10 to-indigo-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <button
                   onClick={() => navigate('/invoiceForm')}
