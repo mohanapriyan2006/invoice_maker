@@ -1,6 +1,6 @@
-
 .invoice-container {
-    max-width: 1024px;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     padding: 8px 16px;
     font-family: sans-serif;
@@ -12,10 +12,13 @@
     margin-left: 12px;
 }
 
+
+
 .invoice-header {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    /*  */
     /* border-bottom: 1px solid black; */
     padding-bottom: 10px;
     /* margin-bottom: 8px; */
@@ -26,7 +29,8 @@
         flex-direction: row;
         justify-content: space-between;
     }
-    .invoice-container{
+
+    .invoice-container {
         margin-left: auto;
     }
 }
@@ -53,6 +57,9 @@
     font-weight: bold;
     font-size: 16px;
 }
+.company-details {
+    margin-bottom: 10px;
+}
 
 .invoice-title {
     text-align: right;
@@ -63,7 +70,8 @@
 .invoice-info {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 8px;
+    /* gap: 8px; */
+    gap: 0;
     border: 1px solid black;
     border-bottom: none;
     /* padding: 8px; */
@@ -80,14 +88,19 @@
 .billing-shipping {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    /* gap: 8px; */
-    /* border-bottom: 1px solid black; */
-    padding-bottom: 8px;
+    padding-bottom: 0;
     /* margin-bottom: 8px; */
 }
 
 .box {
     border: 1px solid black;
+    
+}
+
+/*  */
+.box:first-child {
+    border-right: none;
+    /* Remove right border from first box */
 }
 
 .box-title {
@@ -107,13 +120,16 @@
 
 .product-table-wrapper {
     overflow-x: auto;
-    /* margin-bottom: 8px; */
+    margin-bottom: 8px;
+    margin-top: 8px;
 }
 
 .product-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 12px;
+    /*  */
+    border: none;
 }
 
 .product-table th,
@@ -148,7 +164,7 @@
     min-width: 200px;
     padding: 10px;
     font-size: 12px;
-    border: solid black 1px;
+    border: 1px solid black;
 }
 
 .amounts>div {
@@ -175,6 +191,9 @@
     border: 1px solid black;
     border-top: none;
     padding-top: 4px;
+    /*  */
+    padding: 8px;
+    margin-top: 0;
 }
 
 
@@ -183,7 +202,7 @@
 .edit-btn-glow {
     position: relative;
     animation: multiColorGlow 2s ease-in-out infinite alternate;
-    box-shadow: 
+    box-shadow:
         0 0 20px rgba(59, 130, 246, 0.6),
         0 0 40px rgba(147, 51, 234, 0.4),
         0 0 60px rgba(236, 72, 153, 0.3),
@@ -194,31 +213,35 @@
 
 @keyframes multiColorGlow {
     0% {
-        box-shadow: 
+        box-shadow:
             0 0 20px rgba(59, 130, 246, 0.8),
             0 0 40px rgba(147, 51, 234, 0.6),
             0 0 60px rgba(236, 72, 153, 0.4);
     }
+
     25% {
-        box-shadow: 
+        box-shadow:
             0 0 20px rgba(147, 51, 234, 0.8),
             0 0 40px rgba(236, 72, 153, 0.6),
             0 0 60px rgba(34, 197, 94, 0.4);
     }
+
     50% {
-        box-shadow: 
+        box-shadow:
             0 0 20px rgba(236, 72, 153, 0.8),
             0 0 40px rgba(34, 197, 94, 0.6),
             0 0 60px rgba(245, 158, 11, 0.4);
     }
+
     75% {
-        box-shadow: 
+        box-shadow:
             0 0 20px rgba(34, 197, 94, 0.8),
             0 0 40px rgba(245, 158, 11, 0.6),
             0 0 60px rgba(239, 68, 68, 0.4);
     }
+
     100% {
-        box-shadow: 
+        box-shadow:
             0 0 20px rgba(245, 158, 11, 0.8),
             0 0 40px rgba(239, 68, 68, 0.6),
             0 0 60px rgba(59, 130, 246, 0.4);
@@ -229,7 +252,7 @@
 .invoice-container-glow {
     position: relative;
     animation: binaryBlueGlow 1.5s ease-in-out infinite alternate;
-    box-shadow: 
+    box-shadow:
         0 0 30px rgba(59, 130, 246, 0.3),
         0 0 60px rgba(37, 99, 235, 0.2),
         inset 0 0 30px rgba(59, 130, 246, 0.1);
@@ -244,12 +267,11 @@
     left: -3px;
     right: -3px;
     bottom: -3px;
-    background: linear-gradient(45deg, 
-        rgba(59, 130, 246, 0.4), 
-        rgba(37, 99, 235, 0.6), 
-        rgba(29, 78, 216, 0.4), 
-        rgba(59, 130, 246, 0.4)
-    );
+    background: linear-gradient(45deg,
+            rgba(59, 130, 246, 0.4),
+            rgba(37, 99, 235, 0.6),
+            rgba(29, 78, 216, 0.4),
+            rgba(59, 130, 246, 0.4));
     border-radius: inherit;
     z-index: -1;
     animation: binaryPulse 2s ease-in-out infinite;
@@ -258,14 +280,15 @@
 
 @keyframes binaryBlueGlow {
     0% {
-        box-shadow: 
+        box-shadow:
             0 0 20px rgba(59, 130, 246, 0.4),
             0 0 40px rgba(37, 99, 235, 0.3),
             inset 0 0 20px rgba(59, 130, 246, 0.1);
         border-color: rgba(59, 130, 246, 0.4);
     }
+
     100% {
-        box-shadow: 
+        box-shadow:
             0 0 40px rgba(59, 130, 246, 0.6),
             0 0 80px rgba(37, 99, 235, 0.4),
             inset 0 0 40px rgba(59, 130, 246, 0.2);
@@ -274,10 +297,13 @@
 }
 
 @keyframes binaryPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 0.3;
         transform: scale(1);
     }
+
     50% {
         opacity: 0.6;
         transform: scale(1.01);

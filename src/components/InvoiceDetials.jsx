@@ -102,8 +102,9 @@ const InvoiceDetail = () => {
         clone.style.position = 'absolute';
         clone.style.left = '-9999px';
         clone.style.top = '0';
-        clone.style.padding = '20px 20px 60px 20px'; // Extra bottom padding for complete layout
-        clone.style.boxSizing = 'border-box';
+        clone.style.border = 'none';
+        clone.style.padding = '20px 20px 40px 20px';
+        // clone.style.boxSizing = 'border-box';
         clone.style.backgroundColor = '#ffffff';
         clone.style.minHeight = 'fit-content';
 
@@ -122,8 +123,8 @@ const InvoiceDetail = () => {
 
             // Define margins for better layout
             const marginTop = 12;
-            const marginLeft = 10;
-            const marginRight = 15;
+            const marginLeft = 8;
+            const marginRight = 8;
             const marginBottom = 20;
 
             const contentWidth = pageWidth - marginLeft - marginRight; // 183mm
@@ -198,6 +199,11 @@ const InvoiceDetail = () => {
                     scaledWidth,
                     pageRenderHeight
                 );
+
+                // Add border around the content on each page
+                pdf.setDrawColor(86, 86, 86); // Custom border color
+                pdf.setLineWidth(0.25); // Border thickness
+                pdf.rect(marginLeft, marginTop, scaledWidth, pageRenderHeight);
             }
 
             pdf.save(`Invoice_${invoice.invoice_number}.pdf`);
@@ -453,7 +459,7 @@ const InvoiceDetail = () => {
                                     </p>
                                 </div>
                             </div>
-                            <div className="info-right flex p-3 border-t-2 sm:border-l-2 sm:border-t-0 min-h-[80px] justify-around">
+                            <div className="info-right flex p-3 border-t-1 sm:border-l-1 sm:border-t-0 min-h-[80px] justify-around">
                                 <div>
                                     <p>Place Of Supply </p>
                                 </div>

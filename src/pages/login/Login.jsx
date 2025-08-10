@@ -47,12 +47,12 @@ const Login = () => {
             title: "Logined successfully"
           });
 
-          initDataLoad();
-          navigate("/home");
           setLoginPage({
             isActive: false,
             isLogined: true
           })
+          navigate("/home");
+          initDataLoad();
 
         } catch (e) {
           if (e.response) {
