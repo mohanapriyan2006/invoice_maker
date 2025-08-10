@@ -7,6 +7,7 @@ const Products = () => {
         yourProducts,
         navigate,
         isLoading,
+        setIsLoading,
         fetchProducts,
         yourCompanies,
         fetchCompany
@@ -30,11 +31,15 @@ const Products = () => {
         if (selectedCompanyId) {
             fetchProducts(selectedCompanyId);
         }
+        if (yourCompanies == null || yourCompanies?.length === 0) {
+            setIsLoading({ ...isLoading, company: false, product: false });
+        }
     }, [selectedCompanyId]);
 
     const handleCompanyChange = (e) => {
         setSelectedCompanyId(e.target.value);
     };
+
 
     if (isLoading.product) {
         return (
@@ -119,9 +124,10 @@ const Products = () => {
                     </div>
                 </div>
 
+
                 {/* Products Grid */}
                 <div className="mb-8">
-                    { yourProducts == null || yourProducts?.length === 0 ? (
+                    {yourProducts == null || yourProducts?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16">
                             <div className="model-not-found">
                                 <div className="model-not-found-icon">

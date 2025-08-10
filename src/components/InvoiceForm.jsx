@@ -29,7 +29,11 @@ const InvoiceForm = ({ editMode = false }) => {
         // fetchCompany();
         if (editMode) {
             const existing = yourInvoices.find(inv => inv.invoice_id === id);
-            setEditInvoiceData(existing);
+            if (existing) {
+                console.log("Found existing invoice:", existing);
+                console.log("Invoice items:", existing.invoice_items);
+                setEditInvoiceData(existing);
+            }
         }
     }, [editMode, id, yourInvoices]);
 
@@ -69,17 +73,16 @@ const InvoiceForm = ({ editMode = false }) => {
     });
 
     const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
+        console.log("Submitting invoice with values: ", values);
         try {
-            if (editMode && editInvoiceData) {
-                await api.put(`/invoices/${id}?company_id=${values.owner_company}`, values, {
-                });
+            if (editMode && id) {
+                await api.put(`/invoices/${id}?company_id=${values.owner_company}`, values);
                 Toast.fire({
                     icon: "success",
                     title: "Successfully invoice updated"
                 });
             } else {
-                await api.post(`/invoices?company_id=${values.owner_company}`, values, {
-                });
+                await api.post(`/invoices?company_id=${values.owner_company}`, values);
                 Toast.fire({
                     icon: "success",
                     title: "Successfully invoice created"
@@ -171,7 +174,10 @@ const InvoiceForm = ({ editMode = false }) => {
                             enableReinitialize
                             initialValues={editMode && editInvoiceData ? {
                                 ...editInvoiceData,
-                                invoice_items: editInvoiceData.invoice_items || initialValues.invoice_items,
+                                invoice_items: editInvoiceData.invoice_items?.map(item => ({
+                                    product_id: item.product_id || '',
+                                    invoice_item_quantity: item.invoice_item_quantity || 1,
+                                })) || initialValues.invoice_items,
                             } : initialValues}
                             validationSchema={validationSchema}
                             onSubmit={handleSubmit}
@@ -368,13 +374,6 @@ const InvoiceForm = ({ editMode = false }) => {
                                                                     : 'border-gray-200 focus:border-blue-500 hover:border-gray-300'
                                                                     }`}
                                                             />
-                                                            {touched[key] && errors[key] && (
-                                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                                                    <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                                                                        <span className="text-white text-xs">!</span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
                                                         </div>
                                                         {touched[key] && errors[key] && (
                                                             <div className="mt-1 flex items-center space-x-1">

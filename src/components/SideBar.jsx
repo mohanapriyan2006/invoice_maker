@@ -206,7 +206,7 @@ const SideBar = () => {
                         </p>
 
                         <p onClick={() => handleDeleteAccount(userDetails.user_id)}
-                            className='font-semibold cursor-pointer text-red-400 hover:text-red-300 w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg  md:transition-all   hover:bg-red-900/30 hover:shadow-md hover:transform hover:scale-105'
+                            className='font-semibold cursor-pointer text-red-300 hover:text-red-200 w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg  md:transition-all   hover:bg-red-900/30 hover:shadow-md hover:transform hover:scale-105'
                         >
                             <img src={deleteI} alt='icon' className='h-5 w-5' />
                             <span>Delete Account</span>

@@ -119,11 +119,11 @@ const SignUp = () => {
                     <div style={{ color: 'red' }}>{formik.errors.confirmPassword}</div>
                 )}
 
-                <button type="submit" className='btn-1  mt-5' disabled={isLoading}>
+                <button type="submit" className='btn-1  flex items-center justify-center gap-2 mt-5' disabled={isLoading}>
                     {isLoading && (
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     )}
-                    {isLoading ? 'Signing Up...' : 'Sign Up'}
+                    {isLoading ? 'Signing...' : 'Sign Up'}
                 </button>
             </form>
 

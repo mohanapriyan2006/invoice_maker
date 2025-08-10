@@ -7,6 +7,7 @@ const Customers = () => {
         yourCustomers,
         navigate,
         isLoading,
+        setIsLoading,
         fetchCustomers,
         yourCompanies,
         fetchCompany
@@ -30,11 +31,15 @@ const Customers = () => {
         if (selectedCompany) {
             fetchCustomers(selectedCompany);
         }
+        if (yourCompanies == null || yourCompanies?.length === 0) {
+            setIsLoading({ ...isLoading, company: false, customer: false });
+        }
     }, [selectedCompany]);
 
     const handleCompanyChange = (e) => {
         setSelectedCompany(e.target.value);
     };
+
 
     if (isLoading.customer) {
         return (
@@ -43,7 +48,7 @@ const Customers = () => {
                     <div className="flex flex-col items-center space-y-4">
                         <div className="relative">
                             <img className='w-16 h-16 animate-spin' src={loadingI} alt="loading" />
-                                         </div>
+                        </div>
                         <div className="text-center">
                             <h3 className="text-xl font-semibold text-blue-800 mb-2">Loading Customers</h3>
                             <div className="flex items-center justify-center space-x-1">
@@ -121,7 +126,7 @@ const Customers = () => {
 
                 {/* Customers Grid */}
                 <div className="mb-8">
-                    { yourCustomers == null || yourCustomers?.length === 0 ? (
+                    {yourCustomers == null || yourCustomers?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16">
                             <div className="model-not-found">
                                 <div className="model-not-found-icon">

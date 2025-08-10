@@ -1,18 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DataContext from '../context/DataContest';
+import { api } from '../API/api';
 import loadingI from '../assets/loading.png';
 
-
-const getLocalUpdates = () => {
-    return JSON.parse(localStorage.getItem("InvoiceStatusAndNotes")) || {};
-};
-
-const updateLocalInvoiceField = (invoiceId, field, value, setLocalUpdates) => {
-    const data = getLocalUpdates();
-    if (!data[invoiceId]) data[invoiceId] = {};
-    data[invoiceId][field] = value;
-    localStorage.setItem("InvoiceStatusAndNotes", JSON.stringify(data));
-    setLocalUpdates({ ...data });
+// API function to update invoice status and notes
+const updateInvoiceStatusAndNotes = async (invoiceId, companyId, status, notes) => {
+    try {
+        const response = await api.put(`/invoices/${invoiceId}?company_id=${companyId}`, {
+            invoice_status: status,
+            user_reference_notes: notes
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating invoice:', error);
+        throw error;
+    }
 };
 
 const Invoices = () => {
@@ -20,12 +22,17 @@ const Invoices = () => {
         yourInvoices,
         navigate,
         isLoading,
+        setIsLoading,
         fetchInvoices,
         yourCompanies,
         fetchCompany
     } = useContext(DataContext);
 
     const [selectedCompanyId, setSelectedCompanyId] = useState(yourCompanies?.length > 0 ? yourCompanies[0]?.company_id : null);
+    const [editingNotes, setEditingNotes] = useState({});
+    const [editingStatus, setEditingStatus] = useState({});
+    const [tempNotes, setTempNotes] = useState({});
+    const [tempStatus, setTempStatus] = useState({});
 
     useEffect(() => {
         fetchCompany()
@@ -41,17 +48,14 @@ const Invoices = () => {
         if (selectedCompanyId) {
             fetchInvoices(selectedCompanyId);
         }
+        if (yourCompanies == null || yourCompanies?.length === 0) {
+            setIsLoading({ ...isLoading, company: false, invoice: false });
+        }
     }, [selectedCompanyId]);
 
     const handleCompanyChange = (e) => {
         setSelectedCompanyId(e.target.value);
     };
-
-    const [localUpdates, setLocalUpdates] = useState(getLocalUpdates());
-    const [editingNotes, setEditingNotes] = useState({});
-    const [editingStatus, setEditingStatus] = useState({});
-    const [tempNotes, setTempNotes] = useState({});
-    const [tempStatus, setTempStatus] = useState({});
 
     const statusOptions = [
         { value: 'pending', label: 'Pending', color: 'bg-yellow-100 text-yellow-800' },
@@ -62,12 +66,29 @@ const Invoices = () => {
 
     const handleNotesEdit = (invoiceId, currentNotes) => {
         setEditingNotes(prev => ({ ...prev, [invoiceId]: true }));
-        setTempNotes(prev => ({ ...prev, [invoiceId]: currentNotes }));
+        setTempNotes(prev => ({ ...prev, [invoiceId]: currentNotes || '' }));
     };
 
-    const handleNotesSave = (invoiceId) => {
-        updateLocalInvoiceField(invoiceId, 'invoice_notes', tempNotes[invoiceId], setLocalUpdates);
-        setEditingNotes(prev => ({ ...prev, [invoiceId]: false }));
+    const handleNotesSave = async (invoiceId) => {
+        try {
+            const currentInvoice = yourInvoices.find(inv => inv.invoice_id === invoiceId);
+            const currentStatus = currentInvoice?.invoice_status || 'pending';
+
+            await updateInvoiceStatusAndNotes(
+                invoiceId,
+                selectedCompanyId,
+                currentStatus,
+                tempNotes[invoiceId] || ''
+            );
+
+            setEditingNotes(prev => ({ ...prev, [invoiceId]: false }));
+
+            // Refresh the invoices list
+            fetchInvoices(selectedCompanyId);
+        } catch (error) {
+            alert('Failed to update notes. Please try again.');
+            console.error('Error updating notes:', error);
+        }
     };
 
     const handleNotesCancel = (invoiceId) => {
@@ -80,9 +101,26 @@ const Invoices = () => {
         setTempStatus(prev => ({ ...prev, [invoiceId]: currentStatus || 'pending' }));
     };
 
-    const handleStatusSave = (invoiceId) => {
-        updateLocalInvoiceField(invoiceId, 'invoice_status', tempStatus[invoiceId], setLocalUpdates);
-        setEditingStatus(prev => ({ ...prev, [invoiceId]: false }));
+    const handleStatusSave = async (invoiceId) => {
+        try {
+            const currentInvoice = yourInvoices.find(inv => inv.invoice_id === invoiceId);
+            const currentNotes = currentInvoice?.user_reference_notes || '';
+
+            await updateInvoiceStatusAndNotes(
+                invoiceId,
+                selectedCompanyId,
+                tempStatus[invoiceId],
+                currentNotes
+            );
+
+            setEditingStatus(prev => ({ ...prev, [invoiceId]: false }));
+
+            // Refresh the invoices list
+            fetchInvoices(selectedCompanyId);
+        } catch (error) {
+            alert('Failed to update status. Please try again.');
+            console.error('Error updating status:', error);
+        }
     };
 
     const handleStatusCancel = (invoiceId) => {
@@ -103,7 +141,7 @@ const Invoices = () => {
                     <div className="flex flex-col items-center space-y-4">
                         <div className="relative">
                             <img className='w-16 h-16 animate-spin' src={loadingI} alt="loading" />
-                                         </div>
+                        </div>
                         <div className="text-center">
                             <h3 className="text-xl font-semibold text-blue-800 mb-2">Loading invoices</h3>
                             <div className="flex items-center justify-center space-x-1">
@@ -181,7 +219,7 @@ const Invoices = () => {
 
                 {/* invoices Grid */}
                 <div className="mb-8">
-                    { yourInvoices == null || yourInvoices?.length === 0 ? (
+                    {yourInvoices == null || yourInvoices?.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-16">
                             <div className="model-not-found">
                                 <div className="w-24 h-24 bg-gradient-to-r  from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
@@ -206,8 +244,8 @@ const Invoices = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3   gap-4">
                             {yourInvoices?.map((invoice, index) => {
                                 const invoiceId = invoice.invoice_id;
-                                const localStatus = localUpdates[invoiceId]?.invoice_status || invoice.invoice_status;
-                                const localNotes = localUpdates[invoiceId]?.invoice_notes || invoice.invoice_notes;
+                                const localStatus = invoice.invoice_status;
+                                const localNotes = invoice.user_reference_notes;
 
                                 return (
                                     <div key={index} className="group  bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 hover:border-blue-300 transition-all duration-300 overflow-hidden transform  ">
@@ -297,7 +335,7 @@ const Invoices = () => {
                                                         </svg>
                                                         <span className="text-sm font-medium">Invoice company: {invoice.invoice_by.company_name}</span>
                                                     </div>
-                                                    <span className="text-sm font-medium">Invoice Total: {invoice.invoice_total}</span><br/>
+                                                    <span className="text-sm font-medium">Invoice Total: {invoice.invoice_total}</span><br />
                                                     <span className="text-sm font-medium">Invoice Due: {new Date(invoice.invoice_due_date).toLocaleDateString()}</span>
                                                 </div>
                                                 {/*   Notes Section */}
@@ -368,18 +406,6 @@ const Invoices = () => {
                                                                     <span className="text-gray-500 italic">No notes added</span>
                                                                 )}
                                                             </p>
-
-                                                            {/* Empty state hint */}
-                                                            {!localNotes && (
-                                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-50 transition-opacity duration-200 pointer-events-none">
-                                                                    <div className="flex items-center space-x-1 text-xs text-gray-400">
-                                                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                                                        </svg>
-                                                                        <span>Click edit to add notes</span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
                                                         </div>
                                                     )}
                                                 </div>
@@ -397,7 +423,6 @@ const Invoices = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                        <div className="model-overview-hover"></div>
                                     </div>
                                 );
                             })}

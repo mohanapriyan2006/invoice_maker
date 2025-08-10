@@ -27,7 +27,7 @@ import TermsAndConditions from '../pages/Terms&Conditions';
 import ProtectedRoute from '../hooks/ProtectedRoute';
 
 const Layout = () => {
-    const { loginPage, width, isAIActive } = useContext(DataContext);
+    const { loginPage, width, isAIActive, } = useContext(DataContext);
 
     const location = useLocation();
 
@@ -146,13 +146,13 @@ const Layout = () => {
                             <TermsAndConditions />
                         </ProtectedRoute>
                     } />
-                    
+
                     {/* 404 Route */}
                     <Route path='*' element={<NotFound />} />
                 </Routes>
 
-                {!['/home', '/', '/signup', '/changePassword'].find(val => val === location.pathname) && isAIActive && <AIChatBox />}
-                {!['/home', '/', '/signup', '/changePassword'].find(val => val === location.pathname) && <AIButton />}
+                {!['/home', '/', '/signup', '/changePassword'].find(val => val === location.pathname)  && loginPage.isLogined && isAIActive && <AIChatBox />}
+                {!['/home', '/', '/signup', '/changePassword'].find(val => val === location.pathname) && loginPage.isLogined && <AIButton />}
 
             </div>
 

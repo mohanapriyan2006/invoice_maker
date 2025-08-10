@@ -341,15 +341,21 @@ const InvoiceDetail = () => {
                         {/* <!-- Header --> */}
                         <div className="invoice-header p-2">
                             <div className="company-info">
-                                <div className="logo">
-                                    {(() => {
-                                        let logoName = "LOGO";
-                                        return (<EditableField
-                                            value={logoName}
-                                            onChange={(val) => logoName = val}
-                                            className='w-20 text-center'
-                                        />)
-                                    })()}</div>
+                                {companyDetail.company_logo ? (
+                                    <div className='border rounded-full p-2 flex items-center justify-center'>
+                                        <img
+                                            src={companyDetail.company_logo}
+                                            alt={`${companyDetail.company_name} Logo`}
+                                            className="w-15 h-15 object-contain"
+                                            onError={(e) => {
+                                                e.target.style.display = 'none';
+                                            }}
+                                        />
+                                    </div>
+                                ) :
+                                    <div className="logo">
+                                        Logo
+                                    </div>}
                                 <div className="company-details ml-10 border-l pl-4">
                                     <h2>
                                         <EditableField
