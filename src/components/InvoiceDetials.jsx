@@ -799,9 +799,9 @@ const InvoiceDetail = () => {
 
 
                 {/* Template Selection */}
-                <div className="bg-white shadow-md rounded-xl p-4 border border-gray-200 mb-4">
+                <div className="bg-white shadow-md hover:shadow-blue-300 rounded-xl p-4 border border-blue-300 mb-4">
                     <div className="flex gap-4">
-                        <h5 className='text-lg font-semibold text-gray-700'>Select Invoice Template:</h5>
+                        <h5 className='text-lg font-semibold text-blue-600'>Select Invoice Template:</h5>
                         <div className='flex flex-wrap gap-4'>
                             <label className='flex items-center gap-2 cursor-pointer group'>
                                 <div className="relative">
