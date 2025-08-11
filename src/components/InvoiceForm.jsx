@@ -94,7 +94,7 @@ const InvoiceForm = ({ editMode = false }) => {
         } catch (error) {
             if (error.response?.data) {
                 console.log("Error in post invoice : ", error.response.data)
-                setFieldError((error.response?.data?.detail[0]?.loc[1] || 'invoice_info'), error.response?.data?.detail[0]?.msg || 'Invalid input , check Again !');
+                setFieldError('invoice_info', error.response?.data?.detail[0]?.msg || 'Invalid input , check Again !');
             } else {
                 alert('Server Error: ' + error.message);
             }

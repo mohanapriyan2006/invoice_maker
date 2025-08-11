@@ -146,13 +146,14 @@ const ChangePassword = () => {
                 </button>
             </form>
 
-            <h4><button className='back h-2' onClick={() => {
+            <h4>Go To <button className='back mt-4' onClick={() => {
                 navigate('/home');
                 setLoginPage({
                     isActive: false,
                     isLogined: true
                 })
-            }}>Back</button> / Go to<button className='px-2 btn-1  mt-5' onClick={() => navigate('/')}>login</button></h4>
+            }}>Back</button>
+            </h4>
         </div>
     );
 };

@@ -412,10 +412,7 @@ const Template3 = ({
                 <div style={{ order: isMobile ? 2 : 1 }}>
                     <div style={{ padding: '15px', fontSize: fontSize, fontStyle: 'italic' }}>
                         <div style={{ marginBottom: '10px' }}>
-                            <strong>Amount in words:</strong> <EditableField
-                                value={moneyInWord}
-                                onChange={(val) => moneyInWord = val}
-                            />
+                            <strong>Amount in words:</strong> {moneyInWord}
                         </div>
                         <div>
                             <strong>Notes:</strong> <EditableField

@@ -911,10 +911,7 @@ const template1 = ({
                         border: '1px solid #e2e8f0'
                     }}>
                         <strong style={{ color: '#2d3748', fontSize: responsive.fontSize }}>
-                            <EditableField
-                                value={moneyInWord}
-                                onChange={(val) => moneyInWord = val}
-                            />
+                            {moneyInWord}
                         </strong>
                     </div>
                 </div>

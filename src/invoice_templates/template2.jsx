@@ -474,10 +474,7 @@ const Template2 = ({
                 <div style={{ order: (responsive.isMobile && !isDownloading) ? 2 : 1 }}>
                     <div style={{ marginBottom: '15px' }}>
                         <span style={{ fontWeight: 'bold', color: '#2c3e50', fontSize: responsive.fontSize }}>Total In Words: </span>
-                        <EditableField
-                            value={moneyInWord}
-                            onChange={(val) => moneyInWord = val}
-                        />
+                        {moneyInWord}
                     </div>
                     <div>
                         <span style={{ fontWeight: 'bold', color: '#2c3e50', fontSize: responsive.fontSize }}>Notes: </span>
