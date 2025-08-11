@@ -12,7 +12,7 @@ import EditableField from '../hooks/OnEdit';
 import Template1 from '../invoice_templates/Template1';
 import Template2 from '../invoice_templates/Template2';
 import Template3 from '../invoice_templates/Template3';
-import DefaultTemplate from '../invoice_templates/defaultTemplate';
+import DefaultTemplate from '../invoice_templates/DefaultTemplate';
 
 
 const InvoiceDetail = () => {
