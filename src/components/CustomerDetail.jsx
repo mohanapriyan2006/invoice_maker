@@ -13,21 +13,21 @@ const CustomerDetail = () => {
     const company_name = yourCompanies.find(val => val.company_id == customer?.customer_to)?.company_name;
 
     // delete
-    const handleDeleteCustomer = async (id, cId) => {
-        let isOk = await deleteAlert()
-        if (isOk) {
-            try {
-                await api.delete(`companies/${cId}/customers/${id}`);
-                navigate("/customers")
-            } catch (e) {
-                if (e.response && e.response.data) {
-                    console.log("Error in Delete Customer : ", e.response.data)
-                } else {
-                    alert("Server Error in Delete Customer : ", e);
-                }
-            }
-        }
-    }
+    // const handleDeleteCustomer = async (id, cId) => {
+    //     let isOk = await deleteAlert()
+    //     if (isOk) {
+    //         try {
+    //             await api.delete(`companies/${cId}/customers/${id}`);
+    //             navigate("/customers")
+    //         } catch (e) {
+    //             if (e.response && e.response.data) {
+    //                 console.log("Error in Delete Customer : ", e.response.data)
+    //             } else {
+    //                 alert("Server Error in Delete Customer : ", e);
+    //             }
+    //         }
+    //     }
+    // }
 
     if (!customer) {
         return (
@@ -286,13 +286,13 @@ const CustomerDetail = () => {
                                 <span>Back</span>
                             </button>
 
-                            <button
+                            {/* <button
                                 onClick={() => handleDeleteCustomer(customer.customer_id, customer.customer_to)}
                                 className='model-details-actions-delete  '
                             >
                                 <img src={deleteI} className='w-5 h-5' alt="delete" />
                                 <span>Delete</span>
-                            </button>
+                            </button> */}
 
                             <button
                                 onClick={() => navigate(`customerForm/${customer.customer_id}`)}

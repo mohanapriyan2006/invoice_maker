@@ -15,21 +15,21 @@ const CompanyDetail = () => {
     // const company = yourCompanies[0];
 
     // delete
-    const handleDeleteCompany = async (id) => {
-        let isOk = await deleteAlert()
-        if (isOk) {
-            try {
-                await api.delete(`companies/${id}`);
-                navigate('/companies')
-            } catch (e) {
-                if (e.response && e.response.data) {
-                    console.log("Error in Delete Company : ", e.response.data)
-                } else {
-                    alert("Server Error in Delete Company : ", e);
-                }
-            }
-        }
-    }
+    // const handleDeleteCompany = async (id) => {
+    //     let isOk = await deleteAlert()
+    //     if (isOk) {
+    //         try {
+    //             await api.delete(`companies/${id}`);
+    //             navigate('/companies')
+    //         } catch (e) {
+    //             if (e.response && e.response.data) {
+    //                 console.log("Error in Delete Company : ", e.response.data)
+    //             } else {
+    //                 alert("Server Error in Delete Company : ", e);
+    //             }
+    //         }
+    //     }
+    // }
 
     if (!company) {
         return (
@@ -346,13 +346,13 @@ const CompanyDetail = () => {
                                 <span>Back</span>
                             </button>
 
-                            <button
+                            {/* <button
                                 onClick={() => handleDeleteCompany(company.company_id)}
                                 className='model-details-actions-delete '
                             >
                                 <img src={deleteI} className='w-5 h-5' alt="delete" />
                                 <span>Delete</span>
-                            </button>
+                            </button> */}
 
                             <button
                                 onClick={() => navigate(`/companyForm/${company.company_id}`)}
