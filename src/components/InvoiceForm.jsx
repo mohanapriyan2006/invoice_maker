@@ -16,19 +16,19 @@ import {
     ChevronDown,
     Receipt
 } from 'lucide-react';
-import { api } from '../API/api';
+// Preview mode: use context CRUD instead of API
 import DataContext from '../context/DataContest';
 import { useParams } from 'react-router-dom';
 
 const InvoiceForm = ({ editMode = false }) => {
     const { id } = useParams();
-    const { navigate, Toast, fetchInvoices, yourInvoices, yourCompanies, yourCustomers, yourProducts, fetchCustomers, fetchProducts } = useContext(DataContext);
+    const { navigate, Toast, fetchInvoices, yourInvoices, yourCompanies, yourCustomers, yourProducts, fetchCustomers, fetchProducts, addInvoice, updateInvoice } = useContext(DataContext);
     const [editInvoiceData, setEditInvoiceData] = useState(null);
 
     useEffect(() => {
         // fetchCompany();
         if (editMode) {
-            const existing = yourInvoices.find(inv => inv.invoice_id === id);
+            const existing = yourInvoices.find(inv => String(inv.invoice_id) === String(id));
             if (existing) {
                 console.log("Found existing invoice:", existing);
                 console.log("Invoice items:", existing.invoice_items);
@@ -73,31 +73,18 @@ const InvoiceForm = ({ editMode = false }) => {
     });
 
     const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
-        console.log("Submitting invoice with values: ", values);
         try {
             if (editMode && id) {
-                await api.put(`/invoices/${id}?company_id=${values.owner_company}`, values);
-                Toast.fire({
-                    icon: "success",
-                    title: "Successfully invoice updated"
-                });
+                await updateInvoice(id, values);
+                Toast.fire({ icon: 'success', title: 'Invoice updated' });
             } else {
-                await api.post(`/invoices?company_id=${values.owner_company}`, values);
-                Toast.fire({
-                    icon: "success",
-                    title: "Successfully invoice created"
-                });
+                await addInvoice({ ...values, company_id: values.owner_company, created_at: new Date().toISOString() });
+                Toast.fire({ icon: 'success', title: 'Invoice created' });
             }
-
-            fetchInvoices(values.owner_company);
+            await fetchInvoices(values.owner_company);
             navigate('/invoices');
-        } catch (error) {
-            if (error.response?.data) {
-                console.log("Error in post invoice : ", error.response.data)
-                setFieldError('invoice_info', error.response?.data?.detail[0]?.msg || 'Invalid input , check Again !');
-            } else {
-                alert('Server Error: ' + error.message);
-            }
+        } catch (e) {
+            setFieldError('invoice_info', e.message || 'Failed to save invoice');
         } finally {
             setSubmitting(false);
         }

@@ -152,7 +152,7 @@ const template1 = ({
                             lineHeight: '1.2'
                         }}>
                             <EditableField
-                                value={editableInvoice.invoice_by.company_name}
+                                value={editableInvoice.invoice_by?.company_name}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_name: val }
@@ -161,7 +161,7 @@ const template1 = ({
                         </h2>
                         <p style={{ margin: '4px 0', fontSize: responsive.fontSize, opacity: '0.95' }}>
                             <EditableField
-                                value={editableInvoice.invoice_by.company_address}
+                                value={editableInvoice.invoice_by?.company_address}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_address: val }
@@ -180,7 +180,7 @@ const template1 = ({
                         }}>
                             <span style={{ fontWeight: '600' }}>GSTIN:</span>
                             <EditableField
-                                value={editableInvoice.invoice_by.company_gstin}
+                                value={editableInvoice.invoice_by?.company_gstin}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_gstin: val }
@@ -189,7 +189,7 @@ const template1 = ({
                         </p>
                         <p style={{ margin: '4px 0', fontSize: responsive.fontSize, opacity: '0.95' }}>
                             <EditableField
-                                value={editableInvoice.invoice_by.company_msme}
+                                value={editableInvoice.invoice_by?.company_msme}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_msme: val }
@@ -198,7 +198,7 @@ const template1 = ({
                         </p>
                         <p style={{ margin: '4px 0', fontSize: responsive.fontSize, opacity: '0.95' }}>
                             <EditableField
-                                value={editableInvoice.invoice_by.company_email}
+                                value={editableInvoice.invoice_by?.company_email}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_email: val }
@@ -417,7 +417,7 @@ const template1 = ({
                         textShadow: '0 1px 2px rgba(0,0,0,0.1)'
                     }}>
                         <EditableField
-                            value={editableInvoice.client.customer_name}
+                            value={editableInvoice.client?.customer_name}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_name: val }
@@ -426,7 +426,7 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '4px 0', opacity: '0.95', fontSize: responsive.fontSize }}>
                         <EditableField
-                            value={editableInvoice.client.customer_address_line1}
+                            value={editableInvoice.client?.customer_address_line1}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_address_line1: val }
@@ -435,7 +435,7 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '4px 0', opacity: '0.95', fontSize: responsive.fontSize }}>
                         <EditableField
-                            value={editableInvoice.client.customer_address_line2}
+                            value={editableInvoice.client?.customer_address_line2}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_address_line2: val }
@@ -444,14 +444,14 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '4px 0', opacity: '0.95', display: 'flex', gap: '4px', fontSize: responsive.fontSize, flexWrap: 'wrap' }}>
                         <EditableField
-                            value={editableInvoice.client.customer_city}
+                            value={editableInvoice.client?.customer_city}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_city: val }
                             })}
                         /> - 
                         <EditableField
-                            value={editableInvoice.client.customer_postal_code}
+                            value={editableInvoice.client?.customer_postal_code}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_postal_code: val }
@@ -460,7 +460,7 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '4px 0', opacity: '0.95', fontSize: responsive.fontSize }}>
                         <EditableField
-                            value={editableInvoice.client.customer_country}
+                            value={editableInvoice.client?.customer_country}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_country: val }
@@ -469,7 +469,7 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '8px 0 0 0', fontWeight: '600', opacity: '0.95', fontSize: responsive.fontSize }}>
                         GSTIN: <EditableField
-                            value={editableInvoice.client.customer_gstin}
+                            value={editableInvoice.client?.customer_gstin}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_gstin: val }
@@ -509,7 +509,7 @@ const template1 = ({
                         textShadow: '0 1px 2px rgba(0,0,0,0.1)'
                     }}>
                         <EditableField
-                            value={editableInvoice.client.customer_name}
+                            value={editableInvoice.client?.customer_name}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_name: val }
@@ -518,7 +518,7 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '4px 0', opacity: '0.95', fontSize: responsive.fontSize }}>
                         <EditableField
-                            value={editableInvoice.client.customer_address_line1}
+                            value={editableInvoice.client?.customer_address_line1}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_address_line1: val }
@@ -527,7 +527,7 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '4px 0', opacity: '0.95', fontSize: responsive.fontSize }}>
                         <EditableField
-                            value={editableInvoice.client.customer_address_line2}
+                            value={editableInvoice.client?.customer_address_line2}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_address_line2: val }
@@ -536,14 +536,14 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '4px 0', opacity: '0.95', display: 'flex', gap: '4px', fontSize: responsive.fontSize, flexWrap: 'wrap' }}>
                         <EditableField
-                            value={editableInvoice.client.customer_city}
+                            value={editableInvoice.client?.customer_city}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_city: val }
                             })}
                         /> - 
                         <EditableField
-                            value={editableInvoice.client.customer_postal_code}
+                            value={editableInvoice.client?.customer_postal_code}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_postal_code: val }
@@ -552,7 +552,7 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '4px 0', opacity: '0.95', fontSize: responsive.fontSize }}>
                         <EditableField
-                            value={editableInvoice.client.customer_country}
+                            value={editableInvoice.client?.customer_country}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_country: val }
@@ -561,7 +561,7 @@ const template1 = ({
                     </p>
                     <p style={{ margin: '8px 0 0 0', fontWeight: '600', opacity: '0.95', fontSize: responsive.fontSize }}>
                         GSTIN: <EditableField
-                            value={editableInvoice.client.customer_gstin}
+                            value={editableInvoice.client?.customer_gstin}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 client: { ...editableInvoice.client, customer_gstin: val }
@@ -792,7 +792,7 @@ const template1 = ({
                                         borderRight: '1px solid #e2e8f0',
                                         fontWeight: '600',
                                         color: '#4a5568'
-                                    }}>₹{item.invoice_item_unit_price.toFixed(2)}</td>
+                                    }}>₹{item.invoice_item_unit_price?.toFixed(2)}</td>
                                     {!(responsive.isMobile && !isDownloading) && (
                                         <>
                                             <td style={{
@@ -806,7 +806,7 @@ const template1 = ({
                                                 textAlign: 'right',
                                                 borderRight: '1px solid #e2e8f0',
                                                 color: '#4a5568'
-                                            }}>₹{item.invoice_item_cgst_amount.toFixed(2)}</td>
+                                            }}>₹{item.invoice_item_cgst_amount?.toFixed(2)}</td>
                                             <td style={{
                                                 padding: responsive.cardPadding,
                                                 textAlign: 'center',
@@ -818,7 +818,7 @@ const template1 = ({
                                                 textAlign: 'right',
                                                 borderRight: '1px solid #e2e8f0',
                                                 color: '#4a5568'
-                                            }}>₹{item.invoice_item_sgst_amount.toFixed(2)}</td>
+                                            }}>₹{item.invoice_item_sgst_amount?.toFixed(2)}</td>
                                             <td style={{
                                                 padding: responsive.cardPadding,
                                                 textAlign: 'center',
@@ -830,7 +830,7 @@ const template1 = ({
                                                 textAlign: 'right',
                                                 borderRight: '1px solid #e2e8f0',
                                                 color: '#4a5568'
-                                            }}>₹{item.invoice_item_igst_amount.toFixed(2)}</td>
+                                            }}>₹{item.invoice_item_igst_amount?.toFixed(2)}</td>
                                         </>
                                     )}
                                     <td style={{
@@ -839,7 +839,7 @@ const template1 = ({
                                         fontWeight: '700',
                                         color: '#2d3748',
                                         background: 'linear-gradient(135deg, #667eea20 0%, #764ba220 100%)'
-                                    }}>₹{item.invoice_item_total_amount.toFixed(2)}</td>
+                                    }}>₹{item.invoice_item_total_amount?.toFixed(2)}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -857,9 +857,9 @@ const template1 = ({
                             Tax Summary
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', fontSize: '11px' }}>
-                            <div>CGST: ₹{invoice.invoice_total_cgst.toFixed(2)}</div>
-                            <div>SGST: ₹{invoice.invoice_total_sgst.toFixed(2)}</div>
-                            <div>IGST: ₹{invoice.invoice_total_igst.toFixed(2)}</div>
+                            <div>CGST: ₹{invoice.invoice_total_cgst?.toFixed(2)}</div>
+                            <div>SGST: ₹{invoice.invoice_total_sgst?.toFixed(2)}</div>
+                            <div>IGST: ₹{invoice.invoice_total_igst?.toFixed(2)}</div>
                         </div>
                     </div>
                 )}
@@ -973,7 +973,7 @@ const template1 = ({
                         borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
                     }}>
                         <span style={{ fontSize: responsive.fontSize, opacity: '0.9' }}>Sub Total</span>
-                        <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{invoice.invoice_subtotal.toFixed(2)}</span>
+                        <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{invoice.invoice_subtotal?.toFixed(2)}</span>
                     </div>
                     {!(responsive.isMobile && !isDownloading) && (
                         <>
@@ -985,7 +985,7 @@ const template1 = ({
                                 borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
                             }}>
                                 <span style={{ fontSize: responsive.fontSize, opacity: '0.9' }}>CGST</span>
-                                <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{invoice.invoice_total_cgst.toFixed(2)}</span>
+                                <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{invoice.invoice_total_cgst?.toFixed(2)}</span>
                             </div>
                             <div style={{ 
                                 display: 'flex', 
@@ -995,7 +995,7 @@ const template1 = ({
                                 borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
                             }}>
                                 <span style={{ fontSize: responsive.fontSize, opacity: '0.9' }}>SGST</span>
-                                <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{invoice.invoice_total_sgst.toFixed(2)}</span>
+                                <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{invoice.invoice_total_sgst?.toFixed(2)}</span>
                             </div>
                             <div style={{ 
                                 display: 'flex', 
@@ -1005,7 +1005,7 @@ const template1 = ({
                                 borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
                             }}>
                                 <span style={{ fontSize: responsive.fontSize, opacity: '0.9' }}>IGST</span>
-                                <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{invoice.invoice_total_igst.toFixed(2)}</span>
+                                <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{invoice.invoice_total_igst?.toFixed(2)}</span>
                             </div>
                         </>
                     )}
@@ -1018,7 +1018,7 @@ const template1 = ({
                             borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
                         }}>
                             <span style={{ fontSize: responsive.fontSize, opacity: '0.9' }}>Total Tax</span>
-                            <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{(invoice.invoice_total_cgst + invoice.invoice_total_sgst + invoice.invoice_total_igst).toFixed(2)}</span>
+                            <span style={{ fontWeight: '600', fontSize: responsive.fontSize }}>₹{(invoice.invoice_total_cgst + invoice.invoice_total_sgst + invoice.invoice_total_igst)?.toFixed(2)}</span>
                         </div>
                     )}
                     <div style={{ 
@@ -1032,7 +1032,7 @@ const template1 = ({
                         borderRadius: '8px'
                     }}>
                         <span style={{ fontSize: responsive.headingSize, fontWeight: '700', textShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>Total</span>
-                        <span style={{ fontSize: responsive.titleSize, fontWeight: '800', textShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>₹{invoice.invoice_total.toFixed(2)}</span>
+                        <span style={{ fontSize: responsive.titleSize, fontWeight: '800', textShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>₹{invoice.invoice_total?.toFixed(2)}</span>
                     </div>
                     <div style={{ 
                         display: 'flex', 
@@ -1044,7 +1044,7 @@ const template1 = ({
                         border: '2px solid rgba(255, 255, 255, 0.2)'
                     }}>
                         <span style={{ fontSize: responsive.headingSize, fontWeight: '700', textShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>Balance Due</span>
-                        <span style={{ fontSize: responsive.titleSize, fontWeight: '800', textShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>₹{invoice.invoice_total.toFixed(2)}</span>
+                        <span style={{ fontSize: responsive.titleSize, fontWeight: '800', textShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>₹{invoice.invoice_total?.toFixed(2)}</span>
                     </div>
                 </div>
             </div>
@@ -1161,7 +1161,7 @@ const template1 = ({
                         textShadow: '0 1px 2px rgba(0,0,0,0.1)'
                     }}>
                         <EditableField
-                            value={editableInvoice.invoice_by.company_name}
+                            value={editableInvoice.invoice_by?.company_name}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 invoice_by: { ...editableInvoice.invoice_by, company_name: val }

@@ -12,13 +12,13 @@ import {
     ChevronDown,
     Users
 } from 'lucide-react';
-import { api } from '../API/api';
+// Preview mode: use context CRUD instead of API
 import DataContext from '../context/DataContest';
 import { useParams } from 'react-router-dom';
 
 const CustomerForm = ({ editMode = false }) => {
     const { id } = useParams();
-    const { navigate, fetchCustomers, yourCompanies, yourCustomers, fetchCompany, Toast } = useContext(DataContext);
+    const { navigate, fetchCustomers, yourCompanies, yourCustomers, fetchCompany, Toast, addCustomer, updateCustomer } = useContext(DataContext);
     const [editCustomerData, setEditCustomerData] = useState(null);
 
     useEffect(() => {
@@ -60,38 +60,18 @@ const CustomerForm = ({ editMode = false }) => {
             const saveCustomer = async () => {
                 try {
                     if (editMode && editCustomerData) {
-                        // PUT
-                        await api.put(
-                            `companies/${values.company_id}/customers/${editCustomerData.customer_id}`,
-                            values,
-                        );
-                        Toast.fire({
-                            icon: "success",
-                            title: "Successfully customer updated"
-                        });
+                        await updateCustomer(editCustomerData.customer_id, values);
+                        Toast.fire({ icon: 'success', title: 'Customer updated' });
                     } else {
-                        // POST
-                        await api.post(
-                            `companies/${values.company_id}/customers/`,
-                            { ...values, customer_to: values.company_id },
-                        );
-                        Toast.fire({
-                            icon: "success",
-                            title: "Successfully customer created"
-                        });
+                        await addCustomer({ ...values, customer_to: values.company_id });
+                        Toast.fire({ icon: 'success', title: 'Customer created' });
                     }
-
-                    fetchCustomers(values.company_id);
+                    await fetchCustomers(values.company_id);
                     navigate('/customers');
-                    setSubmitting(false);
                 } catch (e) {
+                    setFieldError('customer_name', e.message || 'Invalid customer');
+                } finally {
                     setSubmitting(false);
-                    if (e.response && e.response.data) {
-                        setFieldError(e.response?.data?.detail[0]?.loc[1] || 'customer_gstin', e.response.data.detail[0].msg || 'Invalid customer input. Check again.');
-                        console.error('API Error:', e.response.data);
-                    } else {
-                        alert('Server Error: ' + e.message);
-                    }
                 }
             };
 
@@ -102,7 +82,7 @@ const CustomerForm = ({ editMode = false }) => {
     // Prefill form on edit
     useEffect(() => {
         if (editMode) {
-            const existing = yourCustomers.find(cust => cust.customer_id === id);
+            const existing = yourCustomers.find(cust => String(cust.customer_id) === String(id));
             setEditCustomerData(existing);
         }
 

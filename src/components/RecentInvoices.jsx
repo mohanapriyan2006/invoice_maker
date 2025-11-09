@@ -24,20 +24,20 @@ const RecentInvoices = () => {
                     {yourInvoices?.map((invoice, index) => (
                         <div
                             key={index}
-                            onClick={() => navigate(`/invoiceDetail/${invoice.invoice_id}`)}
+                            onClick={() => navigate(`/invoiceDetail/${invoice?.invoice_id}`)}
                             className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 hover:border-blue-300 cursor-pointer md:w-auto w-[280px] overflow-hidden transform hover:scale-105 transition-all duration-300 ease-in-out"
                         >
                             {/* Status Badge */}
                             <div className="absolute top-3 left-3 z-10">
                                 <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">
-                                    #{invoice.invoice_number}
+                                    #{invoice?.invoice_number}
                                 </div>
                             </div>
 
                             {/* Amount Badge */}
                             <div className="absolute top-3 right-3 z-10">
                                 <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-                                    ₹{invoice.invoice_total.toFixed(2)}
+                                    ₹{invoice?.invoice_total?.toFixed(2)}
                                 </div>
                             </div>
 
@@ -57,10 +57,10 @@ const RecentInvoices = () => {
                                                     </svg>
                                                     From:
                                                 </h3>
-                                                <p className="font-medium text-gray-800">{invoice.invoice_by.company_name}</p>
-                                                <p className="text-gray-600">{invoice.invoice_by.company_address}</p>
-                                                <p className="text-gray-600">GSTIN: {invoice.invoice_by.company_gstin}</p>
-                                                <p className="text-gray-600">Email: {invoice.invoice_by.company_email}</p>
+                                                <p className="font-medium text-gray-800">{invoice?.invoice_by?.company_name}</p>
+                                                <p className="text-gray-600">{invoice?.invoice_by?.company_address}</p>
+                                                <p className="text-gray-600">GSTIN: {invoice?.invoice_by?.company_gstin}</p>
+                                                <p className="text-gray-600">Email: {invoice?.invoice_by?.company_email}</p>
                                             </div>
                                             <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
                                                 <h3 className="font-semibold text-lg text-blue-700 mb-2 flex items-center">
@@ -69,36 +69,36 @@ const RecentInvoices = () => {
                                                     </svg>
                                                     To:
                                                 </h3>
-                                                <p className="font-medium text-gray-800">{invoice.client.customer_name}</p>
-                                                <p className="text-gray-600">{invoice.client.customer_address_line1}, {invoice.client.customer_address_line2}</p>
-                                                <p className="text-gray-600">{invoice.client.customer_city}, {invoice.client.customer_state}</p>
-                                                <p className="text-gray-600">{invoice.client.customer_country} - {invoice.client.customer_postal_code}</p>
-                                                <p className="text-gray-600">GSTIN: {invoice.client.customer_gstin}</p>
-                                                <p className="text-gray-600">Email: {invoice.client.customer_email}</p>
+                                                <p className="font-medium text-gray-800">{invoice?.client?.customer_name}</p>
+                                                <p className="text-gray-600">{invoice?.client?.customer_address_line1}, {invoice?.client?.customer_address_line2}</p>
+                                                <p className="text-gray-600">{invoice?.client?.customer_city}, {invoice?.client?.customer_state}</p>
+                                                <p className="text-gray-600">{invoice?.client?.customer_country} - {invoice?.client?.customer_postal_code}</p>
+                                                <p className="text-gray-600">GSTIN: {invoice?.client?.customer_gstin}</p>
+                                                <p className="text-gray-600">Email: {invoice?.client?.customer_email}</p>
                                             </div>
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4 text-sm mb-6 bg-blue-50 p-4 rounded-lg">
                                             <div className="flex items-center">
                                                 <span className="font-semibold text-blue-700">Invoice No:</span>
-                                                <span className="ml-2 text-gray-800">{invoice.invoice_number}</span>
+                                                <span className="ml-2 text-gray-800">{invoice?.invoice_number}</span>
                                             </div>
                                             <div className="flex items-center">
                                                 <span className="font-semibold text-blue-700">Date:</span>
-                                                <span className="ml-2 text-gray-800">{new Date(invoice.invoice_date).toLocaleDateString()}</span>
+                                                <span className="ml-2 text-gray-800">{new Date(invoice?.invoice_date).toLocaleDateString()}</span>
                                             </div>
                                             <div className="flex items-center">
                                                 <span className="font-semibold text-blue-700">Due:</span>
-                                                <span className="ml-2 text-gray-800">{new Date(invoice.invoice_due_date).toLocaleDateString()}</span>
+                                                <span className="ml-2 text-gray-800">{new Date(invoice?.invoice_due_date).toLocaleDateString()}</span>
                                             </div>
                                             <div className="flex items-center">
                                                 <span className="font-semibold text-blue-700">Total:</span>
-                                                <span className="ml-2 text-green-600 font-bold">₹{invoice.invoice_total.toFixed(2)}</span>
+                                                <span className="ml-2 text-green-600 font-bold">₹{invoice?.invoice_total?.toFixed(2)}</span>
                                             </div>
                                         </div>
 
                                         <div className="text-sm text-gray-600 mt-4 bg-gray-50 p-3 rounded-lg">
-                                            <p><strong className="text-gray-800">Notes:</strong> {invoice.invoice_notes?.slice(0, 50)}...</p>
+                                            <p><strong className="text-gray-800">Notes:</strong> {invoice?.invoice_notes?.slice(0, 50)}...</p>
                                         </div>
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@ const RecentInvoices = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4M3 7h18M5 7v12a2 2 0 002 2h10a2 2 0 002-2V7" />
                                         </svg>
                                         <span className="text-xs">
-                                            {new Date(invoice.invoice_date).toLocaleDateString()}
+                                            {new Date(invoice?.invoice_date).toLocaleDateString()}
                                         </span>
                                     </div>
                                 </div>

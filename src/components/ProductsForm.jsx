@@ -4,12 +4,12 @@ import * as Yup from 'yup';
 import { Package, FileText, Ruler, Percent, DollarSign, Hash, Building2, ChevronDown } from 'lucide-react';
 import DataContext from '../context/DataContest';
 import { useParams } from 'react-router-dom';
-import { api } from '../API/api';
+// Preview mode: use context CRUD instead of API
 
 
 
 const ProductForm = ({ editMode = false }) => {
-    const { navigate, fetchProducts, yourCompanies, yourProducts, fetchCompany, Toast } = useContext(DataContext);
+    const { navigate, fetchProducts, yourCompanies, yourProducts, fetchCompany, Toast, addProduct, updateProduct } = useContext(DataContext);
     const [editProductData, setEditProductData] = useState(null);
     const { id } = useParams();
 
@@ -48,37 +48,18 @@ const ProductForm = ({ editMode = false }) => {
             const saveProduct = async () => {
                 try {
                     if (editMode && editProductData) {
-                        await api.put(
-                            `companies/${values.company_id}/products/${editProductData.product_id}`,
-                            values,
-                        );
-                        Toast.fire({
-                            icon: "success",
-                            title: "Successfully product updated"
-                        });
+                        await updateProduct(editProductData.product_id, values);
+                        Toast.fire({ icon: 'success', title: 'Product updated' });
                     } else {
-                        await api.post(
-                            `companies/${values.company_id}/products/`,
-                            values,
-                        );
-                        Toast.fire({
-                            icon: "success",
-                            title: "Successfully product created"
-                        });
+                        await addProduct(values);
+                        Toast.fire({ icon: 'success', title: 'Product created' });
                     }
-                    
-
-                    setSubmitting(false);
-                    fetchProducts();
+                    await fetchProducts(values.company_id);
                     navigate('/products');
                 } catch (e) {
+                    setFieldError('product_name', e.message || 'Invalid product');
+                } finally {
                     setSubmitting(false);
-                    if (e.response && e.response.data) {
-                        setFieldError(e.response?.data?.detail[0]?.loc[1] || 'product_name', e.response.data.detail[0].msg || 'Invalid Product');
-                        console.error("Error:", e.response.data);
-                    } else {
-                        console.error('Server Error:', e.message);
-                    }
                 }
             };
 
@@ -88,7 +69,7 @@ const ProductForm = ({ editMode = false }) => {
 
     useEffect(() => {
         if (editMode) {
-            const temp = yourProducts.find(val => val.product_id === id);
+            const temp = yourProducts.find(val => String(val.product_id) === String(id));
             setEditProductData(temp);
         }
         if (editMode && editProductData) {

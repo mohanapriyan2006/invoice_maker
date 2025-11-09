@@ -4,13 +4,13 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Building2, Mail, CreditCard, MapPin, Hash, Award, Landmark, User, GitBranch, Code, Image, X } from 'lucide-react';
 import DataContext from '../context/DataContest';
-import { api } from '../API/api';
+// Preview mode: use local storage CRUD via context instead of API
 import { useParams } from 'react-router-dom';
 import indiaStateCities from '../data/indiaStateCities.js';
 import ImgToURL from '../hooks/ImgToURL.jsx';
 
 const CompanyForm = ({ editMode = false }) => {
-  const { navigate, fetchCompany, userDetails, yourCompanies, Toast } = useContext(DataContext);
+  const { navigate, fetchCompany, yourCompanies, Toast, addCompany, updateCompany } = useContext(DataContext);
   const [editCompanyData, setEditCompanyData] = useState(null);
   const [showImgToURLPopup, setShowImgToURLPopup] = useState(false);
   const { id } = useParams();
@@ -69,39 +69,18 @@ const CompanyForm = ({ editMode = false }) => {
       const saveCompany = async () => {
         try {
           if (editMode && editCompanyData) {
-            await api.put(`/companies/${editCompanyData.company_id}`, values);
-            Toast.fire({
-              icon: "success",
-              title: "Successfully company updated"
-            });
+            await updateCompany(editCompanyData.company_id, values);
+            Toast.fire({ icon: 'success', title: 'Company updated' });
           } else {
-            console.log("posting..");
-            const res = await api.post("/companies", {
-              ...values,
-              company_owner: userDetails.user_id,
-            });
-            console.log("Posting Response: ", res);
-            Toast.fire({
-              icon: "success",
-              title: "Successfully company created"
-            });
+            await addCompany({ ...values });
+            Toast.fire({ icon: 'success', title: 'Company created' });
           }
-
-          fetchCompany();
-          setSubmitting(false);
-          navigate("/companies");
+          await fetchCompany();
+          navigate('/companies');
         } catch (e) {
+          setFieldError('company_name', e.message || 'Save failed');
+        } finally {
           setSubmitting(false);
-          if (e.response && e.response.data && Array.isArray(e.response.data.detail) && e.response.data.detail.length > 0) {
-            const detail = e.response.data.detail[0];
-            const field = (detail.loc && detail.loc.length > 1) ? detail.loc[1] : 'company_ifsc_code';
-            const msg = detail.msg || "Invalid data, check again!";
-            setFieldError(field, msg);
-            console.error("Company Save Error: ", e.response.data);
-          } else {
-            setFieldError('company_ifsc_code', "Invalid data, check again!");
-            alert("Server Error: " + e.message);
-          }
         }
       };
 
@@ -111,7 +90,7 @@ const CompanyForm = ({ editMode = false }) => {
 
   useEffect(() => {
     if (editMode && id) {
-      const temp = yourCompanies.find(val => val.company_id === id);
+  const temp = yourCompanies.find(val => String(val.company_id) === String(id));
       setEditCompanyData(temp);
     }
   }, [editMode, id, yourCompanies]);

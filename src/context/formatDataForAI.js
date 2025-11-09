@@ -30,8 +30,8 @@ export const formatDataForAI = (companies, products, customers, invoices) => {
     const formatInvoice = (inv) => `
 🧾 Invoice #${inv.invoice_number}
 - Date: ${new Date(inv.invoice_date).toLocaleDateString()}
-- From: ${inv.invoice_by.company_name}, ${inv.invoice_by.company_city} (GSTIN: ${inv.invoice_by.company_gstin})
-- To: ${inv.client.customer_name}, ${inv.client.customer_city} (GSTIN: ${inv.client.customer_gstin})
+- From: ${inv.invoice_by?.company_name}, ${inv.invoice_by?.company_city} (GSTIN: ${inv.invoice_by?.company_gstin})
+- To: ${inv.client?.customer_name}, ${inv.client?.customer_city} (GSTIN: ${inv.client?.customer_gstin})
 - Amount: ₹${inv.invoice_total}
 - Place of Supply: ${inv.invoice_place_of_supply}
 - Status: ${inv.invoice_status}

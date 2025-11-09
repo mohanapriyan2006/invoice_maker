@@ -2,12 +2,11 @@ import React, { useContext, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import DataContext from '../../context/DataContest';
-import { api } from '../../API/api';
 import { Eye, EyeOff } from 'lucide-react';
 
 const ChangePassword = () => {
 
-    const { navigate, userDetails, token, Toast, setLoginPage } = useContext(DataContext);
+    const { navigate, userDetails, Toast, setLoginPage, setToken, setuserDetails, updateUser } = useContext(DataContext);
 
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,44 +28,32 @@ const ChangePassword = () => {
                 .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
                 .required('Please confirm your new password')
         }),
-        onSubmit: (values, { setFieldError }) => {
-            const putUser = async (userID) => {
-                setIsLoading(true);
-                try {
-                    await api.put(`users/${userID}`, { user_name: values.user_name, password: values.newPassword }, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
-                    Toast.fire({
-                        icon: "success",
-                        title: "Successfully userdetail updated"
-                    });
-                    setLoginPage({
-                        isActive: true,
-                        isLogined: false
-                    });
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("userDetails");
-                    navigate("/");
-                } catch (e) {
-                    if (e.response && e.response.data) {
-                        console.log("Error Details:", e.response.data);
-                        if (e.response.data.detail) {
-                            setFieldError("user_name", "Username already registered !");
-                        } else {
-                            setFieldError("user_name", "Signup failed. Try again.");
-                        }
-                    } else {
-                        setFieldError("user_name", "Server error. Try again later.");
-                    }
-                }
-                finally {
-                    setIsLoading(false);
-                }
-
+        onSubmit: async (values, { setFieldError }) => {
+            // Basic security: ensure user_name matches logged in user
+            if (values.user_name !== userDetails.user_name) {
+                setFieldError('user_name', 'Username does not match your account');
+                return;
             }
-            putUser(userDetails.user_id);
+            setIsLoading(true);
+            try {
+                await updateUser(values.user_name, { password: values.newPassword });
+                Toast.fire({ icon: 'success', title: 'Password updated. Please login again.' });
+                // Logout flow for preview mode
+                localStorage.removeItem('token');
+                localStorage.removeItem('userDetail');
+                setLoginPage({ isActive: true, isLogined: false });
+                setToken("");
+                setuserDetails({});
+                navigate('/');
+            } catch (e) {
+                if (e.code === 'User not found') {
+                    setFieldError('user_name', 'User not found');
+                } else {
+                    setFieldError('user_name', 'Failed to update password');
+                }
+            } finally {
+                setIsLoading(false);
+            }
         }
     });
 

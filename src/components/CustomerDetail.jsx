@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import DataContext from '../context/DataContest';
-import { api } from '../API/api';
 import deleteI from '../assets/delete1.png'
 import editI from '../assets/edit.png'
 
@@ -9,7 +8,7 @@ const CustomerDetail = () => {
     const { id } = useParams();
     const { deleteAlert, yourCustomers, yourCompanies, navigate } = useContext(DataContext);
 
-    const customer = yourCustomers.find(c => c.customer_id === id);
+    const customer = yourCustomers.find(c => String(c.customer_id) === String(id));
     const company_name = yourCompanies.find(val => val.company_id == customer?.customer_to)?.company_name;
 
     // delete

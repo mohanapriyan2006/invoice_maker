@@ -1,21 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import DataContext from '../context/DataContest';
-import { api } from '../API/api';
 import loadingI from '../assets/loading.png';
-
-// API function to update invoice status and notes
-const updateInvoiceStatusAndNotes = async (invoiceId, companyId, status, notes) => {
-    try {
-        const response = await api.put(`/invoices/${invoiceId}?company_id=${companyId}`, {
-            invoice_status: status,
-            user_reference_notes: notes
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error updating invoice:', error);
-        throw error;
-    }
-};
 
 const Invoices = () => {
     const {
@@ -25,7 +10,8 @@ const Invoices = () => {
         setIsLoading,
         fetchInvoices,
         yourCompanies,
-        fetchCompany
+        fetchCompany,
+        updateInvoice
     } = useContext(DataContext);
 
     const [selectedCompanyId, setSelectedCompanyId] = useState(yourCompanies?.length > 0 ? yourCompanies[0]?.company_id : null);
@@ -74,12 +60,11 @@ const Invoices = () => {
             const currentInvoice = yourInvoices.find(inv => inv.invoice_id === invoiceId);
             const currentStatus = currentInvoice?.invoice_status || 'pending';
 
-            await updateInvoiceStatusAndNotes(
-                invoiceId,
-                selectedCompanyId,
-                currentStatus,
-                tempNotes[invoiceId] || ''
-            );
+            // Update local storage invoice
+            await updateInvoice(invoiceId, {
+                invoice_status: currentStatus,
+                user_reference_notes: tempNotes[invoiceId] || ''
+            });
 
             setEditingNotes(prev => ({ ...prev, [invoiceId]: false }));
 
@@ -106,12 +91,11 @@ const Invoices = () => {
             const currentInvoice = yourInvoices.find(inv => inv.invoice_id === invoiceId);
             const currentNotes = currentInvoice?.user_reference_notes || '';
 
-            await updateInvoiceStatusAndNotes(
-                invoiceId,
-                selectedCompanyId,
-                tempStatus[invoiceId],
-                currentNotes
-            );
+            // Update local storage invoice
+            await updateInvoice(invoiceId, {
+                invoice_status: tempStatus[invoiceId],
+                user_reference_notes: currentNotes
+            });
 
             setEditingStatus(prev => ({ ...prev, [invoiceId]: false }));
 
@@ -333,7 +317,13 @@ const Invoices = () => {
                                                         <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                                         </svg>
-                                                        <span className="text-sm font-medium">Invoice company: {invoice.invoice_by.company_name}</span>
+                                                        <span className="text-sm font-medium">
+                                                            Invoice company: {(() => {
+                                                                const companyId = invoice.owner_company ?? invoice.company_id;
+                                                                const comp = yourCompanies?.find(c => String(c.company_id) === String(companyId));
+                                                                return comp?.company_name || '—';
+                                                            })()}
+                                                        </span>
                                                     </div>
                                                     <span className="text-sm font-medium">Invoice Total: {invoice.invoice_total}</span><br />
                                                     <span className="text-sm font-medium">Invoice Due: {new Date(invoice.invoice_due_date).toLocaleDateString()}</span>

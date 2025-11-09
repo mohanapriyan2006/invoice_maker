@@ -3,13 +3,13 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { api, setBearerToken } from '../../API/api';
+// Use local storage auth via DataContext
 import DataContext from '../../context/DataContest';
 
 const Login = () => {
 
   const navigate = useNavigate();
-  const { setLoginPage, setToken, setuserDetails, initDataLoad, Toast } = useContext(DataContext);
+  const { login, Toast } = useContext(DataContext);
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,55 +28,15 @@ const Login = () => {
         .min(4, 'Password must be at least 4 characters')
         .required('Password is required')
     }),
-    onSubmit: (values, { setFieldError }) => {
-
-      const postUser = async () => {
-        setIsLoading(true);
-        try {
-          const res = await api.post("users/login", { ...values });
-          if (res.data.access_token) {
-            localStorage.setItem("token", res.data.access_token);
-            setToken(res.data.access_token);
-            setBearerToken(res.data.access_token);
-            localStorage.setItem("userDetail", JSON.stringify(res.data.user_details));
-            setuserDetails(res.data.user_details);
-          }
-
-          Toast.fire({
-            icon: "success",
-            title: "Logined successfully"
-          });
-
-          setLoginPage({
-            isActive: false,
-            isLogined: true
-          })
-          navigate("/home");
-          initDataLoad();
-
-        } catch (e) {
-          if (e.response) {
-            if (e.response.status === 401) {
-              console.log("Unauthorized: Invalid username or password");
-              setFieldError("password", "Invalid username or password");
-            } else {
-              console.log("Server error:", e.response.status);
-              alert("Something went wrong!, Try again");
-            }
-          } else if (e.request) {
-            console.log("No response from server.");
-            alert("No response from server, Try again");
-          } else {
-            console.log("Request error:", e.message);
-            alert("Something went wrong!, Try again");
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      postUser();
-
+    onSubmit: async (values, { setFieldError }) => {
+      setIsLoading(true);
+      try {
+        await login(values);
+      } catch (e) {
+        setFieldError("password", e?.message || "Invalid username or password");
+      } finally {
+        setIsLoading(false);
+      }
     }
   });
 

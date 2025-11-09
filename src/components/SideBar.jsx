@@ -11,7 +11,6 @@ import customerI from '../assets/customer2.png'
 import logoutI from '../assets/logout.png'
 import deleteI from '../assets/delete2.png'
 import menuWI from '../assets/menuwhite.svg';
-import { api } from '../API/api';
 import { Info } from 'lucide-react';
 
 
@@ -36,31 +35,23 @@ const SideBar = () => {
     }
 
     // delete
-    const handleDeleteAccount = async (id) => {
+    const handleDeleteAccount = async () => {
         setIsToggle(false);
         let isOK = await confirmUsernameBeforeDelete();
         if (isOK) {
-            try {
-                await api.delete(`users/${id}`
-                );
-                navigate('/');
-                localStorage.removeItem("token");
-                setLoginPage({
-                    isLogined: false,
-                    isActive: true,
-                })
-                setToken("");
-                setYourCompanies([]);
-                setYourProducts([]);
-                setYourCustomers([]);
-                setYourInvoices([]);
-            } catch (e) {
-                if (e.response && e.response.data) {
-                    console.log("Error in Delete Account : ", e.response.data)
-                } else {
-                    console.log("Server Error in Delete Account : ", e);
-                }
-            }
+            // Preview mode: simulate account deletion locally
+            navigate('/');
+            localStorage.removeItem("token");
+            localStorage.removeItem("userDetail");
+            setLoginPage({
+                isLogined: false,
+                isActive: true,
+            })
+            setToken("");
+            setYourCompanies([]);
+            setYourProducts([]);
+            setYourCustomers([]);
+            setYourInvoices([]);
         }
         else {
             console.log("Wrong username !");
@@ -85,7 +76,7 @@ const SideBar = () => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [isToggle, width]);
+    }, [isToggle, width, setIsToggle]);
 
     const style = {
         links: 'font-semibold cursor-pointer w-fit flex gap-2 items-center py-2.5 px-3 rounded-lg hover:bg-blue-600 hover:shadow-md hover:transform hover:scale-103',

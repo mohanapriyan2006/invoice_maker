@@ -23,8 +23,8 @@ const ImgToURL = ({ onImageGenerated }) => {
         }
 
         if (file.size > MAX_FILE_SIZE) {
-            const maxSizeMB = (MAX_FILE_SIZE / (1024 * 1024)).toFixed(1);
-            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1);
+            const maxSizeMB = (MAX_FILE_SIZE / (1024 * 1024))?.toFixed(1);
+            const fileSizeMB = (file.size / (1024 * 1024))?.toFixed(1);
             return {
                 isValid: false,
                 error: `File size ${fileSizeMB}MB exceeds the maximum limit of ${maxSizeMB}MB. Please choose a smaller image.`
@@ -161,7 +161,7 @@ const ImgToURL = ({ onImageGenerated }) => {
                         </div>
                         <p className="text-sm text-gray-600">{selectedImage.name}</p>
                         <p className="text-xs text-gray-500">
-                            Size: {(selectedImage.size / 1024 / 1024).toFixed(2)} MB
+                            Size: {(selectedImage.size / 1024 / 1024)?.toFixed(2)} MB
                         </p>
                         <p className="text-xs text-green-600 font-medium">
                             ✅ Data URL - Works after page reload

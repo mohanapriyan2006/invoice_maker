@@ -7,7 +7,7 @@ const ProductDetail = () => {
     const { id } = useParams();
     const { yourProducts, navigate, yourCompanies } = useContext(DataContext);
 
-    const product = yourProducts.find(p => p.product_id === id);
+    const product = yourProducts.find(p => String(p.product_id) === String(id));
     const company_name = yourCompanies.find(val => val.company_id == product?.company_id)?.company_name;
 
     if (!product) {

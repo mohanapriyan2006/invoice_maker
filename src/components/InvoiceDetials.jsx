@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
 import '../style/Invoice.css';
 import { useParams } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import DataContext from '../context/DataContest';
-import { api } from '../API/api';
-import { Download, Pencil, } from 'lucide-react';
+import { Download, Pencil } from 'lucide-react';
 import { convertNumberToWords } from '../hooks/NumToWord';
 import Swal from 'sweetalert2';
 import EditableField from '../hooks/OnEdit';
@@ -17,508 +16,114 @@ import DefaultTemplate from '../invoice_templates/DefaultTemplate';
 
 const InvoiceDetail = () => {
     const { id } = useParams();
-    const { yourInvoices, yourProducts, yourCompanies, navigate, deleteAlert, isEditing, setIsEditing } = React.useContext(DataContext);
+    const { yourInvoices, yourProducts, yourCompanies, yourCustomers, navigate, isEditing, setIsEditing } = useContext(DataContext);
     const componentRef = useRef();
     const [changeTitle, setChangeTitle] = useState(false);
     const [selectedTemplate, setSelectedTemplate] = useState('default'); // Add template selection state
 
-    const getProductName = (pID) => {
-        const temp = yourProducts.find(val => val.product_id == pID).product_name;
-        return temp;
-    }
-    const getProductCode = (pID) => {
-        const temp = yourProducts.find(val => val.product_id == pID).product_hsn_sac_code;
-        return temp;
-    }
-
     const [isDownloading, setIsDownloading] = useState(false);
+    
+    // Build an enriched invoice for preview (derive nested objects and totals)
+    const rawInvoice = yourInvoices.find(val => String(val.invoice_id) === String(id));
 
-    const invoice = yourInvoices.find(val => val.invoice_id == id);
-    const [editableInvoice, setEditableInvoice] = useState(invoice);
-    const [companyDetail, setCompanyDetail] = useState({});
+    const enrichedInvoice = useMemo(() => {
+        if (!rawInvoice) return null;
+        const companyId = rawInvoice.owner_company || rawInvoice.company_id;
+        const company = yourCompanies.find(c => String(c.company_id) === String(companyId)) || {};
+        const customer = yourCustomers.find(c => String(c.customer_id) === String(rawInvoice.customer_company)) || {};
+        const items = (rawInvoice.invoice_items || []).map(it => {
+            const product = yourProducts.find(p => String(p.product_id) === String(it.product_id));
+            const qty = Number(it.invoice_item_quantity) || 1;
+            const rate = product?.product_unit_price || 0;
+            const cgstRate = product?.product_default_cgst_rate || 0;
+            const sgstRate = product?.product_default_sgst_rate || 0;
+            const igstRate = product?.product_default_igst_rate || 0;
+            const base = qty * rate;
+            const cgstAmt = base * cgstRate / 100;
+            const sgstAmt = base * sgstRate / 100;
+            const igstAmt = base * igstRate / 100;
+            const total = base + cgstAmt + sgstAmt + igstAmt;
+            return {
+                product_id: it.product_id,
+                invoice_item_quantity: qty,
+                invoice_item_unit_price: rate,
+                invoice_item_cgst_rate: cgstRate,
+                invoice_item_sgst_rate: sgstRate,
+                invoice_item_igst_rate: igstRate,
+                invoice_item_cgst_amount: cgstAmt,
+                invoice_item_sgst_amount: sgstAmt,
+                invoice_item_igst_amount: igstAmt,
+                invoice_item_total_amount: total,
+                invoice_item_name: product?.product_name || 'Item'
+            };
+        });
+        const invoice_total = items.reduce((s, it) => s + it.invoice_item_total_amount, 0);
+        return {
+            ...rawInvoice,
+            invoice_by: company,
+            client: customer,
+            products: items,
+            invoice_total
+        };
+    }, [rawInvoice, yourCompanies, yourCustomers, yourProducts]);
+
+    const [editableInvoice, setEditableInvoice] = useState(enrichedInvoice);
+    useEffect(() => { setEditableInvoice(enrichedInvoice); }, [enrichedInvoice]);
+    useEffect(() => { setIsEditing(false) }, [setIsEditing]);
+
+    const moneyInWord = convertNumberToWords(Math.trunc(editableInvoice?.invoice_total || 0));
+
     const [editableField, setEditableField] = useState({
         date: {
-            invoice_date: new Date(invoice.invoice_date).toLocaleDateString(),
-            invoice_due_date: new Date(invoice.invoice_due_date).toLocaleDateString()
+            invoice_date: enrichedInvoice ? new Date(enrichedInvoice.invoice_date).toLocaleDateString() : '',
+            invoice_due_date: enrichedInvoice ? new Date(enrichedInvoice.invoice_due_date).toLocaleDateString() : ''
         },
-        products: [
-            ...invoice.products.map(product => ({
-                invoice_item_name: getProductName(product.product_id) || 'Product Name',
-                product_hsn_sac_code: getProductCode(product.product_id) || '1111',
-            }))
-        ]
+        products: (enrichedInvoice?.products || []).map(p => ({
+            invoice_item_name: p.invoice_item_name,
+            product_hsn_sac_code: yourProducts.find(prod => String(prod.product_id) === String(p.product_id))?.product_hsn_sac_code || ''
+        }))
     });
-
-    useEffect(() => { setIsEditing(false) }, [setIsEditing])
-
-    let moneyInWord = convertNumberToWords(Math.trunc(editableInvoice?.invoice_total || 0));
-    
-    const getCompanyDetails = useCallback((cID) => {
-        return (yourCompanies.find((val) => val.company_id === cID))
-    }, [yourCompanies]);
-
     useEffect(() => {
-        setEditableInvoice(invoice);
-        if (invoice) {
-            const company = getCompanyDetails(invoice.invoice_by.company_id);
-            setCompanyDetail(company);
+        if (enrichedInvoice) {
+            setEditableField({
+                date: {
+                    invoice_date: new Date(enrichedInvoice.invoice_date).toLocaleDateString(),
+                    invoice_due_date: new Date(enrichedInvoice.invoice_due_date).toLocaleDateString()
+                },
+                products: enrichedInvoice.products.map(p => ({
+                    invoice_item_name: p.invoice_item_name,
+                    product_hsn_sac_code: yourProducts.find(prod => String(prod.product_id) === String(p.product_id))?.product_hsn_sac_code || ''
+                }))
+            });
         }
-    }, [getCompanyDetails, invoice, yourCompanies]);
+    }, [enrichedInvoice, yourProducts]);
 
 
 
 
     // Function to render the selected template
     const renderSelectedTemplate = () => {
+        if (!editableInvoice) return null;
         const templateProps = {
             componentRef,
             isDownloading,
             invoice: editableInvoice,
             editableInvoice,
             setEditableInvoice,
-            companyDetail,
-            setCompanyDetail,
+            companyDetail: editableInvoice.invoice_by || {},
             editableField,
             setEditableField,
             moneyInWord,
             changeTitle
         };
-
         switch (selectedTemplate) {
-            case 'template1':
-                return <Template1 {...templateProps} />;
-            case 'template2':
-                return <Template2 {...templateProps} />;
-            case 'template3':
-                return <Template3 {...templateProps} />;
-            default:
-                return <DefaultTemplate {...templateProps} />;
+            case 'template1': return <Template1 {...templateProps} />;
+            case 'template2': return <Template2 {...templateProps} />;
+            case 'template3': return <Template3 {...templateProps} />;
+            default: return <DefaultTemplate {...templateProps} />;
         }
     };
-
-    // Move your existing template JSX to a separate function
-    // const renderDefaultTemplate = () => {
-    //     return (
-    //         <>
-    //             {/* <!-- Header --> */}
-    //             <div className="invoice-header p-2">
-    //                 <div className="company-info">
-    //                     {companyDetail.company_logo ? (
-    //                         <div className='border rounded-full p-2 flex items-center justify-center'>
-    //                             <img
-    //                                 src={companyDetail.company_logo}
-    //                                 alt={`${companyDetail.company_name} Logo`}
-    //                                 className="w-15 h-15 object-contain"
-    //                                 onError={(e) => {
-    //                                     e.target.style.display = 'none';
-    //                                 }}
-    //                             />
-    //                         </div>
-    //                     ) :
-    //                         <div className="logo">
-    //                             Logo
-    //                         </div>}
-    //                     <div className="company-details ml-10 border-l pl-4">
-    //                         <h2>
-    //                             <EditableField
-    //                                 value={editableInvoice.invoice_by.company_name}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     invoice_by: { ...editableInvoice.invoice_by, company_name: val }
-    //                                 })}
-    //                             />
-    //                         </h2>
-    //                         <p>
-    //                             <EditableField
-    //                                 value={editableInvoice.invoice_by.company_address}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     invoice_by: { ...editableInvoice.invoice_by, company_address: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p className='flex gap-1'> GSTIN :
-    //                             <EditableField
-    //                                 value={editableInvoice.invoice_by.company_gstin}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     invoice_by: { ...editableInvoice.invoice_by, company_gstin: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p>
-    //                             <EditableField
-    //                                 value={editableInvoice.invoice_by.company_msme}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     invoice_by: { ...editableInvoice.invoice_by, company_msme: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p>
-    //                             <EditableField
-    //                                 value={editableInvoice.invoice_by.company_email}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     invoice_by: { ...editableInvoice.invoice_by, company_email: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                     </div>
-    //                 </div>
-    //                 <div className="invoice-title text-3xl">{changeTitle ? "PERFOMA" : "TAX"} INVOICE</div>
-    //             </div>
-
-    //             {/* <!-- Invoice Info --> */}
-    //             <div className="invoice-info">
-    //                 <div className="info-left flex p-3 justify-around">
-    //                     <div>
-    //                         <p># Invoice</p>
-    //                         <p>Date</p>
-    //                         <p>Terms</p>
-    //                         <p>Due Date</p>
-    //                     </div>
-    //                     <div>
-    //                         <p className='font-semibold flex gap-1'>:
-    //                             <EditableField
-    //                                 value={editableInvoice.invoice_number}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice, invoice_number: val
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p className='font-semibold flex gap-2'>:
-    //                             <EditableField
-    //                                 value={editableField.date.invoice_date}
-    //                                 onChange={(val) => setEditableField({
-    //                                     ...editableField,
-    //                                     date: { ...editableField.date, invoice_date: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p className='font-semibold flex gap-1'>:
-    //                             <EditableField
-    //                                 value={editableInvoice.invoice_terms}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice, invoice_terms: val
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p className='font-semibold flex gap-2'>:
-    //                             <EditableField
-    //                                 value={editableField.date.invoice_due_date}
-    //                                 onChange={(val) => setEditableField({
-    //                                     ...editableField,
-    //                                     date: { ...editableField.date, invoice_due_date: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                     </div>
-    //                 </div>
-    //                 <div className="info-right flex p-3 border-t-1 sm:border-l-1 sm:border-t-0 min-h-[80px] justify-around">
-    //                     <div>
-    //                         <p>Place Of Supply </p>
-    //                     </div>
-    //                     <div>
-    //                         <p className='font-semibold flex gap-1'>:
-    //                             <EditableField
-    //                                 value={editableInvoice.invoice_place_of_supply}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice, invoice_place_of_supply: val
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                     </div>
-    //                 </div>
-    //             </div>
-
-    //             {/* <!-- Bill & Ship To --> */}
-    //             <div className="billing-shipping">
-    //                 <div className="box pb-2">
-    //                     <div className="box-title">Bill To</div>
-    //                     <div className="box-body">
-    //                         <p className='bold'>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_name}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_name: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_address_line1}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_address_line1: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_address_line2}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_address_line2: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p className='flex gap-1'>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_city}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_city: val }
-    //                                 })}
-    //                             /> -
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_postal_code}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_postal_code: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_country}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_country: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p className='flex gap-1'>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_gstin}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_gstin: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                     </div>
-    //                 </div>
-    //                 <div className="box pb-2">
-    //                     <div className="box-title">Ship To</div>
-    //                     <div className="box-body">
-    //                         <p className='bold'>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_name}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_name: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_address_line1}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_address_line1: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_address_line2}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_address_line2: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p className='flex gap-1'>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_city}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_city: val }
-    //                                 })}
-    //                             /> -
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_postal_code}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_postal_code: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_country}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_country: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                         <p className='flex gap-1'>
-    //                             <EditableField
-    //                                 value={editableInvoice.client.customer_gstin}
-    //                                 onChange={(val) => setEditableInvoice({
-    //                                     ...editableInvoice,
-    //                                     client: { ...editableInvoice.client, customer_gstin: val }
-    //                                 })}
-    //                             />
-    //                         </p>
-    //                     </div>
-    //                 </div>
-    //             </div>
-
-    //             {/* <!-- Products Table --> */}
-    //             <div className="product-table-wrapper">
-    //                 <table className="product-table">
-    //                     <thead>
-    //                         <tr>
-    //                             <th className='font-bold'>#</th>
-    //                             <th className='font-bold'>Item & Description</th>
-    //                             <th className='font-bold'>HSN/SAC</th>
-    //                             <th className='font-bold'>Qty</th>
-    //                             <th className='font-bold'>Rate</th>
-    //                             <th className='font-bold'>CGST%</th>
-    //                             <th className='font-bold'>CGST Amt</th>
-    //                             <th className='font-bold'>SGST%</th>
-    //                             <th className='font-bold'>SGST Amt</th>
-    //                             <th className='font-bold'>IGST%</th>
-    //                             <th className='font-bold'>IGST Amt</th>
-    //                             <th className='font-bold'>Amount</th>
-    //                         </tr>
-    //                     </thead>
-    //                     <tbody>
-    //                         {invoice.products?.map((item, i) => (
-    //                             <tr key={i}>
-    //                                 <td>{i + 1}</td>
-    //                                 <td>
-    //                                     <EditableField
-    //                                         value={editableField.products[i]?.invoice_item_name || item.invoice_item_name}
-    //                                         onChange={(val) => {
-    //                                             setEditableField({
-    //                                                 ...editableField,
-    //                                                 products: {
-    //                                                     ...editableField.products,
-    //                                                     [i]: {
-    //                                                         ...editableField.products[i],
-    //                                                         invoice_item_name: val
-    //                                                     }
-    //                                                 }
-    //                                             });
-    //                                         }}
-    //                                     />
-    //                                 </td>
-    //                                 <td>
-    //                                     <EditableField
-    //                                         value={editableField.products[i]?.product_hsn_sac_code}
-    //                                         onChange={(val) => {
-    //                                             setEditableField({
-    //                                                 ...editableField,
-    //                                                 products: {
-    //                                                     ...editableField.products,
-    //                                                     [i]: {
-    //                                                         ...editableField.products[i],
-    //                                                         product_hsn_sac_code: val
-    //                                                     }
-    //                                                 }
-    //                                             });
-    //                                         }}
-    //                                     />
-    //                                 </td>
-    //                                 <td>{item.invoice_item_quantity}</td>
-    //                                 <td>{item.invoice_item_unit_price.toFixed(2)}</td>
-    //                                 <td>{item.invoice_item_cgst_rate}%</td>
-    //                                 <td>{item.invoice_item_cgst_amount.toFixed(2)}</td>
-    //                                 <td>{item.invoice_item_sgst_rate}%</td>
-    //                                 <td>{item.invoice_item_sgst_amount.toFixed(2)}</td>
-    //                                 <td>{item.invoice_item_igst_rate}%</td>
-    //                                 <td>{item.invoice_item_igst_amount.toFixed(2)}</td>
-    //                                 <td>{item.invoice_item_total_amount.toFixed(2)}</td>
-    //                             </tr>
-    //                         ))}
-    //                     </tbody>
-    //                 </table>
-    //             </div>
-
-    //             <div className="totals-section flex flex-row">
-    //                 {/* <!-- Totals --> */}
-    //                 <div className="notes">
-    //                     <p className='my-2'>Total In Words: <br /><strong><EditableField
-    //                         value={moneyInWord}
-    //                         onChange={(val) => moneyInWord = val}
-    //                     /></strong></p>
-    //                     <p>Notes: <br /><strong><EditableField
-    //                         value={editableInvoice.invoice_notes}
-    //                         onChange={(val) => setEditableInvoice({
-    //                             ...editableInvoice, invoice_notes: val
-    //                         })}
-    //                     /></strong></p>
-    //                 </div>
-    //                 <div className="amounts">
-    //                     <div><span>Sub Total</span><span>{invoice.invoice_subtotal.toFixed(2)}</span></div>
-    //                     <div><span>CGST</span><span>{invoice.invoice_total_cgst.toFixed(2)}</span></div>
-    //                     <div><span>SGST</span><span>{invoice.invoice_total_sgst.toFixed(2)}</span></div>
-    //                     <div><span>IGST</span><span>{invoice.invoice_total_igst.toFixed(2)}</span></div>
-    //                     <div className="bold total"><span>Total</span><span>₹{invoice.invoice_total.toFixed(2)}</span></div>
-    //                     <div className="bold balance"><span>Balance Due</span><span>₹{invoice.invoice_total.toFixed(2)}</span></div>
-    //                 </div>
-    //             </div>
-
-    //             <div className='flex w-full justify-between'>
-    //                 <div className='text-[12px]'>
-    //                     <h6 className='font-semibold'>Bank Details:</h6>
-    //                     <p>Account No:  <EditableField
-    //                         value={companyDetail.company_bank_account_no}
-    //                         onChange={(val) => setCompanyDetail({
-    //                             ...companyDetail, company_bank_account_no: val
-    //                         })}
-    //                         className='font-medium'
-    //                     /></p>
-    //                     <p>Bank Name: <EditableField
-    //                         value={companyDetail.company_bank_name}
-    //                         onChange={(val) => setCompanyDetail({
-    //                             ...companyDetail, company_bank_name: val
-    //                         })} className='font-medium'
-    //                     /></p>
-    //                     <p>Account Holder: <EditableField
-    //                         value={companyDetail.company_name}
-    //                         onChange={(val) => setCompanyDetail({
-    //                             ...companyDetail, company_name: val
-    //                         })} className='font-medium'
-    //                     /></p>
-    //                     <p>Branch: <EditableField
-    //                         value={companyDetail.company_branch}
-    //                         onChange={(val) => setCompanyDetail({
-    //                             ...companyDetail, company_branch: val
-    //                         })} className='font-medium'
-    //                     /></p>
-    //                     <p>IFSC Code: <EditableField
-    //                         value={companyDetail.company_ifsc_code}
-    //                         onChange={(val) => setCompanyDetail({
-    //                             ...companyDetail, company_ifsc_code: val
-    //                         })} className='font-medium'
-    //                     /></p>
-    //                 </div>
-    //                 {/* <!-- Signature --> */}
-    //                 <div className="signature w-25 sm:w-50 p-2 flex flex-col items-end-safe justify-end-safe">
-    //                     <p>Authorized Signature</p>
-    //                     <div className='flex gap-1'>For <strong>
-    //                         <EditableField
-    //                             value={editableInvoice.invoice_by.company_name}
-    //                             onChange={(val) => setEditableInvoice({
-    //                                 ...editableInvoice,
-    //                                 invoice_by: { ...editableInvoice.invoice_by, company_name: val }
-    //                             })}
-    //                         />
-    //                     </strong></div>
-    //                 </div>
-    //             </div>
-    //         </>
-    //     );
-    // };
-
-    // sweat alert
-
+    
     const GenerateInvoice = () => {
         let timerInterval;
         Swal.fire({
@@ -661,7 +266,7 @@ const InvoiceDetail = () => {
                 pdf.rect(marginLeft, marginTop, scaledWidth, pageRenderHeight);
             }
 
-            pdf.save(`Invoice_${invoice.invoice_number}.pdf`);
+            pdf.save(`Invoice_${rawInvoice?.invoice_number || 'invoice'}.pdf`);
         } catch (error) {
             console.error("PDF Export Error:", error);
             alert("Failed to generate PDF.");
@@ -689,7 +294,7 @@ const InvoiceDetail = () => {
 
 
 
-    if (!invoice) {
+    if (!rawInvoice) {
         return (
             <div className='min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-6'>
                 <div className="model-not-found">
@@ -899,7 +504,7 @@ const InvoiceDetail = () => {
                         </button> */}
                         
                         <button
-                            onClick={() => navigate(`/invoiceForm/${invoice.invoice_id}`)}
+                            onClick={() => navigate(`/invoiceForm/${rawInvoice.invoice_id}`)}
                             className="model-details-actions-edit "
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

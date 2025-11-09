@@ -7,7 +7,6 @@ const DefaultTemplate = ({
     editableInvoice,
     setEditableInvoice,
     companyDetail,
-    setCompanyDetail,
     editableField,
     setEditableField,
     moneyInWord,
@@ -20,16 +19,31 @@ const DefaultTemplate = ({
         isDesktop: isDownloading ? true : (typeof window !== 'undefined' ? window.innerWidth > 1024 : true)
     };
 
+    // Helper to safely format numbers
+    const fmt = (val) => Number(val || 0)?.toFixed(2);
+
+    const products = invoice?.products || [];
+    // Derive base amounts if invoice level totals missing
+    const derivedSubtotal = products.reduce((s, p) => s + (Number(p.invoice_item_quantity || 0) * Number(p.invoice_item_unit_price || 0)), 0);
+    const derivedCgst = products.reduce((s, p) => s + Number(p.invoice_item_cgst_amount || 0), 0);
+    const derivedSgst = products.reduce((s, p) => s + Number(p.invoice_item_sgst_amount || 0), 0);
+    const derivedIgst = products.reduce((s, p) => s + Number(p.invoice_item_igst_amount || 0), 0);
+    const subtotal = invoice?.invoice_subtotal !== undefined ? invoice.invoice_subtotal : derivedSubtotal;
+    const totalCgst = invoice?.invoice_total_cgst !== undefined ? invoice.invoice_total_cgst : derivedCgst;
+    const totalSgst = invoice?.invoice_total_sgst !== undefined ? invoice.invoice_total_sgst : derivedSgst;
+    const totalIgst = invoice?.invoice_total_igst !== undefined ? invoice.invoice_total_igst : derivedIgst;
+    const grandTotal = invoice?.invoice_total !== undefined ? invoice.invoice_total : (subtotal + totalCgst + totalSgst + totalIgst);
+
     return (
         <>
             {/* <!-- Header --> */}
             <div className="invoice-header p-2">
                 <div className={`company-info ${responsive.isMobile ? 'text-center flex flex-col' : ''}`}>
-                    {companyDetail.company_logo ? (
+                    {companyDetail?.company_logo ? (
                         <div className='border rounded-full p-2 flex items-center justify-center'>
                             <img
                                 src={companyDetail.company_logo}
-                                alt={`${companyDetail.company_name} Logo`}
+                                alt={`${companyDetail?.company_name || 'Company'} Logo`}
                                 className="w-15 h-15 object-contain"
                                 onError={(e) => {
                                     e.target.style.display = 'none';
@@ -43,7 +57,7 @@ const DefaultTemplate = ({
                     <div className="company-details md:ml-10 md:border-l pl-4">
                         <h2>
                             <EditableField
-                                value={editableInvoice.invoice_by.company_name}
+                                value={editableInvoice?.invoice_by?.company_name || ''}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_name: val }
@@ -52,7 +66,7 @@ const DefaultTemplate = ({
                         </h2>
                         <p>
                             <EditableField
-                                value={editableInvoice.invoice_by.company_address}
+                                value={editableInvoice?.invoice_by?.company_address || ''}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_address: val }
@@ -61,7 +75,7 @@ const DefaultTemplate = ({
                         </p>
                         <p className='flex gap-1'> GSTIN :
                             <EditableField
-                                value={editableInvoice.invoice_by.company_gstin}
+                                value={editableInvoice?.invoice_by?.company_gstin || ''}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_gstin: val }
@@ -70,7 +84,7 @@ const DefaultTemplate = ({
                         </p>
                         <p>
                             <EditableField
-                                value={editableInvoice.invoice_by.company_msme}
+                                value={editableInvoice?.invoice_by?.company_msme || ''}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_msme: val }
@@ -79,7 +93,7 @@ const DefaultTemplate = ({
                         </p>
                         <p>
                             <EditableField
-                                value={editableInvoice.invoice_by.company_email}
+                                value={editableInvoice?.invoice_by?.company_email || ''}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     invoice_by: { ...editableInvoice.invoice_by, company_email: val }
@@ -161,7 +175,7 @@ const DefaultTemplate = ({
                     <div className="box-body">
                         <p className='bold'>
                             <EditableField
-                                value={editableInvoice.client.customer_name}
+                                value={editableInvoice.client?.customer_name}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_name: val }
@@ -170,7 +184,7 @@ const DefaultTemplate = ({
                         </p>
                         <p>
                             <EditableField
-                                value={editableInvoice.client.customer_address_line1}
+                                value={editableInvoice.client?.customer_address_line1}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_address_line1: val }
@@ -179,7 +193,7 @@ const DefaultTemplate = ({
                         </p>
                         <p>
                             <EditableField
-                                value={editableInvoice.client.customer_address_line2}
+                                value={editableInvoice.client?.customer_address_line2}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_address_line2: val }
@@ -188,14 +202,14 @@ const DefaultTemplate = ({
                         </p>
                         <p className='flex gap-1'>
                             <EditableField
-                                value={editableInvoice.client.customer_city}
+                                value={editableInvoice.client?.customer_city}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_city: val }
                                 })}
                             /> -
                             <EditableField
-                                value={editableInvoice.client.customer_postal_code}
+                                value={editableInvoice.client?.customer_postal_code}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_postal_code: val }
@@ -204,7 +218,7 @@ const DefaultTemplate = ({
                         </p>
                         <p>
                             <EditableField
-                                value={editableInvoice.client.customer_country}
+                                value={editableInvoice.client?.customer_country}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_country: val }
@@ -213,7 +227,7 @@ const DefaultTemplate = ({
                         </p>
                         <p className='flex gap-1'>
                             <EditableField
-                                value={editableInvoice.client.customer_gstin}
+                                value={editableInvoice.client?.customer_gstin}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_gstin: val }
@@ -227,7 +241,7 @@ const DefaultTemplate = ({
                     <div className="box-body">
                         <p className='bold'>
                             <EditableField
-                                value={editableInvoice.client.customer_name}
+                                value={editableInvoice.client?.customer_name}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_name: val }
@@ -236,7 +250,7 @@ const DefaultTemplate = ({
                         </p>
                         <p>
                             <EditableField
-                                value={editableInvoice.client.customer_address_line1}
+                                value={editableInvoice.client?.customer_address_line1}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_address_line1: val }
@@ -245,7 +259,7 @@ const DefaultTemplate = ({
                         </p>
                         <p>
                             <EditableField
-                                value={editableInvoice.client.customer_address_line2}
+                                value={editableInvoice.client?.customer_address_line2}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_address_line2: val }
@@ -254,14 +268,14 @@ const DefaultTemplate = ({
                         </p>
                         <p className='flex gap-1'>
                             <EditableField
-                                value={editableInvoice.client.customer_city}
+                                value={editableInvoice.client?.customer_city}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_city: val }
                                 })}
                             /> -
                             <EditableField
-                                value={editableInvoice.client.customer_postal_code}
+                                value={editableInvoice.client?.customer_postal_code}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_postal_code: val }
@@ -270,7 +284,7 @@ const DefaultTemplate = ({
                         </p>
                         <p>
                             <EditableField
-                                value={editableInvoice.client.customer_country}
+                                value={editableInvoice.client?.customer_country}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_country: val }
@@ -279,7 +293,7 @@ const DefaultTemplate = ({
                         </p>
                         <p className='flex gap-1'>
                             <EditableField
-                                value={editableInvoice.client.customer_gstin}
+                                value={editableInvoice.client?.customer_gstin}
                                 onChange={(val) => setEditableInvoice({
                                     ...editableInvoice,
                                     client: { ...editableInvoice.client, customer_gstin: val }
@@ -310,19 +324,19 @@ const DefaultTemplate = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {invoice.products?.map((item, i) => (
+                        {products.map((item, i) => (
                             <tr key={i}>
                                 <td>{i + 1}</td>
                                 <td>
                                     <EditableField
-                                        value={editableField.products[i]?.invoice_item_name || item.invoice_item_name}
+                                        value={editableField.products?.[i]?.invoice_item_name || item.invoice_item_name}
                                         onChange={(val) => {
                                             setEditableField({
                                                 ...editableField,
                                                 products: {
                                                     ...editableField.products,
                                                     [i]: {
-                                                        ...editableField.products[i],
+                                                        ...editableField.products?.[i],
                                                         invoice_item_name: val
                                                     }
                                                 }
@@ -332,14 +346,14 @@ const DefaultTemplate = ({
                                 </td>
                                 <td>
                                     <EditableField
-                                        value={editableField.products[i]?.product_hsn_sac_code}
+                                        value={editableField.products?.[i]?.product_hsn_sac_code || ''}
                                         onChange={(val) => {
                                             setEditableField({
                                                 ...editableField,
                                                 products: {
                                                     ...editableField.products,
                                                     [i]: {
-                                                        ...editableField.products[i],
+                                                        ...editableField.products?.[i],
                                                         product_hsn_sac_code: val
                                                     }
                                                 }
@@ -348,14 +362,14 @@ const DefaultTemplate = ({
                                     />
                                 </td>
                                 <td>{item.invoice_item_quantity}</td>
-                                <td>{item.invoice_item_unit_price.toFixed(2)}</td>
+                                <td>{fmt(item.invoice_item_unit_price)}</td>
                                 <td>{item.invoice_item_cgst_rate}%</td>
-                                <td>{item.invoice_item_cgst_amount.toFixed(2)}</td>
+                                <td>{fmt(item.invoice_item_cgst_amount)}</td>
                                 <td>{item.invoice_item_sgst_rate}%</td>
-                                <td>{item.invoice_item_sgst_amount.toFixed(2)}</td>
+                                <td>{fmt(item.invoice_item_sgst_amount)}</td>
                                 <td>{item.invoice_item_igst_rate}%</td>
-                                <td>{item.invoice_item_igst_amount.toFixed(2)}</td>
-                                <td>{item.invoice_item_total_amount.toFixed(2)}</td>
+                                <td>{fmt(item.invoice_item_igst_amount)}</td>
+                                <td>{fmt(item.invoice_item_total_amount)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -374,12 +388,12 @@ const DefaultTemplate = ({
                     /></strong></p>
                 </div>
                 <div className="amounts">
-                    <div><span>Sub Total</span><span>{invoice.invoice_subtotal.toFixed(2)}</span></div>
-                    <div><span>CGST</span><span>{invoice.invoice_total_cgst.toFixed(2)}</span></div>
-                    <div><span>SGST</span><span>{invoice.invoice_total_sgst.toFixed(2)}</span></div>
-                    <div><span>IGST</span><span>{invoice.invoice_total_igst.toFixed(2)}</span></div>
-                    <div className="bold total"><span>Total</span><span>₹{invoice.invoice_total.toFixed(2)}</span></div>
-                    <div className="bold balance"><span>Balance Due</span><span>₹{invoice.invoice_total.toFixed(2)}</span></div>
+                    <div><span>Sub Total</span><span>{fmt(subtotal)}</span></div>
+                    <div><span>CGST</span><span>{fmt(totalCgst)}</span></div>
+                    <div><span>SGST</span><span>{fmt(totalSgst)}</span></div>
+                    <div><span>IGST</span><span>{fmt(totalIgst)}</span></div>
+                    <div className="bold total"><span>Total</span><span>₹{fmt(grandTotal)}</span></div>
+                    <div className="bold balance"><span>Balance Due</span><span>₹{fmt(grandTotal)}</span></div>
                 </div>
             </div>
 
@@ -387,34 +401,39 @@ const DefaultTemplate = ({
                 <div className='text-[12px]'>
                     <h6 className='font-semibold'>Bank Details:</h6>
                     <p>Account No:  <EditableField
-                        value={companyDetail.company_bank_account_no}
-                        onChange={(val) => setCompanyDetail({
-                            ...companyDetail, company_bank_account_no: val
+                        value={companyDetail?.company_bank_account_no || ''}
+                        onChange={(val) => setEditableInvoice({
+                            ...editableInvoice,
+                            invoice_by: { ...editableInvoice.invoice_by, company_bank_account_no: val }
                         })}
                         className='font-medium'
                     /></p>
                     <p>Bank Name: <EditableField
-                        value={companyDetail.company_bank_name}
-                        onChange={(val) => setCompanyDetail({
-                            ...companyDetail, company_bank_name: val
+                        value={companyDetail?.company_bank_name || ''}
+                        onChange={(val) => setEditableInvoice({
+                            ...editableInvoice,
+                            invoice_by: { ...editableInvoice.invoice_by, company_bank_name: val }
                         })} className='font-medium'
                     /></p>
                     <p>Account Holder: <EditableField
-                        value={companyDetail.company_name}
-                        onChange={(val) => setCompanyDetail({
-                            ...companyDetail, company_name: val
+                        value={companyDetail?.company_name || ''}
+                        onChange={(val) => setEditableInvoice({
+                            ...editableInvoice,
+                            invoice_by: { ...editableInvoice.invoice_by, company_name: val }
                         })} className='font-medium'
                     /></p>
                     <p>Branch: <EditableField
-                        value={companyDetail.company_branch}
-                        onChange={(val) => setCompanyDetail({
-                            ...companyDetail, company_branch: val
+                        value={companyDetail?.company_branch || ''}
+                        onChange={(val) => setEditableInvoice({
+                            ...editableInvoice,
+                            invoice_by: { ...editableInvoice.invoice_by, company_branch: val }
                         })} className='font-medium'
                     /></p>
                     <p>IFSC Code: <EditableField
-                        value={companyDetail.company_ifsc_code}
-                        onChange={(val) => setCompanyDetail({
-                            ...companyDetail, company_ifsc_code: val
+                        value={companyDetail?.company_ifsc_code || ''}
+                        onChange={(val) => setEditableInvoice({
+                            ...editableInvoice,
+                            invoice_by: { ...editableInvoice.invoice_by, company_ifsc_code: val }
                         })} className='font-medium'
                     /></p>
                 </div>
@@ -423,7 +442,7 @@ const DefaultTemplate = ({
                     <p>Authorized Signature</p>
                     <div className='flex gap-1'>For <strong>
                         <EditableField
-                            value={editableInvoice.invoice_by.company_name}
+                            value={editableInvoice?.invoice_by?.company_name || ''}
                             onChange={(val) => setEditableInvoice({
                                 ...editableInvoice,
                                 invoice_by: { ...editableInvoice.invoice_by, company_name: val }

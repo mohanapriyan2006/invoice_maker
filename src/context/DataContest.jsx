@@ -1,6 +1,23 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api, setBearerToken } from '../API/api';
+// Backend-free preview: swap axios API calls for local storage data layer
+// import { api, setBearerToken } from '../API/api'; // Not used in preview mode
+import {
+    seedIfEmpty,
+    loginUser,
+    registerUser,
+    getCompanies,
+    getProducts,
+    getCustomers,
+    getInvoices,
+    addInvoice,
+    updateInvoice,
+    removeInvoice,
+    addCompany, updateCompany, removeCompany,
+    addProduct, updateProduct, removeProduct,
+    addCustomer, updateCustomer, removeCustomer,
+    updateUser, removeUser
+} from '../API/localData';
 import Swal from 'sweetalert2'
 import { setupAutoLogout } from '../API/auth';
 
@@ -138,6 +155,8 @@ export const DataProvider = ({ children }) => {
     const [userDetails, setuserDetails] = useState({});
 
     const initDataLoad = async () => {
+        // Seed demo data if first time
+        seedIfEmpty();
         const companies = await fetchCompany();
         if (companies?.length > 0) {
             const companyId = companies[0]?.company_id;
@@ -151,26 +170,38 @@ export const DataProvider = ({ children }) => {
 
 
     const fetchToken = async () => {
-        const tokenStr = await localStorage.getItem("token");
-        const userdetail = await localStorage.getItem("userDetail");
-        if (tokenStr) {
+        const tokenStr = localStorage.getItem("token");
+        const userdetail = localStorage.getItem("userDetail");
+        if (tokenStr && userdetail) {
             setToken(tokenStr);
-            // console.log("Token fetched from localStorage:", tokenStr);
-            setLoginPage(
-                { isActive: false, isLogined: true }
-            )
-            setBearerToken(tokenStr);
-
-            initDataLoad();
-
+            setLoginPage({ isActive: false, isLogined: true });
+            setuserDetails(JSON.parse(userdetail));
+            await initDataLoad();
             navigate("/home");
         }
+    };
 
-        if (userdetail) {
-            setuserDetails(JSON.parse(userdetail));
-        }
+    // Preview-mode login (local storage)
+    const login = async (credentials) => {
+        const res = await loginUser(credentials);
+        localStorage.setItem("token", res.access_token);
+        localStorage.setItem("userDetail", JSON.stringify(res.user_details));
+        setToken(res.access_token);
+        setuserDetails(res.user_details);
+        setLoginPage({ isActive: false, isLogined: true });
+        await initDataLoad();
+        Toast.fire({ icon: 'success', title: 'Logged in successfully' });
+        navigate('/home');
+        return true;
 
-    }
+    };
+
+    const register = async (form) => {
+        const user = await registerUser(form);
+        Toast.fire({ icon: 'success', title: 'Account created. Please login.' });
+        navigate('/');
+        return user;
+    };
 
     const checkTokenExpiry = () => {
         const tokenStr = localStorage.getItem("token");
@@ -183,6 +214,7 @@ export const DataProvider = ({ children }) => {
 
     useEffect(() => {
         fetchToken();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
@@ -210,6 +242,7 @@ export const DataProvider = ({ children }) => {
                 });
             };
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
 
@@ -233,17 +266,16 @@ export const DataProvider = ({ children }) => {
 
     const fetchCompany = async () => {
         try {
-            const res = await api.get("/companies");
-            // console.log("Get Companies Response : ", res);
-            setYourCompanies(res.data.data);
-            setIsLoading((p) => ({ ...p, company: false }))
-            return res.data.data;
+            const data = await getCompanies();
+            setYourCompanies(data);
+            setIsLoading(p => ({ ...p, company: false }));
+            return data;
         } catch (e) {
-            console.log("Get Companies Error : ", e);
-            setIsLoading((p) => ({ ...p, company: false }));
+            console.log('Get Companies Error : ', e);
+            setIsLoading(p => ({ ...p, company: false }));
             return [];
         }
-    }
+    };
 
 
 
@@ -255,15 +287,14 @@ export const DataProvider = ({ children }) => {
 
     const fetchProducts = async (cId) => {
         try {
-            const res = await api.get(`companies/${cId}/products`);
-            // console.log("Get Products Response : ", res);
-            setYourProducts(res.data.data);
-            setIsLoading((p) => ({ ...p, product: false }));
+            const data = await getProducts(cId);
+            setYourProducts(data);
+            setIsLoading(p => ({ ...p, product: false }));
         } catch (e) {
-            console.log("Get Products Error : ", e);
-            setIsLoading((p) => ({ ...p, product: false }));
+            console.log('Get Products Error : ', e);
+            setIsLoading(p => ({ ...p, product: false }));
         }
-    }
+    };
 
 
 
@@ -275,15 +306,14 @@ export const DataProvider = ({ children }) => {
 
     const fetchCustomers = async (cId) => {
         try {
-            const res = await api.get(`companies/${cId}/customers/`);
-            // console.log("Get Customers Response : ", res);
-            setYourCustomers(res.data.data);
-            setIsLoading((p) => ({ ...p, customer: false }));
+            const data = await getCustomers(cId);
+            setYourCustomers(data);
+            setIsLoading(p => ({ ...p, customer: false }));
         } catch (e) {
-            console.log("Get Customer Error : ", e);
-            setIsLoading((p) => ({ ...p, customer: false }));
+            console.log('Get Customer Error : ', e);
+            setIsLoading(p => ({ ...p, customer: false }));
         }
-    }
+    };
 
 
 
@@ -296,18 +326,15 @@ export const DataProvider = ({ children }) => {
 
     const fetchInvoices = async (cId) => {
         try {
-            const res = await api.get(`invoices?company_id=${cId}`);
-            // console.log("Get Invoices Response : ", res);
-            setYourInvoices(res.data.data);
-            setIsLoading((p) => ({ ...p, invoice: false }));
-            await Promise.all([
-                fetchProducts(cId)
-            ]);
+            const data = await getInvoices(cId);
+            setYourInvoices(data);
+            setIsLoading(p => ({ ...p, invoice: false }));
+            await Promise.all([fetchProducts(cId)]);
         } catch (e) {
-            console.log("Get Invoice Error : ", e);
-            setIsLoading((p) => ({ ...p, invoice: false }));
+            console.log('Get Invoice Error : ', e);
+            setIsLoading(p => ({ ...p, invoice: false }));
         }
-    }
+    };
 
     const [isEditing, setIsEditing] = useState(false);
 
@@ -334,6 +361,12 @@ export const DataProvider = ({ children }) => {
             yourCustomers, setYourCustomers, fetchCustomers,
             yourInvoices, setYourInvoices, fetchInvoices, isEditing, setIsEditing,
             isAIActive, setIsAIActive,
+            login, register,
+            addInvoice, updateInvoice, removeInvoice,
+            addCompany, updateCompany, removeCompany,
+            addProduct, updateProduct, removeProduct,
+            addCustomer, updateCustomer, removeCustomer,
+            updateUser, removeUser
         }}>
             {children}
         </DataContext.Provider>

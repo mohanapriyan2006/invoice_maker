@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { api } from '../../API/api';
+// Use local storage registration via DataContext
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import { useContext } from 'react';
+import DataContext from '../../context/DataContest';
 
 
 const SignUp = () => {
@@ -12,18 +14,24 @@ const SignUp = () => {
 
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { register: registerUser, Toast } = useContext(DataContext);
 
 
     const formik = useFormik({
         initialValues: {
+            name: '',
             user_name: '',
+            email: '',
             password: '',
             confirmPassword: ''
         },
         validationSchema: Yup.object({
+            name: Yup.string().min(2, 'Name must be at least 2 characters').required('Name is required'),
             user_name: Yup.string()
                 .min(6, 'username must be at least 6 characters')
                 .required('username is required'),
+            role: Yup.string().oneOf(['artist', 'collector'], 'Invalid role').required('Role is required'),
+            email: Yup.string().email('Invalid email').required('Email is required'),
             password: Yup.string()
                 .min(4, 'Password must be at least 4 characters')
                 .required('Password is required'),
@@ -31,29 +39,21 @@ const SignUp = () => {
                 .oneOf([Yup.ref('password'), null], 'Passwords must match')
                 .required('Confirm Password is required')
         }),
-        onSubmit: (values, { setFieldError }) => {
-            const postUser = async () => {
-                setIsLoading(true);
-                try {
-                    await api.post("users/signup", { ...values })
-                    navigate("/");
-                } catch (e) {
-                    if (e.response && e.response.data) {
-                        console.log("Error Details:", e.response.data);
-                        if (e.response.data.detail) {
-                            setFieldError("user_name", "Username already registered !");
-                        } else {
-                            setFieldError("user_name", "Signup failed. Try again.");
-                        }
-                    } else {
-                        setFieldError("user_name", "Server error. Try again later.");
-                    }
-                } finally {
-                    setIsLoading(false);
+        onSubmit: async (vals, { setFieldError }) => {
+            const { name, user_name, role, email, password } = vals;
+            const form = { name, user_name, role, email, password };
+            setIsLoading(true);
+            try {
+                await registerUser(form);
+            } catch (e) {
+                if (e?.code === 'USERNAME_TAKEN') {
+                    setFieldError('user_name', 'Username already registered!');
+                } else {
+                    setFieldError('user_name', e?.message || 'Signup failed. Try again.');
                 }
-
+            } finally {
+                setIsLoading(false);
             }
-            postUser();
         }
     });
 
@@ -65,6 +65,20 @@ const SignUp = () => {
                 <div className='w-full text-center  -mt-4 '>
                     <h3 className='text-blue-900 text-[26px] font-semibold'>SignUp</h3>
                 </div>
+
+                <label htmlFor="name" className='absolute -left-999999'>Enter name:</label>
+                <input
+                    type="text"
+                    name="name"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.name}
+                    className='login-input'
+                    placeholder='  Enter name'
+                />
+                {formik.touched.name && formik.errors.name && (
+                    <div style={{ color: 'red' }}>{formik.errors.name}</div>
+                )}
 
                 <label htmlFor="user_name" className='absolute -left-999999'>Enter user_name:</label>
                 <input
@@ -79,6 +93,20 @@ const SignUp = () => {
                 />
                 {formik.touched.user_name && formik.errors.user_name && (
                     <div style={{ color: 'red' }}>{formik.errors.user_name}</div>
+                )}
+
+                <label htmlFor="email" className='absolute -left-999999'>Enter email:</label>
+                <input
+                    type="email"
+                    name="email"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.email}
+                    className='login-input'
+                    placeholder='  Enter email'
+                />
+                {formik.touched.email && formik.errors.email && (
+                    <div style={{ color: 'red' }}>{formik.errors.email}</div>
                 )}
 
                 <div className="relative w-full">
