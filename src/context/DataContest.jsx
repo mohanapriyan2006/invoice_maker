@@ -193,7 +193,6 @@ export const DataProvider = ({ children }) => {
         Toast.fire({ icon: 'success', title: 'Logged in successfully' });
         navigate('/home');
         return true;
-
     };
 
     const register = async (form) => {

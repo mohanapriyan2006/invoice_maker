@@ -9,13 +9,13 @@ const LS_KEYS = {
   invoices: 'im_invoices'
 };
 
-const delay = (ms=200) => new Promise(res => setTimeout(res, ms));
+const delay = (ms = 200) => new Promise(res => setTimeout(res, ms));
 
 const b64url = (str) =>
   btoa(unescape(encodeURIComponent(str)))
-    .replace(/=+$/,'')
-    .replace(/\+/g,'-')
-    .replace(/\//g,'_');
+    .replace(/=+$/, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
 
 export const createLocalToken = (user, daysValid = 7) => {
   const header = { alg: 'none', typ: 'JWT' };
@@ -81,7 +81,7 @@ export const seedIfEmpty = () => {
 };
 
 // Auth
-export const registerUser = async ({ name, user_name, role, email, password }) => {
+export const registerUser = async ({ name, user_name, email, password }) => {
   await delay();
   const users = read(LS_KEYS.users);
   if (users.some(u => u.user_name.toLowerCase() === user_name.toLowerCase())) {
@@ -90,10 +90,11 @@ export const registerUser = async ({ name, user_name, role, email, password }) =
     throw err;
   }
   const id = nextId(users, 'id');
-  const newUser = { id, name, user_name, role, email, password };
+  const newUser = { id, name, user_name, email, password };
   users.push(newUser);
   write(LS_KEYS.users, users);
-  return { id, name, user_name, role, email };
+  // Provide both id and user_id for compatibility with legacy code paths
+  return { id, user_id: id, name, user_name, email };
 };
 
 export const loginUser = async ({ user_name, password }) => {
@@ -106,7 +107,7 @@ export const loginUser = async ({ user_name, password }) => {
     throw err;
   }
   const token = createLocalToken(user);
-  const user_details = { id: user.id, name: user.name, user_name: user.user_name, role: user.role, email: user.email };
+  const user_details = { id: user.id, user_id: user.id, name: user.name, user_name: user.user_name, role: user.role, email: user.email };
   return { access_token: token, user_details };
 };
 

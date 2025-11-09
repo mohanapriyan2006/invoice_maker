@@ -30,7 +30,6 @@ const SignUp = () => {
             user_name: Yup.string()
                 .min(6, 'username must be at least 6 characters')
                 .required('username is required'),
-            role: Yup.string().oneOf(['artist', 'collector'], 'Invalid role').required('Role is required'),
             email: Yup.string().email('Invalid email').required('Email is required'),
             password: Yup.string()
                 .min(4, 'Password must be at least 4 characters')
