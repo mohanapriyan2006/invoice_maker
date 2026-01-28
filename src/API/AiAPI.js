@@ -4,7 +4,7 @@ import { instructionForAI } from "../context/aiConfig";
 const YOUR_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const ai = new GoogleGenerativeAI(YOUR_API_KEY);
 
-const MODEL_LIST = ["gemini-2.0-flash", "gemini-1.5-pro"];
+const MODEL_LIST = ["gemini-flash-latest", "gemini-pro-latest"];
 
 async function gemini(history) {
     for (const modelName of MODEL_LIST) {
