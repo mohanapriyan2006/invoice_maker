@@ -29,6 +29,10 @@ A modern invoice management platform designed for freelancers, startups, agencie
 
 ## Overview
 
+<div align="center">
+<img src="screenshots/image7.png" width="100%" />
+</div>
+
 InvoiceManager is a complete billing and business management solution that helps organizations create professional invoices, manage customers, organize products, maintain company profiles, and streamline financial record-keeping.
 
 Built with a clean and intuitive interface, InvoiceManager reduces administrative overhead while helping businesses maintain accurate invoicing workflows.
@@ -46,6 +50,10 @@ Managing invoices manually often leads to:
 * Customer management challenges
 * Tax classification confusion
 * Inconsistent invoice formats
+
+<div align="center">
+<img src="screenshots/image1.png" width="100%" />
+</div>
 
 InvoiceManager centralizes everything into a single platform.
 
@@ -85,6 +93,10 @@ Status Tracking
 
 ### Professional Invoice Creation
 
+<div align="center">
+<img src="screenshots/image6.png" width="100%" />
+</div>
+
 Create polished and business-ready invoices within minutes.
 
 Capabilities:
@@ -101,6 +113,10 @@ Capabilities:
 
 ### Customer Management
 
+<div align="center">
+<img src="screenshots/image4.png" width="100%" />
+</div>
+
 Maintain customer information in one place.
 
 Features:
@@ -115,6 +131,10 @@ Features:
 
 ### Product Management
 
+<div align="center">
+<img src="screenshots/image3.png" width="100%" />
+</div>
+
 Organize products and services used in invoices.
 
 Capabilities:
@@ -128,6 +148,10 @@ Capabilities:
 ---
 
 ### Multi-Company Support
+
+<div align="center">
+<img src="screenshots/image2.png" width="100%" />
+</div>
 
 Manage multiple business entities from a single platform.
 
@@ -144,6 +168,10 @@ Perfect for agencies, consultants, and businesses operating multiple entities.
 ---
 
 ### Invoice Status Tracking
+
+<div align="center">
+<img src="screenshots/image5.png" width="100%" />
+</div>
 
 Track the lifecycle of every invoice.
 
@@ -177,6 +205,10 @@ Use notes for:
 ---
 
 ### HSN/SAC AI Assistant
+
+<div align="center">
+<img src="screenshots/image8.png" width="100%" />
+</div>
 
 Built-in AI assistance helps businesses identify appropriate:
 
